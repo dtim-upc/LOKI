@@ -1,0 +1,6 @@
+Total entries processed: 6023
+Total tables extracted: 3157
+Total sentence contexts extracted: 15752
+Total skipped entries: 2866
+Total failed entries: 0
+Total rows in all tables: 38117

@@ -1,4 +1,5 @@
 import os
+import gc
 import datetime
 import traceback
 import sys
@@ -7,10 +8,11 @@ import json
 import time
 import wandb
 from pathlib import Path
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from sentence_transformers.evaluation import SentenceEvaluator
 
 import torch
+import torch.cuda
 from datasets import Dataset
 from tqdm.auto import tqdm
 from sentence_transformers import (
@@ -361,6 +363,64 @@ class ComprehensiveEvaluator(SentenceEvaluator):
     def compute_metrics(self, model) -> Dict[str, float]:
         """Compute metrics for evaluation results."""
         return self.__call__(model)
+    
+class EarlyStopping:
+    """Early stopping handler to prevent overfitting."""
+    def __init__(self, patience: int = 3, min_delta: float = 0.001):
+        self.patience = patience
+        self.min_delta = min_delta
+        self.counter = 0
+        self.best_loss = None
+        self.early_stop = False
+        self.best_model = None
+        
+    def __call__(self, current_value: float, model: SentenceTransformer) -> bool:
+        if self.best_loss is None:
+            self.best_loss = current_value
+            self.best_model = model
+        elif current_value < self.best_loss - self.min_delta:
+            self.best_loss = current_value
+            self.counter = 0
+            self.best_model = model
+        else:
+            self.counter += 1
+            if self.counter >= self.patience:
+                self.early_stop = True
+                
+        return self.early_stop
+
+class GPUMemoryManager:
+    """Manages GPU memory during training."""
+    @staticmethod
+    def clear_memory():
+        """Clear GPU memory cache."""
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+            gc.collect()
+    
+    @staticmethod
+    def get_memory_stats() -> Dict[str, float]:
+        """Get current GPU memory statistics."""
+        if not torch.cuda.is_available():
+            return {}
+        
+        return {
+            'allocated': torch.cuda.memory_allocated() / 1024**2,  # MB
+            'cached': torch.cuda.memory_reserved() / 1024**2,      # MB
+            'max_allocated': torch.cuda.max_memory_allocated() / 1024**2  # MB
+        }
+    
+    @staticmethod
+    def log_memory_stats(prefix: str = ""):
+        """Log current GPU memory statistics."""
+        if not torch.cuda.is_available():
+            return
+        
+        stats = GPUMemoryManager.get_memory_stats()
+        print(f"{prefix} GPU Memory Stats:")
+        print(f"  Allocated: {stats['allocated']:.2f} MB")
+        print(f"  Cached: {stats['cached']:.2f} MB")
+        print(f"  Max Allocated: {stats['max_allocated']:.2f} MB")
 
 def train_model(
     model: SentenceTransformer,
@@ -368,221 +428,196 @@ def train_model(
     eval_dataset: Dataset,
     output_path: Path,
     run_name: str,
+    initial_metrics: Dict[str, float],  # Initial Results Before Training
     learning_rate: float = 8e-5,
     epochs: int = 3,
-    train_batch_size: int = 32,
-    eval_batch_size: int = 32,
+    train_batch_size: int = 64,
+    eval_batch_size: int = 64,
     loss_type: str = 'cached_mnr',
     warmup_ratio: float = 0.05,
-    gradient_accumulation_steps: int = 1,
+    gradient_accumulation_steps: int = 8,
     max_grad_norm: float = 1.0,
+    early_stopping_patience: int = 3,
+    enable_checkpointing: bool = True,
 ) -> SentenceTransformer:
     """
-    Train the model with fixed checkpoint handling.
+    Train the model with enhanced memory management and early stopping.
     """
-    # Define loss function
-    loss = get_loss_function(loss_type, model)
+    # Initialize memory manager and clear GPU memory
+    memory_manager = GPUMemoryManager()
+    memory_manager.clear_memory()
+    memory_manager.log_memory_stats("Initial")
     
-    # Calculate total steps
-    total_steps_per_epoch = len(train_dataset) // (train_batch_size * gradient_accumulation_steps)
-    if len(train_dataset) % (train_batch_size * gradient_accumulation_steps) != 0:
-        total_steps_per_epoch += 1
+    # Initialize early stopping
+    early_stopping = EarlyStopping(patience=early_stopping_patience)
     
-    # Configure progress bar display
-    tqdm.pandas()
-    
-    # Create evaluator
-    evaluator = ComprehensiveEvaluator(
-        eval_dataset=eval_dataset,
-        name="table-text-eval"
-    )
-    
-    # Set up directories
-    output_path = Path(output_path)
-    checkpoint_dir = output_path / run_name / "checkpoints"  # Changed checkpoint directory structure
-    checkpoint_dir.mkdir(parents=True, exist_ok=True)
-    
-    best_model_dir = output_path / run_name / "best_model"
-    best_model_dir.mkdir(parents=True, exist_ok=True)
-
-    # Define training arguments
-    training_args = SentenceTransformerTrainingArguments(
-        output_dir=str(checkpoint_dir),
-        num_train_epochs=epochs,
-        per_device_train_batch_size=train_batch_size,
-        per_device_eval_batch_size=eval_batch_size,
-        warmup_ratio=warmup_ratio,
-        gradient_accumulation_steps=gradient_accumulation_steps,
-        max_grad_norm=max_grad_norm,
-        fp16=True,
-        bf16=False,
-        learning_rate=learning_rate,
-        save_strategy="epoch",
-        eval_strategy="epoch",
-        save_total_limit=1,             # Keep only the last checkpoint
-        load_best_model_at_end=True,    # Load the best model at the end
-        save_only_model=True,
-        metric_for_best_model="eval_f1",
-        greater_is_better=True,
-        logging_dir=str(output_path / run_name / "logs"),
-        report_to=['wandb'],
-        run_name=run_name,
-    )
-
-    # Create callback for progress reporting
-    progress_callback = TrainingCallback(
-        evaluator=evaluator,
-        loss_type=loss_type,
-        total_steps=total_steps_per_epoch
-    )
-
-    # Create trainer
-    trainer = SentenceTransformerTrainer(
-        model=model,
-        args=training_args,
-        train_dataset=train_dataset,
-        eval_dataset=eval_dataset,
-        loss=loss,
-        evaluator=evaluator,
-        callbacks=[progress_callback]
-    )
-
-    # Initial evaluation
-    print("\n" + "="*50)
-    print("Initial Model Evaluation")
-    print("="*50)
-    initial_metrics = evaluator(model)
-    best_metrics = initial_metrics.copy()
-    best_f1 = initial_metrics['eval_f1']
-    
-    print("\nInitial Metrics:")
-    for metric, value in initial_metrics.items():
-        if isinstance(value, float):
-            print(f"{metric}: {value:.4f}")
-        else:
-            print(f"{metric}: {value}")
-
-    # Train the model
-    print("\n" + "="*50)
-    print("Starting Training")
-    print("="*50)
-    print(f"Total epochs: {epochs}")
-    print(f"Steps per epoch: {total_steps_per_epoch}")
-    print(f"Total training steps: {total_steps_per_epoch * epochs}")
-    print(f"Gradient accumulation steps: {gradient_accumulation_steps}")
-    print(f"Effective batch size: {train_batch_size * gradient_accumulation_steps}")
-    
-    trainer.train()
-    
-    # Load best model
-    print("\nLoading best model...")
-    best_epoch = None
-    best_checkpoint = None
-    best_f1 = -float('inf')
-    
-    # Check all checkpoints
-    for checkpoint_path in checkpoint_dir.glob("checkpoint-*"):
-        if checkpoint_path.is_dir():
-            # Load metrics for this checkpoint
-            metrics_file = checkpoint_path / "trainer_state.json"
-            if metrics_file.exists():
-                with open(metrics_file, 'r') as f:
-                    checkpoint_data = json.load(f)
-                    # Get the metrics from the last evaluation
-                    if checkpoint_data['log_history']:
-                        eval_metrics = [log for log in checkpoint_data['log_history'] if 'eval_f1' in log]
-                        if eval_metrics:
-                            latest_eval = eval_metrics[-1]
-                            f1_score = latest_eval.get('eval_f1', -float('inf'))
-                            
-                            if f1_score > best_f1:
-                                best_f1 = f1_score
-                                best_checkpoint = checkpoint_path
-                                best_epoch = latest_eval.get('epoch', None)
-    
-    if best_checkpoint is not None:
-        print(f"Loading best model from epoch {best_epoch} (F1: {best_f1:.4f})")
-        model = SentenceTransformer(str(best_checkpoint))
-    else:
-        print("Warning: No checkpoint found with better F1 score than initial model")
-
-    # Final evaluation using best model
-    print("\n" + "="*50)
-    print("Final Model Evaluation (Best Checkpoint)")
-    print("="*50)
-    final_metrics = evaluator(model)
-    
-    print("\nFinal Metrics (Best Checkpoint):")
-    for metric, value in final_metrics.items():
-        if isinstance(value, float):
-            print(f"{metric}: {value:.4f}")
-        else:
-            print(f"{metric}: {value}")
-    
-    # Save best model
-    print("\nSaving best model...")
-    final_save_path = str(best_model_dir)
-    os.makedirs(final_save_path, exist_ok=True)
-    model.save(final_save_path)
-    
-    # Verify saved model
-    print("\nVerifying saved model...")
     try:
-        loaded_model = SentenceTransformer(final_save_path)
-        verification_metrics = evaluator(loaded_model)
+        # Define loss function
+        loss = get_loss_function(loss_type, model)
         
-        print("\nMetrics from loaded model:")
-        for metric, value in verification_metrics.items():
+        # Calculate total steps
+        total_steps_per_epoch = len(train_dataset) // (train_batch_size * gradient_accumulation_steps)
+        if len(train_dataset) % (train_batch_size * gradient_accumulation_steps) != 0:
+            total_steps_per_epoch += 1
+        
+        # Configure progress bar display
+        tqdm.pandas()
+        
+        # Create evaluator
+        evaluator = ComprehensiveEvaluator(
+            eval_dataset=eval_dataset,
+            name="table-text-eval"
+        )
+        
+        # Set up directories
+        output_path = Path(output_path)
+        checkpoint_dir = output_path / run_name / "checkpoints"
+        checkpoint_dir.mkdir(parents=True, exist_ok=True)
+        
+        best_model_dir = output_path / run_name / "best_model"
+        best_model_dir.mkdir(parents=True, exist_ok=True)
+
+        # Define training arguments
+        training_args = SentenceTransformerTrainingArguments(
+            output_dir=str(checkpoint_dir),
+            num_train_epochs=epochs,
+            per_device_train_batch_size=train_batch_size,
+            per_device_eval_batch_size=eval_batch_size,
+            warmup_ratio=warmup_ratio,
+            gradient_accumulation_steps=gradient_accumulation_steps,
+            max_grad_norm=max_grad_norm,
+            fp16=True,
+            bf16=False,
+            learning_rate=learning_rate,
+            save_strategy="epoch",
+            eval_strategy="epoch",
+            save_total_limit=1,
+            load_best_model_at_end=True,
+            save_only_model=True,
+            metric_for_best_model="eval_f1",
+            greater_is_better=True,
+            logging_dir=str(output_path / run_name / "logs"),
+            report_to=['wandb'],
+            run_name=run_name,
+            gradient_checkpointing=True,  # Enable gradient checkpointing
+            use_flash_attention_2=True,  # Add this line to enable flash attention
+        )
+
+        # Create callback for progress reporting
+        progress_callback = TrainingCallback(
+            evaluator=evaluator,
+            loss_type=loss_type,
+            total_steps=total_steps_per_epoch
+        )
+
+        # Create trainer
+        trainer = SentenceTransformerTrainer(
+            model=model,
+            args=training_args,
+            train_dataset=train_dataset,
+            eval_dataset=eval_dataset,
+            loss=loss,
+            evaluator=evaluator,
+            callbacks=[progress_callback]
+        )
+
+        best_metrics = initial_metrics.copy()
+        # best_f1 = initial_metrics['eval_f1']
+        
+        print("\nInitial Metrics:")
+        for metric, value in initial_metrics.items():
             if isinstance(value, float):
                 print(f"{metric}: {value:.4f}")
             else:
                 print(f"{metric}: {value}")
+
+        # Train the model
+        print("\n" + "="*50)
+        print("Starting Training")
+        print("="*50)
+        print(f"Total epochs: {epochs}")
+        print(f"Steps per epoch: {total_steps_per_epoch}")
+        print(f"Total training steps: {total_steps_per_epoch * epochs}")
+        print(f"Gradient accumulation steps: {gradient_accumulation_steps}")
+        print(f"Effective batch size: {train_batch_size * gradient_accumulation_steps}")
         
-        # Check if metrics match
-        metrics_match = all(
-            abs(final_metrics[k] - verification_metrics[k]) < 1e-6 
-            for k in final_metrics 
-            if isinstance(final_metrics[k], (int, float))
-        )
+        # Train the model
+        trainer.train()
         
-        if metrics_match:
-            print("\nVerification successful: Saved model produces identical results")
-        else:
-            print("\nWarning: Saved model metrics differ from best checkpoint metrics!")
-            print("Please verify the model saving process.")
+        # Final cleanup and memory check
+        memory_manager.clear_memory()
+        memory_manager.log_memory_stats("Final")
+        
+        # Load best model and save
+        if early_stopping.best_model is not None:
+            model = early_stopping.best_model
+        
+        # Save best model
+        print("\nSaving best model...")
+        final_save_path = str(best_model_dir)
+        os.makedirs(final_save_path, exist_ok=True)
+        model.save(final_save_path)
+        
+        # Verify saved model
+        print("\nVerifying saved model...")
+        try:
+            loaded_model = SentenceTransformer(final_save_path)
+            verification_metrics = evaluator(loaded_model)
             
-    except Exception as e:
-        print(f"\nError during model verification: {str(e)}")
-        print("Please verify the model was saved correctly.")
-    
-    # Save all metrics including verification
-    metrics = {
-        'initial_metrics': initial_metrics,
-        'final_metrics': final_metrics,
-        'verification_metrics': verification_metrics if 'verification_metrics' in locals() else None,
-        'best_epoch': best_epoch,
-        'best_f1': best_f1,
-        'training_params': {
-            'learning_rate': learning_rate,
-            'epochs': epochs,
-            'train_batch_size': train_batch_size,
-            'gradient_accumulation_steps': gradient_accumulation_steps,
-            'effective_batch_size': train_batch_size * gradient_accumulation_steps,
-            'warmup_ratio': warmup_ratio,
-            'max_grad_norm': max_grad_norm,
-            'loss_type': loss_type
-        },
-        'verification_successful': metrics_match if 'metrics_match' in locals() else False
-    }
-    
-    metrics_path = output_path / run_name / 'training_metrics.json'
-    with open(metrics_path, 'w') as f:
-        json.dump(metrics, f, indent=2)
+            print("\nMetrics from loaded model:")
+            for metric, value in verification_metrics.items():
+                if isinstance(value, float):
+                    print(f"{metric}: {value:.4f}")
+                else:
+                    print(f"{metric}: {value}")
+            
+            metrics_match = all(
+                abs(best_metrics[k] - verification_metrics[k]) < 1e-6 
+                for k in best_metrics 
+                if isinstance(best_metrics[k], (int, float))
+            )
+            
+            if metrics_match:
+                print("\nVerification successful: Saved model produces identical results")
+            else:
+                print("\nWarning: Saved model metrics differ from best model metrics!")
+                
+        except Exception as e:
+            print(f"\nError during model verification: {str(e)}")
         
-    print(f"\nBest model saved to {final_save_path}")
-    print(f"Metrics saved to {metrics_path}")
-    
-    return model
+        # Save all metrics
+        metrics = {
+            'initial_metrics': initial_metrics,
+            'best_metrics': best_metrics,
+            'verification_metrics': verification_metrics if 'verification_metrics' in locals() else None,
+            'training_params': {
+                'learning_rate': learning_rate,
+                'epochs': epochs,
+                'train_batch_size': train_batch_size,
+                'gradient_accumulation_steps': gradient_accumulation_steps,
+                'effective_batch_size': train_batch_size * gradient_accumulation_steps,
+                'warmup_ratio': warmup_ratio,
+                'max_grad_norm': max_grad_norm,
+                'loss_type': loss_type,
+                'early_stopping_patience': early_stopping_patience
+            },
+            'memory_stats': memory_manager.get_memory_stats(),
+            'verification_successful': metrics_match if 'metrics_match' in locals() else False
+        }
+        
+        metrics_path = output_path / run_name / 'training_metrics.json'
+        with open(metrics_path, 'w') as f:
+            json.dump(metrics, f, indent=2)
+            
+        print(f"\nBest model saved to {final_save_path}")
+        print(f"Metrics saved to {metrics_path}")
+        
+        return model
+        
+    except Exception as e:
+        memory_manager.clear_memory()
+        print(f"\nError during training: {str(e)}")
+        raise
 
 def main():
     parser = argparse.ArgumentParser(description='Train a sentence transformer model with comprehensive evaluation')
@@ -602,51 +637,59 @@ def main():
     # Training hyperparameters
     parser.add_argument("--epochs", type=int, default=3,
                        help="Number of training epochs")
-    parser.add_argument("--train_batch_size", type=int, default=64,
+    parser.add_argument("--train_batch_size", type=int, default=16,
                        help="Training batch size")
-    parser.add_argument("--eval_batch_size", type=int, default=64,
+    parser.add_argument("--eval_batch_size", type=int, default=16,
                        help="Evaluation batch size")
     parser.add_argument("--loss_type", type=str, default="cached_mnr",
                        choices=['mnr', 'cached_mnr', 'cosine', 'mse', 'triplet'],
                        help="Type of loss function to use for training")
     
     # Additional training options
-    parser.add_argument("--gradient_accumulation_steps", type=int, default=8,
+    parser.add_argument("--gradient_accumulation_steps", type=int, default=4,
                        help="Number of gradient accumulation steps")
     parser.add_argument("--max_grad_norm", type=float, default=1.0,
                        help="Maximum gradient norm for clipping")
     parser.add_argument("--warmup_ratio", type=float, default=0.05,
                        help="Ratio of warmup steps")
     
+    # Arguments for early stopping and checkpointing
+    parser.add_argument("--early_stopping_patience", type=int, default=3,
+                       help="Number of epochs with no improvement after which training will be stopped")
+    parser.add_argument("--enable_checkpointing", type=bool, default=True,
+                       help="Enable gradient checkpointing for memory efficiency")
+    
     args = parser.parse_args()
 
-    wandb.init(
-        project="LOKI",  # Replace with your project name
-        name=f"{args.model_name.split('/')[-1]}-TableText-{args.lr}",  # Using same format as run_name
-        config={
-            "learning_rate": args.lr,
-            "epochs": args.epochs,
-            "train_batch_size": args.train_batch_size,
-            "eval_batch_size": args.eval_batch_size,
-            "model_name": args.model_name,
-            "loss_type": args.loss_type,
-            "gradient_accumulation_steps": args.gradient_accumulation_steps,
-            "max_grad_norm": args.max_grad_norm,
-            "warmup_ratio": args.warmup_ratio
-        }
-    )
-
-    # Print training configuration
-    print("\nTraining Configuration:")
-    print("=" * 50)
-    for arg in vars(args):
-        print(f"{arg}: {getattr(args, arg)}")
-    print("=" * 50)
-
     try:
+        # Initialize wandb
+        wandb.init(
+            project="LOKI",
+            name=f"{args.model_name.split('/')[-1]}-TableText-{args.epochs}",
+            config={
+                "learning_rate": args.lr,
+                "epochs": args.epochs,
+                "train_batch_size": args.train_batch_size,
+                "eval_batch_size": args.eval_batch_size,
+                "model_name": args.model_name,
+                "loss_type": args.loss_type,
+                "gradient_accumulation_steps": args.gradient_accumulation_steps,
+                "max_grad_norm": args.max_grad_norm,
+                "warmup_ratio": args.warmup_ratio,
+                "early_stopping_patience": args.early_stopping_patience,
+                "enable_checkpointing": args.enable_checkpointing
+            }
+        )
+
+        # Initialize memory manager
+        memory_manager = GPUMemoryManager()
+        memory_manager.clear_memory()
+        memory_manager.log_memory_stats("Initial")
+
         # Initialize model
         print(f"\nInitializing model {args.model_name}...")
         model = SentenceTransformer(args.model_name)
+        model.config.use_flash_attention_2 = True  # Utilize flash attention
         print("Model initialized successfully")
 
         # Prepare datasets
@@ -691,6 +734,7 @@ def main():
             eval_dataset=eval_dataset,
             output_path=output_path,
             run_name=run_name,
+            initial_metrics=initial_metrics,
             learning_rate=args.lr,
             epochs=args.epochs,
             train_batch_size=args.train_batch_size,
@@ -739,10 +783,17 @@ def main():
         
         print(f"\nTraining completed successfully!")
         print(f"Model and results saved to: {output_path}")
+        
+        # Add memory cleanup at the end
+        memory_manager.clear_memory()
+        memory_manager.log_memory_stats("Final")
+        
+        wandb.finish()
 
     except Exception as e:
         print(f"\nError during training: {str(e)}")
         traceback.print_exc()
+        wandb.finish()
         sys.exit(1)
 
 if __name__ == "__main__":

@@ -1,0 +1,708 @@
+[
+  {
+    "anchor": {
+      "id": 321,
+      "broad_topic": "Music Charts",
+      "medium_topic": "Geography",
+      "table_content": [
+        [
+          "year",
+          "population"
+        ],
+        [
+          "1803",
+          "203"
+        ],
+        [
+          "1850",
+          "239"
+        ],
+        [
+          "1900",
+          "185"
+        ],
+        [
+          "1950",
+          "219"
+        ],
+        [
+          "1960",
+          "241"
+        ],
+        [
+          "1990",
+          "187"
+        ],
+        [
+          "2000",
+          "189"
+        ]
+      ],
+      "caption": "",
+      "table_title": "Siat"
+    },
+    "primary_positive": {
+      "id": 321,
+      "distance": 0.0,
+      "broad_topic": "Music Charts",
+      "medium_topic": "Geography",
+      "sentence_context": "[\"Goree, Texas (1): The population was 203 at the 2010 census, down from 321 at the 2000 census.\",\"Sanford, Texas (1): As of the census of 2000, there were 203 people, 82 households, and 59 families residing in the town.\",\"Goree, Texas (2): Census Bureau]] estimate placed the population at 207.\",\"Sanford, Texas (2): The population was 164 at the 2010 census, down from 203 at the 2000 census.\",\"Goree, Texas (3): The racial makeup of the city was 61.37% White, 8.10% African American, 3.74% Native American, 25.23% from other races, and 1.56% from two or more races.\"]"
+    },
+    "additional_positives": [
+      {
+        "id": 697,
+        "distance": 0.4366075687739024,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": "[\"Borgou Department (1): According to Benin's 2013 census, the total population of the department was 1,214,249, with 607,013 males and 607,236 females.\",\"Borgou Department (2): According to the 2013 census, the total population of the department was 1,214,249, with 607,013 males and 607,236 females.\",\"Borgou Department (3): The foreign population was 22,665, representing 1.90% of the total population in the department.\",\"Borgou Department (4): The proportion of women was 50.00%.\",\"Borgou Department (5): The proportion of women was 50.00%.\"]"
+      },
+      {
+        "id": 2604,
+        "distance": 0.5016888359800805,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Places-2",
+        "sentence_context": "[\"Andemtenga Department (1): Andemtenga is a department of Kouritenga Province in eastern Burkina Faso.\",\"Sabrabinatenga (1): Sabrabinatenga, also spelt Sabrabintenga, is a commune in the Andemtenga Department of Kouritenga Province in the Centre-Est region of Burkina Faso.\",\"Sabrabinatenga (2): It had a population of 2,034 in 2006.\",\"Koulkienga (1): Koulkienga or Koulkianga is a commune in the Andemtenga Department of Kouritenga Province in the Centre-Est region of Burkina Faso.\",\"Kindi, Andemtenga (1): Kindi is a commune in the Andemtenga Department of Kouritenga Province in the Centre-Est region of Burkina Faso.\"]"
+      },
+      {
+        "id": 2581,
+        "distance": 0.9567908018147645,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Places-2",
+        "sentence_context": "[\"Nura District (1): Nura District (Kazakh: , Nura aydany) is a district of Karaganda Region in central Kazakhstan.\",\"Nura, Kyrgyzstan (1): Nura is a village in Alay District, Osh Region of Kyrgyzstan, at the point where the A371 road from China turns northwest to go over the pass into the Alay Valley.\",\"Astrakhan Kazakhs (1): Astrakhan Kazakhs are people of Kazakh ethnicity originating from or living in the historically Central Asian city and region of Astrakhan in South-Western Russia.\",\"Kharabalinsky District (1): Kharabalinsky District (Russian: ; Kazakh: , Qarabaly aydany) is an administrative and municipal district (raion), one of the eleven in Astrakhan Oblast, Russia.\",\"Nura District (2): The district has a population of 22,569 as of 2019.\"]"
+      },
+      {
+        "id": 1200,
+        "distance": 1.2283912826882077,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Census Data",
+        "sentence_context": "[\"Wara Kalirana (1): Wara Kalirana is a village in the Firozpur district of Punjab, India.\",\"Wara Kalirana (2): According to the 2011 census of India, Wara Kalirana has 146 households.\",\"Demographics of Denmark (1): This article is about the demographic features of the population of Denmark, including population density, ethnicity, education level, health of the populace, economic status, religious affiliations and other aspects of the population.\",\"Demographics of Denmark (2): With the same definition, the most common countries of origin were Poland, Turkey, Germany, Iraq, Romania, Syria, Somalia, Iran, Afghanistan, and Yugoslavia and its successor states.\",\"Demographics of Denmark (3): Population as of 31 December.\"]"
+      },
+      {
+        "id": 1538,
+        "distance": 1.3479658111133659,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Census Data",
+        "sentence_context": "[\"Lamurde (1): Lamurde is a town and Local Government Area of Adamawa State, Nigeria inhabited predominantly by the Bwatiye (Bachama) people.\",\"Balanga, Nigeria (1): It has an area of 1,626 km and a population of 212,549 at the 2006 census.\",\"Demsa (1): Population is 180,251.\",\"Lamurde (2): .\",\"Adamawa State University (1): It was established in 2002 by the Adamawa State University Law No.\"]"
+      },
+      {
+        "id": 2621,
+        "distance": 1.4206287562851385,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Places-2",
+        "sentence_context": "[\"Ayni, Ayni District (1): Ayni (Tajik: ) is a village and jamoat in north-west Tajikistan.\",\"Ayni, Varzob District (1): Ayni (Tajik: , Persian: ) is a jamoat in Tajikistan.\",\"Ayni, Ayni District (2): The jamoat has a total population of 14,862 (2015).\",\"Ayni, Varzob District (2): The jamoat has a total population of 14,052 (2015).\",\"Shamtuch (1): The jamoat has a total population of 6,557 (2015).\"]"
+      },
+      {
+        "id": 2177,
+        "distance": 1.4645759816363393,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Places-2",
+        "sentence_context": "[\"Andemtenga (1): Andemtenga (sometimes spelt Amdemtenga, Andamtenga or Amdentenga) is the capital and largest settlement in Andemtenga Department, Kouritenga province, Burkina Faso.\",\"Andemtenga (2): It had a population of about 2,120 in 2006.\",\"Andemtenga Department (1): From 2015, Ibrahim Kousse was the Prefect of Andemtenga Department.\",\"Andemtenga Department (2): This followed the death of mayor Nonguema Johanie Kabore in June 2012.\",\"Wadi Al-Seer (1): Wadi Al-Seer district contains ten neighbourhoods; Al-Rawabi, Swefieh, Jandaweel, Al-Rawnaq, Al-Sahl, Al-Diyar, Bayader, Al-Sina'a, Al-Kursi and west Umm Uthaina.\"]"
+      },
+      {
+        "id": 30,
+        "distance": 1.53451258745011,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Places-2",
+        "sentence_context": "[\"Hamadoni District (1): Hamadoni District (Tajik: , Persian: ) is a district in the south-east of Khatlon Region of Tajikistan, located south of Kulob and stretching along a section of the Panj on the border with Afghanistan.\",\"Turdiev (1): It is located in Hamadoni District in Khatlon Region.\",\"Turdiev (2): Turdiev (Tajik: , Persian: ) is a jamoat in Tajikistan.\",\"Panjrud (1): It is located in Hamadoni District in Khatlon Region.\",\"Panjrud (2): Panjrud (Tajik: , formerly: Kalinin) is a jamoat in Tajikistan.\"]"
+      },
+      {
+        "id": 471,
+        "distance": 1.692792794099348,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Census Data",
+        "sentence_context": "[\"Papagou (1): Papagou (Greek: ) is a suburb and municipal unit in the eastern part of the Athens agglomeration, Greece.\",\"Demographics of Hyderabad (1): As a consequence, the total population leaped from 3,637,483 in 2001 census to 6,809,970 in 2011 census, an increase of over 87%.\",\"Demographics of Hyderabad (2): Telugu and Urdu are the official languages of Hyderabad, while English is commonly used.\",\"Papagou (2): It became a municipality in 1982.\",\"Papagou (3): Papagou B.C. is the professional basketball team of Papagou.\"]"
+      }
+    ],
+    "negatives": [
+      {
+        "negative_id": 1508,
+        "distance": 4.264166628751047,
+        "broad_topic": "Sports (5)",
+        "medium_topic": "Aircraft Industry",
+        "sentence_context": "[\"Carlson Criquet (1): The Carlson Criquet is an American, two-seats-in-tandem, high wing, strut-braced, single engine, homebuilt aircraft that was designed by Ernst W. Carlson and produced by Carlson Aircraft of East Palestine, Ohio in kit form.\",\"Carlson Sparrow (1): The Carlson Sparrow is a family of American, high wing, strut-braced, single engine, ultralight aircraft that was designed by Ernst W. Carlson and produced by Carlson Aircraft of East Palestine, Ohio and later Skyline Technologies of Salem, Ohio for amateur construction.\",\"Carlson Skycycle (1): The Carlson Skycycle is an American, single-seat, low-wing, single-engine, homebuilt aircraft that was originally designed by A. Hanford Eckman in 1945 and re-designed as a replica by Ernst W. Carlson and produced by Carlson Aircraft of East Palestine, Ohio in kit form.\",\"Heinkel (1): Heinkel Flugzeugwerke (German pronunciation: [hakl fluktskvk) was a German aircraft manufacturing company founded by and named after Ernst Heinkel.\",\"Shenyang Aircraft Corporation (1): Shenyang Aircraft Corporation (SAC) or Shenyang Aerospace Corporation is a Chinese civilian and military aircraft manufacturer located in Shenyang, Liaoning, a subsidiary of the state-owned aircraft manufacturer AVIC.\"]"
+      },
+      {
+        "negative_id": 1174,
+        "distance": 4.712338809749573,
+        "broad_topic": "Sports (5)",
+        "medium_topic": "Company News",
+        "sentence_context": "[\"Shanthi Feeds (1): The company was started in 1988 and is involved in broiler farming, hatcheries, feed mills for poultry and cattle, farming of soya, corn and wind energy projects.\",\"Shanthi Feeds (2): Shanthi Feeds Limited is an Indian multinational food products company headquartered in Coimbatore, India.\",\"Shanthi Feeds (3): It markets and exports broiler chicken, frozen chicken, chicken eggs.\",\"Suguna Foods (1): It markets and exports broiler chicken, frozen chicken, chicken eggs, and is the largest poultry company in India.\",\"Pasupati Group (1): It also markets and sells broiler chicken, frozen chicken, chicken eggs, and is the one of the largest poultry companies in Eastern India.\"]"
+      },
+      {
+        "negative_id": 1086,
+        "distance": 4.580466613517944,
+        "broad_topic": "Sports (5)",
+        "medium_topic": "Aircraft Industry",
+        "sentence_context": "[\"Aden Airways (1): Aden Airways was a subsidiary of British Overseas Airways Corporation (BOAC) based in Aden.\",\"Aden Airways (2): An engineering base was established by BOAC in Asmara, Eritrea, in January 1948 as part of BOACs No.5 Line, which was centered on Aden and served Cairo, Nairobi and the Red Sea area.\",\"Aden Airways (3): It was in operation from 1949 to 1967.\",\"Aden Airways (4): On 7 March 1949, Aden Airways Ltd was established as a wholly owned subsidiary of BOAC.\",\"Aden Airways (5): In 1967, the political situation in Aden was deteriorating and Aden Airways therefore ceased operations on 30 June 1967.\"]"
+      },
+      {
+        "negative_id": 597,
+        "distance": 4.943546086120561,
+        "broad_topic": "Sports (5)",
+        "medium_topic": "Aircraft Industry",
+        "sentence_context": "[\"Aden Airways (1): Aden Airways was a subsidiary of British Overseas Airways Corporation (BOAC) based in Aden.\",\"Aden Airways (2): An engineering base was established by BOAC in Asmara, Eritrea, in January 1948 as part of BOACs No.5 Line, which was centered on Aden and served Cairo, Nairobi and the Red Sea area.\",\"Aden Airways (3): In 1967, the political situation in Aden was deteriorating and Aden Airways therefore ceased operations on 30 June 1967.\",\"Aden Airways (4): It was in operation from 1949 to 1967.\",\"Aden Airways (5): On 7 March 1949, Aden Airways Ltd was established as a wholly owned subsidiary of BOAC.\"]"
+      },
+      {
+        "negative_id": 2018,
+        "distance": 4.513895495703821,
+        "broad_topic": "Sports (5)",
+        "medium_topic": "Aircraft Industry",
+        "sentence_context": "[\"Aden Airways (1): A fleet of six BOAC Douglas DC-3 aircraft were based at Aden and these were taken over by Aden Airways.\",\"Aden Airways (2): Aden Airways was a subsidiary of British Overseas Airways Corporation (BOAC) based in Aden.\",\"Aden Airways (3): On 7 March 1949, Aden Airways Ltd was established as a wholly owned subsidiary of BOAC.\",\"Aden Airways (4): It was in operation from 1949 to 1967.\",\"Aden Airways (5): An engineering base was established by BOAC in Asmara, Eritrea, in January 1948 as part of BOACs No.5 Line, which was centered on Aden and served Cairo, Nairobi and the Red Sea area.\"]"
+      },
+      {
+        "negative_id": 287,
+        "distance": 34.473708324186795,
+        "broad_topic": "Sports (5)",
+        "medium_topic": "Politics",
+        "sentence_context": "[\"Gustavo Selva (1): Born in Imola, Selva started his career as a journalist for the Bologna newspaper L'Avvenire d'Italia, for which he worked from 1946 to 1956.\",\"Gustavo Selva (2): Gustavo Selva (10 August 1926 16 March 2015) was an Italian journalist, writer and politician.\",\"Gustavo Selva (3): Selva started his political activity in 1984, as a Member of the European Parliament for the Christian Democratic party.\",\"Gustavo Selva (4): In 1960 he became a RAI employer, working as a newscaster and later being appointed director of the Radio 2 news programs and president of \\\"RAI Corporation\\\" in New York.\",\"Gustavo Selva (5): He later adhered to the National Alliance party, with whom he was a deputy for three legislatures and senator for one legislature.\"]"
+      },
+      {
+        "negative_id": 2924,
+        "distance": 33.972607268245916,
+        "broad_topic": "Sports (4)",
+        "medium_topic": "Cycling",
+        "sentence_context": "[\"Toshihisa Kuzuhara (1): Toshihisa Kuzuhara ( , Kuzuhara Toshihisa, born May 23, 1980) is a Japanese motorcycle racer.\",\"Honda NSR250 (1): The first bike debuted in 1985 as Honda RS250RW, then from 1986 to 2002 the factory bikes were named NSR250.\",\"Toshihisa Kuzuhara (2): (key) (Races in bold indicate pole position, races in italics indicate fastest lap)\",\"Honda NSR250 (2): Honda also mass-produced a road legal Honda NSR250R.\",\"Dan Linfoot (1): However, Linfoot failed to score the 6 remaining race.\"]"
+      },
+      {
+        "negative_id": 3085,
+        "distance": 32.45199844494642,
+        "broad_topic": "Telugu Cinema",
+        "medium_topic": "Bollywood Songs",
+        "sentence_context": "[\"Manasaare (1): Manasaare (Kannada: ) is a 2009 Indian Kannada romantic psychological film directed by Yogaraj Bhat.\",\"Manasaare (2): The film soundtrack and score was composed by Mano Murthy with lyrics by Yogaraj Bhat and veteran lyricist Jayant Kaikini.\",\"Manasaare (3): The music of the film was composed by Mano Murthy with lyrics penned by Jayant Kaikini, Yogaraj Bhat and Sloka.\",\"Ondu Hennu Aaru Kannu (1): Rajeswara Rao]].\",\"Naanu Nanna Kanasu (1): Hamsalekha]].\"]"
+      },
+      {
+        "negative_id": 2502,
+        "distance": 30.685905025610257,
+        "broad_topic": "Sports Leagues",
+        "medium_topic": "Hockey News",
+        "sentence_context": "[\"Aleksander Barkov (1): Aleksander Aleksandrovich \\\"Sasha\\\" Barkov (Russian: ; born 2 September 1995) is a Finnish-Russian professional ice hockey centre currently serving as captain of the Florida Panthers of the National Hockey League (NHL).\",\"List of Florida Panthers players (1): By the end of the 201819 season, 33 goaltenders and 354 skaters (forwards and defensemen) have appeared in at least one regular-season game with the Panthers.\",\"201819 Florida Panthers season (1): The 201819 Florida Panthers season was the 26th season for the National Hockey League franchise that was established on June 14, 1993.\",\"Aleksander Barkov (2): In December 2011, Barkov was chosen to play for Finland as the youngest Finnish player in the Ice Hockey World Junior Championships.\",\"Aleksander Barkov (3): He is the son of former Russian hockey player Alexander Barkov Sr. and holds dual Finnish and Russian citizenship.\"]"
+      },
+      {
+        "negative_id": 84,
+        "distance": 30.072801296355692,
+        "broad_topic": "Entertainment Industry",
+        "medium_topic": "Film Directors",
+        "sentence_context": "[\"Hassan Zee (1): Hassan \\\"Doctor\\\" Zee is a Pakistani-American film director who was born in Chakwal, Pakistan.\",\"Hassan Zee (2): Doctor Zee grew up in Chakwal, a small village in Punjab, Pakistan.\",\"Night of Henna (1): Night of Henna (2005) is a comedy film directed by Hassan Zee (Bicycle Bride), and is the first Pakistani-American feature film.\",\"Hassan Zee (3): At age 13, Doctor Zee got his start in the world of entertainment at Radio Pakistan where he wrote and produced radio dramas and musical programs.\",\"Hassan Zee (4): These experiences inspired Doctor Zee to tackle the issues of women's empowerment and gender inequality in his films.\"]"
+      }
+    ]
+  },
+  {
+    "anchor": {
+      "id": 421,
+      "broad_topic": "Music Charts",
+      "medium_topic": "Geography",
+      "table_content": [
+        [
+          "Rank",
+          "Settlement name",
+          "Country",
+          "Population",
+          "Latitude/longitude",
+          "Koppen climate classification"
+        ],
+        [
+          "1",
+          "Puerto Williams",
+          "Chile",
+          "2,874",
+          "",
+          "Cfc"
+        ],
+        [
+          "2",
+          "Ushuaia",
+          "Argentina",
+          "56,956",
+          "",
+          "ET"
+        ],
+        [
+          "3",
+          "Tolhuin",
+          "Argentina",
+          "3,004",
+          "",
+          "ET"
+        ],
+        [
+          "4",
+          "Rio Grande",
+          "Argentina",
+          "55,231",
+          "",
+          "Cfc/Dfc"
+        ],
+        [
+          "5",
+          "Porvenir",
+          "Chile",
+          "4,807",
+          "",
+          "Cfc"
+        ],
+        [
+          "6",
+          "Punta Arenas",
+          "Chile",
+          "130,136",
+          "",
+          "Cfc"
+        ],
+        [
+          "7",
+          "Puerto Natales",
+          "Chile",
+          "19,116",
+          "",
+          "Csb"
+        ],
+        [
+          "8",
+          "Stanley",
+          "Falkland Islands (UK)",
+          "2,115",
+          "",
+          "Cfc"
+        ],
+        [
+          "9",
+          "Veintiocho de Noviembre",
+          "Argentina",
+          "4,686",
+          "",
+          "Cfc"
+        ],
+        [
+          "10",
+          "Rio Gallegos",
+          "Argentina",
+          "110,435",
+          "",
+          "BSk"
+        ],
+        [
+          "11",
+          "Rio Turbio",
+          "Argentina",
+          "6,650",
+          "",
+          "Cfc"
+        ],
+        [
+          "11",
+          "El Calafate",
+          "Argentina",
+          "6,410",
+          "",
+          "BSk"
+        ],
+        [
+          "12",
+          "Puerto Santa Cruz",
+          "Argentina",
+          "3,397",
+          "",
+          "BSk"
+        ],
+        [
+          "13",
+          "Comandante Luis Piedrabuena",
+          "Argentina",
+          "4,175",
+          "",
+          "BSk"
+        ],
+        [
+          "14",
+          "Gobernador Gregores",
+          "Argentina",
+          "2,519",
+          "",
+          "BWk"
+        ],
+        [
+          "15",
+          "Puerto San Julian",
+          "Argentina",
+          "6,143",
+          "",
+          "BSk"
+        ],
+        [
+          "16",
+          "Puerto Deseado",
+          "Argentina",
+          "10,237",
+          "",
+          "BSk"
+        ],
+        [
+          "17",
+          "Cochrane",
+          "Chile",
+          "2,217",
+          "",
+          "Cfb"
+        ],
+        [
+          "18",
+          "Pico Truncado",
+          "Argentina",
+          "14,985",
+          "",
+          "BWk"
+        ],
+        [
+          "19",
+          "Bluff",
+          "New Zealand",
+          "1,850",
+          "",
+          "Cfb"
+        ],
+        [
+          "20",
+          "Perito Moreno",
+          "Argentina",
+          "3,588",
+          "",
+          "BSk"
+        ],
+        [
+          "21",
+          "Las Heras",
+          "Argentina",
+          "10,688",
+          "",
+          "BWk"
+        ],
+        [
+          "22",
+          "Los Antiguos",
+          "Argentina",
+          "2,047",
+          "",
+          "BSk"
+        ],
+        [
+          "23",
+          "Chile Chico",
+          "Chile",
+          "3,042",
+          "",
+          "Csb"
+        ],
+        [
+          "24",
+          "Caleta Olivia",
+          "Argentina",
+          "36,077",
+          "",
+          "BSk"
+        ],
+        [
+          "25",
+          "Invercargill",
+          "New Zealand",
+          "50,200",
+          "",
+          "Cfb"
+        ],
+        [
+          "26",
+          "Riverton",
+          "New Zealand",
+          "1,700",
+          "",
+          "Cfb"
+        ],
+        [
+          "27",
+          "Balclutha",
+          "New Zealand",
+          "4,230",
+          "",
+          "Cfb"
+        ],
+        [
+          "28",
+          "Mataura",
+          "New Zealand",
+          "1,710",
+          "",
+          "Cfb"
+        ],
+        [
+          "29",
+          "Winton",
+          "New Zealand",
+          "2,470",
+          "",
+          "Cfb"
+        ],
+        [
+          "30",
+          "Milton",
+          "New Zealand",
+          "2,210",
+          "",
+          "Cfb"
+        ],
+        [
+          "31",
+          "Gore",
+          "New Zealand",
+          "8,230",
+          "",
+          "Cfb"
+        ],
+        [
+          "32",
+          "Rada Tilly",
+          "Argentina",
+          "6,208",
+          "",
+          "BSk"
+        ],
+        [
+          "33",
+          "Comodoro Rivadavia",
+          "Argentina",
+          "182,631",
+          "",
+          "BSk"
+        ],
+        [
+          "34",
+          "Dunedin",
+          "New Zealand",
+          "106,200",
+          "",
+          "Cfb"
+        ],
+        [
+          "35",
+          "Rio Mayo",
+          "Argentina",
+          "2,939",
+          "",
+          "BSk"
+        ],
+        [
+          "36",
+          "Sarmiento",
+          "Argentina",
+          "8,028",
+          "",
+          "BSk"
+        ],
+        [
+          "37",
+          "Waikouaiti",
+          "New Zealand",
+          "1,250",
+          "",
+          "Cfb"
+        ],
+        [
+          "38",
+          "Coihaique",
+          "Chile",
+          "50,041",
+          "",
+          "Cfb"
+        ],
+        [
+          "39",
+          "Puerto Chacabuco",
+          "Chile",
+          "1,243",
+          "",
+          "Cfb"
+        ],
+        [
+          "40",
+          "Te Anau",
+          "New Zealand",
+          "2,940",
+          "",
+          "Cfb"
+        ],
+        [
+          "41",
+          "Puerto Aisen",
+          "Chile",
+          "16,936",
+          "",
+          "Cfb"
+        ],
+        [
+          "42",
+          "Alexandra",
+          "New Zealand",
+          "5,790",
+          "",
+          "BSk"
+        ],
+        [
+          "43",
+          "Clyde",
+          "New Zealand",
+          "1,200",
+          "",
+          "Cfb"
+        ],
+        [
+          "44",
+          "Oamaru",
+          "New Zealand",
+          "13,700",
+          "",
+          "Cfb"
+        ],
+        [
+          "45",
+          "Cromwell",
+          "New Zealand",
+          "6,480",
+          "",
+          "Cfb"
+        ],
+        [
+          "46",
+          "Queenstown",
+          "New Zealand",
+          "16,000",
+          "",
+          "Cfb"
+        ],
+        [
+          "47",
+          "Alto Rio Senguer",
+          "Argentina",
+          "1,454",
+          "",
+          "Csc/Dsc"
+        ]
+      ],
+      "caption": "",
+      "table_title": "Southernmost settlements"
+    },
+    "primary_positive": {
+      "id": 421,
+      "distance": 0.0,
+      "broad_topic": "Music Charts",
+      "medium_topic": "Geography",
+      "sentence_context": "[\"Porvenir, Chile (1): It is one of Chile's southernmost towns, and has 4,734 inhabitants, including several thousand soldiers.\",\"Pico Truncado (1): Pico Truncado is a town and municipality in Santa Cruz Province in southern Argentina.\",\"Porvenir, Chile (2): It is the largest settlement in the Chilean half of the island of Tierra del Fuego.\",\"Southernmost settlements (1): This is a list of the all settlements south of the 45th parallel south with over 1,000 permanent inhabitants.\",\"Southernmost settlements (2): Southernmost settlements are cities, towns, weather stations or permanent military bases which are farther south than latitude 45°S.\"]"
+    },
+    "additional_positives": [
+      {
+        "id": 398,
+        "distance": 0.16712368277404413,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": "[\"Guadalupe y Calvo Municipality (1): Guadalupe y Calvo is one of the 67 municipalities of Chihuahua, in northern Mexico.\",\"Guadalupe, Nuevo Leon (1): Guadalupe is a city and surrounding municipality located in the state of Nuevo Leon, in northern Mexico.\",\"Guadalupe y Calvo Municipality (2): Other than the town of Guadalupe y Calvo, the municipality had 1,416 localities, the largest of which (with 2010 populations in parentheses) were: Baborigame (3,294), classified as urban, and Atascaderos (1,559), Las Yerbitas (Aserradero) (1,200), and Turuachi (1,131), classified as rural.\",\"Guadalupe, Nuevo Leon (2): It is the second-largest city and municipality in the state.\",\"Guadalupe Municipality, Chihuahua (1): Guadalupe is one of the 67 municipalities of Chihuahua, in northern Mexico.\"]"
+      },
+      {
+        "id": 681,
+        "distance": 0.21152900989953463,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": "[\"Altar, Sonora (1): Altar (O'odham: Wawuk) is small city and municipal seat of Altar Municipality in the Mexican state of Sonora.\",\"Altar Municipality (1): Altar is a municipality in Sonora in north-western Mexico.\",\"Altar Municipality (2): The largest localities (cities, towns, and villages) are:\",\"Altar Municipality (3): Surrounding municipalities are Saric, Tubutama, Atil, Trincheras, Pitiquito, Caborca and Oquitoa.\",\"Altar Municipality (4): state]] of Arizona.\"]"
+      },
+      {
+        "id": 902,
+        "distance": 0.22173731882889272,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": "[\"Pacasmayo Province (1): The Pacasmayo Province is one of twelve provinces of the La Libertad Region in Peru; also Pacasmayo is the name of one of its districts.\",\"Pacasmayo Province (2): The province is divided into five districts, which are:\",\"San Pedro de Lloc District (1): San Pedro de Lloc District is one of five districts of the province Pacasmayo in Peru.\",\"Pataz Province (1): The province is divided into thirteen districts, which are:\",\"Pacasmayo Province (3): The capital of this province is the city of San Pedro de Lloc.\"]"
+      },
+      {
+        "id": 1991,
+        "distance": 0.2690360118702577,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": "[\"Meoqui Municipality (1): Meoqui is one of the 67 municipalities of Chihuahua, in northern Mexico.\",\"Lazaro Cardenas, Michoacan (1): Lazaro Cardenas is located in the southern part of the Mexican state of Michoacan.\",\"Lazaro Cardenas, Michoacan (2): Lazaro Cardenas (Spanish: [lasao kardenas (listen)) is a port city in Michoacan bordered to the west by Guerrero.\",\"Meoqui Municipality (2): The municipality had 882 localities, the largest of which (with 2010 populations in parentheses) were: Pedro Meoqui (22,574), Lazaro Cardenas (8,704), classified as urban, and Estacion Consuelo (1,981), Colonia Felipe Angeles (1,254), and Guadalupe Victoria (1,045), classified as rural.\",\"Lazaro Cardenas, Michoacan (3): The municipality of Lazaro Cardenas, which has an area of 1,160.24 km (447.97 sq mi), had a total population of 162,997 in 2005, and includes the metropolitan area of city, which includes the communities of Las Guacamayas, La Orilla, and La Mira.\"]"
+      },
+      {
+        "id": 2942,
+        "distance": 0.3247488397092048,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": "[\"Potosi Municipality (1): The people are predominantly indigenous citizens of Quechua descent.\",\"Potosi Municipality (2): Potosi Municipality is the capital municipality of the Tomas Frias Province in the Potosi Department in Bolivia.\",\"Potosi Department (1): Potosi (Spanish pronunciation: [potosi; Aymara: Putusi; Quechua: P'utuqsi) is a department in southwestern Bolivia.\",\"San Luis Potosi City (1): San Luis Potosi, commonly called SLP or simply San Luis, is the capital and the most populous city of the Mexican state of San Luis Potosi.\",\"San Luis Potosi City (2): With a population of approximately one million inhabitants, it is now the tenth-largest metropolitan area in Mexico.\"]"
+      },
+      {
+        "id": 1867,
+        "distance": 0.3554228610731475,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": "[\"San Antonio de Esmoruco Municipality (1): The people are predominantly indigenous citizens of Quechua descent.\",\"San Antonio de Esmoruco Municipality (2): San Antonio de Esmoruco is the third municipal section of the Sur Lipez Province in the Potosi Department in Bolivia.\",\"San Antonio (1): San Antonio (/sæn æntonio/; in Spanish, \\\"Saint Anthony\\\"), officially the City of San Antonio, is the seventh-most populous city in the United States, and the second-most populous city in both Texas and the Southern United States, with 1,547,253 residents in 2019.\",\"San Antonio (2): San Antonio-based TV stations are WOAI channel 4 (NBC), KSAT channel 12 (ABC), KENS channel 5 (CBS), KABB channel 29 (FOX), KCWX channel 2 (myNetworkTV), KMYS channel 35 (The CW) and KLRN channel 9 (PBS).\",\"Guadalupe, Sud Lipez (1): It is the seat of the Guadalupe Canton, one of the two cantons of the San Antonio de Esmoruco Municipality which is the third municipal section of the Sud Lipez Province.\"]"
+      },
+      {
+        "id": 309,
+        "distance": 0.38267445670652905,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": "[\"San Antonio de Esmoruco Municipality (1): The people are predominantly indigenous citizens of Quechua descent.\",\"Guarani people (1): Guarani are a group of culturally-related indigenous peoples of South America.\",\"San Antonio (1): San Antonio (/sæn æntonio/; in Spanish, \\\"Saint Anthony\\\"), officially the City of San Antonio, is the seventh-most populous city in the United States, and the second-most populous city in both Texas and the Southern United States, with 1,547,253 residents in 2019.\",\"San Antonio de Esmoruco Municipality (2): San Antonio de Esmoruco is the third municipal section of the Sur Lipez Province in the Potosi Department in Bolivia.\",\"Tarabuco Municipality (1): Its population is overwhelmingly indigenous: of 10,530 people 15 or older in the 2001 Census, 9,834 (or 93,40%) self-identified with an indigenous people; 9,779 to the Quechua people, 29 Aymara, 15 to another indigenous people, and 7 as Guarani.\"]"
+      },
+      {
+        "id": 1904,
+        "distance": 0.48422605579299516,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": "[\"Uyuni Municipality (1): The people are predominantly indigenous citizens of Quechua and Aymara descent.\",\"Uyuni Municipality (2): Uyuni Municipality is the first municipal section of the Antonio Quijarro Province in the Potosi Department in Bolivia.\",\"Indigenous peoples in Bolivia (1): Aymara and Quechua are the largest groups.\",\"Tarabuco Municipality (1): Its population is overwhelmingly indigenous: of 10,530 people 15 or older in the 2001 Census, 9,834 (or 93,40%) self-identified with an indigenous people; 9,779 to the Quechua people, 29 Aymara, 15 to another indigenous people, and 7 as Guarani.\",\"Tomave Municipality (1): The people are predominantly indigenous citizens of Quechua descent.\"]"
+      },
+      {
+        "id": 2954,
+        "distance": 0.5349212108178959,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": "[\"Uncia Municipality (1): The people are predominantly indigenous citizens of Quechua and Aymara descent.\",\"Uncia Municipality (2): Uncia Municipality is the first municipal section of the Rafael Bustillo Province in the Potosi Department in Bolivia.\",\"Uncia Municipality (3): The municipality consists of the following cantons:\",\"Chimboata Canton (1): Chimboata Canton (Quechua: Chimpuwata) is one of the cantons of the Pocona Municipality, the third municipal section of the Carrasco Province in the Cochabamba Department in central Bolivia.\",\"Uncia Municipality (4): Its seat is Uncia.\"]"
+      }
+    ],
+    "negatives": [
+      {
+        "negative_id": 1354,
+        "distance": 2.0055681996691637,
+        "broad_topic": "Sports (5)",
+        "medium_topic": "Geography-2",
+        "sentence_context": "[\"Communaute de communes des Savanes (1): Created in 2011, the communaute de communes had a population of 30,645 in 2017.\",\"Communaute de communes des Savanes (2): The Communaute de communes des Savanes (CCDS) is a communaute de communes, an intercommunal structure in the French departement d'outre-mer of French Guiana.\",\"Communaute de communes des Savanes (3): The administrative seat of the Communaute de communes des Savanes is located in Kourou at 1 rue Raymond Cresson.\",\"Communaute de communes des Trois Rivieres, Aisne (1): The Communaute de communes des Trois Rivieres (CC3R) (before January 2017: Communaute de communes du Pays des Trois Rivieres) is a federation of municipalities (communaute de communes) in the Aisne departement and in the Hauts-de-France region of France.\",\"Communaute de communes (1): A communaute de communes (French: [kmynote d kmyn, \\\"community of communes\\\") is a federation of municipalities (communes) in France.\"]"
+      },
+      {
+        "negative_id": 287,
+        "distance": 34.97994349890921,
+        "broad_topic": "Sports (5)",
+        "medium_topic": "Politics",
+        "sentence_context": "[\"Gustavo Selva (1): Born in Imola, Selva started his career as a journalist for the Bologna newspaper L'Avvenire d'Italia, for which he worked from 1946 to 1956.\",\"Gustavo Selva (2): Gustavo Selva (10 August 1926 16 March 2015) was an Italian journalist, writer and politician.\",\"Gustavo Selva (3): Selva started his political activity in 1984, as a Member of the European Parliament for the Christian Democratic party.\",\"Gustavo Selva (4): In 1960 he became a RAI employer, working as a newscaster and later being appointed director of the Radio 2 news programs and president of \\\"RAI Corporation\\\" in New York.\",\"Gustavo Selva (5): He later adhered to the National Alliance party, with whom he was a deputy for three legislatures and senator for one legislature.\"]"
+      },
+      {
+        "negative_id": 889,
+        "distance": 34.786142082779165,
+        "broad_topic": "Sports (4)",
+        "medium_topic": "Cycling",
+        "sentence_context": "[\"Juan Pablo Montoya (1): Juan Pablo Montoya Roldan (Spanish pronunciation: [xwan palo montoa roldan; born September 20, 1975), is a Colombian racing driver.\",\"Juan Pablo Montoya (2): This was his first IndyCar race win since 2000, when he won the Indianapolis 500.\",\"2000 Indianapolis 500 (1): Juan Pablo Montoya won the race from the 2nd starting position.\",\"Juan Pablo Montoya (3): The Ganassi team also competed in the 2000 Indianapolis 500 of the rival Indy Racing League series using a G-Force chassis and a Comptech-tuned Oldsmobile Aurora engine.\",\"2000 Indianapolis 500 (2): Juan Pablo Montoya settled into second, and Robby Gordon third.\"]"
+      },
+      {
+        "negative_id": 2502,
+        "distance": 32.96371315804046,
+        "broad_topic": "Sports Leagues",
+        "medium_topic": "Hockey News",
+        "sentence_context": "[\"Aleksander Barkov (1): Aleksander Aleksandrovich \\\"Sasha\\\" Barkov (Russian: ; born 2 September 1995) is a Finnish-Russian professional ice hockey centre currently serving as captain of the Florida Panthers of the National Hockey League (NHL).\",\"List of Florida Panthers players (1): By the end of the 201819 season, 33 goaltenders and 354 skaters (forwards and defensemen) have appeared in at least one regular-season game with the Panthers.\",\"201819 Florida Panthers season (1): The 201819 Florida Panthers season was the 26th season for the National Hockey League franchise that was established on June 14, 1993.\",\"Aleksander Barkov (2): In December 2011, Barkov was chosen to play for Finland as the youngest Finnish player in the Ice Hockey World Junior Championships.\",\"Aleksander Barkov (3): He is the son of former Russian hockey player Alexander Barkov Sr. and holds dual Finnish and Russian citizenship.\"]"
+      },
+      {
+        "negative_id": 3085,
+        "distance": 31.478604475405934,
+        "broad_topic": "Telugu Cinema",
+        "medium_topic": "Bollywood Songs",
+        "sentence_context": "[\"Manasaare (1): Manasaare (Kannada: ) is a 2009 Indian Kannada romantic psychological film directed by Yogaraj Bhat.\",\"Manasaare (2): The film soundtrack and score was composed by Mano Murthy with lyrics by Yogaraj Bhat and veteran lyricist Jayant Kaikini.\",\"Manasaare (3): The music of the film was composed by Mano Murthy with lyrics penned by Jayant Kaikini, Yogaraj Bhat and Sloka.\",\"Ondu Hennu Aaru Kannu (1): Rajeswara Rao]].\",\"Naanu Nanna Kanasu (1): Hamsalekha]].\"]"
+      },
+      {
+        "negative_id": 2776,
+        "distance": 29.872853570702137,
+        "broad_topic": "College Sports",
+        "medium_topic": "Sports News-3",
+        "sentence_context": "[\"2010 Winnipeg Blue Bombers season (1): The 2010 Winnipeg Blue Bombers season was the 53rd season for the team in the Canadian Football League and their 78th overall.\",\"Terrence Edwards (1): Terrence Edwards (born April 20, 1979) is a former Canadian football wide receiver who played for nine seasons with the Winnipeg Blue Bombers and Montreal Alouettes of the Canadian Football League.\",\"Adarius Bowman (1): Adarius Bowman (born July 10, 1985) is a former Canadian football wide receiver.\",\"Winnipeg Blue Bombers (1): The Winnipeg Blue Bombers are a professional Canadian football team based in Winnipeg, Manitoba and the current Grey Cup champions.\",\"Adarius Bowman (2): Despite missing half the season Bowman still had a strong year accumulating 697 receiving yards and 5 touchdowns.\"]"
+      }
+    ]
+  }
+]

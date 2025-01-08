@@ -1,0 +1,316 @@
+[
+  {
+    "anchor": {
+      "id": 3082,
+      "broad_topic": "Music Charts",
+      "medium_topic": "Geography",
+      "table_content": [
+        [
+          "Name ofmunicipality",
+          "Population(2001)",
+          "Population(2011)",
+          "Population(2018)"
+        ],
+        [
+          "Carino",
+          "4,844",
+          "4,374",
+          "3,945"
+        ],
+        [
+          "Cerdido",
+          "1,568",
+          "1,304",
+          "1,126"
+        ],
+        [
+          "Manon",
+          "1,870",
+          "1,541",
+          "1,363"
+        ],
+        [
+          "Ortigueira",
+          "8,172",
+          "6,697",
+          "5,804"
+        ],
+        [
+          "Totals",
+          "16,454",
+          "13,916",
+          "12,238"
+        ]
+      ],
+      "caption": "",
+      "table_title": "Ortegal"
+    },
+    "primary_positive": {
+      "id": 3082,
+      "distance": 0.0,
+      "broad_topic": "Music Charts",
+      "medium_topic": "Geography",
+      "sentence_context": "[\"Ortegal (1): It covers an area of 394.3 sq.km, and the overall population of this region was 13,916 at the 2011 census; the latest official estimate (as at the start of 2018) was 12,238.\",\"Ortegal (2): Ortegal is a comarca in the north of the Galician Province of A Coruna, Spain.\",\"Ortegal (3): The comarca comprises the following four municipalities:\",\"Carino (1): Carino is a municipality in the province of A Coruna, in the autonomous community of Galicia, northwestern Spain.\",\"Carino, Paniqui (1): Carino is an accessible barangay and it is situated along the Mac Arthur Highway.\"]"
+    },
+    "additional_positives": [
+      {
+        "id": 1728,
+        "distance": 0.25786473502838925,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": "[\"O Condado (1): O Condado is a comarca in the Galician Province of Pontevedra, centred on the town of Ponteareas (Puenteareas in Castilian Spanish).\",\"Mondariz (1): Mondariz is a town and municipality in the province of Pontevedra, autonomous community of Galicia, Spain.\",\"Mondariz (2): It has a population of 4,440 inhabitants.\",\"El Condado (Laviana) (1): El Condado (asturian and officially El Condao) is one of nine parishes (administrative divisions) in Laviana, a municipality within the province and autonomous community of Asturias, in northern Spain.\",\"O Condado (2): It covers an area of 341 km, and the overall population of this comarca was 42,642 at the 2011 Census; the latest official estimate at the start of 2018 was 41,551.\"]"
+      },
+      {
+        "id": 683,
+        "distance": 0.4382905885260912,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": "[\"Aldama Municipality, Chihuahua (1): Aldama is one of the 67 municipalities of Chihuahua, in northern Mexico.\",\"Aldama Municipality, Chiapas (1): Aldama Municipality is one of the 122 municipalities of Chiapas, in southern Mexico.\",\"Aldama Municipality, Chihuahua (2): The municipality had 487 localities, the largest of which (with 2010 populations in parentheses) was: Juan Aldama (18,642), classified as urban, and classified as rural.\",\"Aldama Municipality, Chihuahua (3): As of 2010, the municipality had a total population of 22,302, up from 19,879 as of 2005.\",\"Aldama Municipality, Chiapas (2): Other than the town of Aldama, the municipality had 20 localities, none of which had a population over 1,000.\"]"
+      },
+      {
+        "id": 2210,
+        "distance": 0.5182535862106439,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Ireland Geography",
+        "sentence_context": "[\"Sant Vicent del Raspeig (1): San Vicente del Raspeig (Spanish name, pronounced [sam biente ðel raspet), or Sant Vicent del Raspeig (Valencian name, pronounced [sam visn del raspet), is a municipality located in the comarca of Alacanti, in the province of Alicante, Spain, inside the conurbation of Alicante city (6 km away and perfectly communicated).\",\"Sant Vicent del Raspeig (2): San Vicente del Raspeig is twinned with:\",\"San Vicente del Valle (1): In the decade since 2001, the population ranged between 34 (2001) and 52 (2004), with 45 inhabitants documented in the 2007 census, but recently the municipality had only 31 inhabitants in 2014.\",\"San Vicente del Valle (2): The earliest documentation for the hamlet of San Vicente del Valle is in the year 945 in records of the monastery of San Millan de la Cogolla as viam that vadit ad Vicentium.\",\"San Vicente del Valle (3): San Vicente del Valle is a municipality and hamlet located in the province of Burgos, Castile and Leon, Spain.\"]"
+      },
+      {
+        "id": 2400,
+        "distance": 0.5261798403680367,
+        "broad_topic": "Music Charts",
+        "medium_topic": "European Politics",
+        "sentence_context": "[\"Spain (1): Spain (Spanish: Espana, [espaa (listen)), officially the Kingdom of Spain (Spanish: Reino de Espana), is a country in Southwestern Europe with some pockets of territory across the Strait of Gibraltar and the Atlantic Ocean.\",\"Geography of Spain (1): Spain is a country located in southwestern Europe occupying most (about 82 percent) of the Iberian Peninsula.\",\"Spain (2): With an area of 505,990 km (195,360 sq mi), Spain is the largest country in Southern Europe, the second-largest country in Western Europe and the European Union, and the fourth-largest country by area on the European continent.\",\"Strait of Gibraltar (1): The Strait of Gibraltar (Arabic: , romanized: Madiq Jabal Tariq; Spanish: Estrecho de Gibraltar, Archaic: Pillars of Hercules), also known as the Straits of Gibraltar, is a narrow strait that connects the Atlantic Ocean to the Mediterranean Sea and separates the Iberian Peninsula in Europe from Morocco in Africa.\",\"Spain (3): Spain is a transcontinental country, having territory in both Europe and Africa.\"]"
+      },
+      {
+        "id": 1198,
+        "distance": 0.5832963510481703,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Places-2",
+        "sentence_context": "[\"Vilafranca (1): Vilafranca is a municipality in the comarca of Alt Maestrat, Castellon, Valencia, Spain.\",\"Alt Maestrat (1): Alt Maestrat (Valencian pronunciation: [alt maestat; Spanish: Alto Maestrazgo) is a comarca in the province of Castellon, Valencian Community, Spain.\",\"Albocasser (1): Albocasser (Valencian pronunciation: [albokase; Aragonese: Albocazar) is a municipality in Castellon, Valencia, Spain.\",\"Alt Maestrat (2): The comarca of Alt Maestrat is composed of nine municipalities, listed below with their populations at the 2001 and 2011 Censuses, and according to the most recent official estimates (for 1 January 2019):\",\"Vilafranca (2): The highest points are basically formed by limestone erosion that has beveled sometimes deeply.\"]"
+      },
+      {
+        "id": 1082,
+        "distance": 0.627132127827432,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Places-2",
+        "sentence_context": "[\"Ibi, Spain (1): Ibi (Valencian and Spanish: [ii) is a town located in the comarca of Alcoia, in the province of Alicante, Spain.\",\"Province of Alicante (1): Alicante (Spanish: [alikante; Valencian: Alacant [alakant) is a province of eastern Spain, in the southern part of the Valencian Community.\",\"Alicante (1): Alicante (/ælkænti/, also UK: /-te/, Valencian: Alacant [alakant) is a city on the Valencian Community, Spain.\",\"Alcoia (1): Alcoia (Valencian pronunciation: [alkoja; Spanish: Hoya de Alcoy) is a comarca in the province of Alicante, Valencian Community, Spain.\",\"Alicante (2): Alicante is located in the southeast of the Iberian Peninsula, on the shores of the Mediterranean Sea.\"]"
+      },
+      {
+        "id": 1991,
+        "distance": 0.7382480485987737,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": "[\"Meoqui Municipality (1): Meoqui is one of the 67 municipalities of Chihuahua, in northern Mexico.\",\"Lazaro Cardenas, Michoacan (1): Lazaro Cardenas is located in the southern part of the Mexican state of Michoacan.\",\"Lazaro Cardenas, Michoacan (2): Lazaro Cardenas (Spanish: [lasao kardenas (listen)) is a port city in Michoacan bordered to the west by Guerrero.\",\"Meoqui Municipality (2): The municipality had 882 localities, the largest of which (with 2010 populations in parentheses) were: Pedro Meoqui (22,574), Lazaro Cardenas (8,704), classified as urban, and Estacion Consuelo (1,981), Colonia Felipe Angeles (1,254), and Guadalupe Victoria (1,045), classified as rural.\",\"Lazaro Cardenas, Michoacan (3): The municipality of Lazaro Cardenas, which has an area of 1,160.24 km (447.97 sq mi), had a total population of 162,997 in 2005, and includes the metropolitan area of city, which includes the communities of Las Guacamayas, La Orilla, and La Mira.\"]"
+      },
+      {
+        "id": 681,
+        "distance": 0.7707951438592453,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": "[\"Altar, Sonora (1): Altar (O'odham: Wawuk) is small city and municipal seat of Altar Municipality in the Mexican state of Sonora.\",\"Altar Municipality (1): Altar is a municipality in Sonora in north-western Mexico.\",\"Altar Municipality (2): The largest localities (cities, towns, and villages) are:\",\"Altar Municipality (3): Surrounding municipalities are Saric, Tubutama, Atil, Trincheras, Pitiquito, Caborca and Oquitoa.\",\"Altar Municipality (4): state]] of Arizona.\"]"
+      },
+      {
+        "id": 398,
+        "distance": 0.8342524918541613,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": "[\"Guadalupe y Calvo Municipality (1): Guadalupe y Calvo is one of the 67 municipalities of Chihuahua, in northern Mexico.\",\"Guadalupe, Nuevo Leon (1): Guadalupe is a city and surrounding municipality located in the state of Nuevo Leon, in northern Mexico.\",\"Guadalupe y Calvo Municipality (2): Other than the town of Guadalupe y Calvo, the municipality had 1,416 localities, the largest of which (with 2010 populations in parentheses) were: Baborigame (3,294), classified as urban, and Atascaderos (1,559), Las Yerbitas (Aserradero) (1,200), and Turuachi (1,131), classified as rural.\",\"Guadalupe, Nuevo Leon (2): It is the second-largest city and municipality in the state.\",\"Guadalupe Municipality, Chihuahua (1): Guadalupe is one of the 67 municipalities of Chihuahua, in northern Mexico.\"]"
+      }
+    ],
+    "negatives": [
+      {
+        "negative_id": 1354,
+        "distance": 2.535841354242114,
+        "broad_topic": "Sports (5)",
+        "medium_topic": "Geography-2",
+        "sentence_context": "[\"Communaute de communes des Savanes (1): Created in 2011, the communaute de communes had a population of 30,645 in 2017.\",\"Communaute de communes des Savanes (2): The Communaute de communes des Savanes (CCDS) is a communaute de communes, an intercommunal structure in the French departement d'outre-mer of French Guiana.\",\"Communaute de communes des Savanes (3): The administrative seat of the Communaute de communes des Savanes is located in Kourou at 1 rue Raymond Cresson.\",\"Communaute de communes des Trois Rivieres, Aisne (1): The Communaute de communes des Trois Rivieres (CC3R) (before January 2017: Communaute de communes du Pays des Trois Rivieres) is a federation of municipalities (communaute de communes) in the Aisne departement and in the Hauts-de-France region of France.\",\"Communaute de communes (1): A communaute de communes (French: [kmynote d kmyn, \\\"community of communes\\\") is a federation of municipalities (communes) in France.\"]"
+      },
+      {
+        "negative_id": 287,
+        "distance": 35.638067063451615,
+        "broad_topic": "Sports (5)",
+        "medium_topic": "Politics",
+        "sentence_context": "[\"Gustavo Selva (1): Born in Imola, Selva started his career as a journalist for the Bologna newspaper L'Avvenire d'Italia, for which he worked from 1946 to 1956.\",\"Gustavo Selva (2): Gustavo Selva (10 August 1926 16 March 2015) was an Italian journalist, writer and politician.\",\"Gustavo Selva (3): Selva started his political activity in 1984, as a Member of the European Parliament for the Christian Democratic party.\",\"Gustavo Selva (4): In 1960 he became a RAI employer, working as a newscaster and later being appointed director of the Radio 2 news programs and president of \\\"RAI Corporation\\\" in New York.\",\"Gustavo Selva (5): He later adhered to the National Alliance party, with whom he was a deputy for three legislatures and senator for one legislature.\"]"
+      },
+      {
+        "negative_id": 889,
+        "distance": 35.36764567021051,
+        "broad_topic": "Sports (4)",
+        "medium_topic": "Cycling",
+        "sentence_context": "[\"Juan Pablo Montoya (1): Juan Pablo Montoya Roldan (Spanish pronunciation: [xwan palo montoa roldan; born September 20, 1975), is a Colombian racing driver.\",\"Juan Pablo Montoya (2): This was his first IndyCar race win since 2000, when he won the Indianapolis 500.\",\"2000 Indianapolis 500 (1): Juan Pablo Montoya won the race from the 2nd starting position.\",\"Juan Pablo Montoya (3): The Ganassi team also competed in the 2000 Indianapolis 500 of the rival Indy Racing League series using a G-Force chassis and a Comptech-tuned Oldsmobile Aurora engine.\",\"2000 Indianapolis 500 (2): Juan Pablo Montoya settled into second, and Robby Gordon third.\"]"
+      },
+      {
+        "negative_id": 2502,
+        "distance": 33.15228479460199,
+        "broad_topic": "Sports Leagues",
+        "medium_topic": "Hockey News",
+        "sentence_context": "[\"Aleksander Barkov (1): Aleksander Aleksandrovich \\\"Sasha\\\" Barkov (Russian: ; born 2 September 1995) is a Finnish-Russian professional ice hockey centre currently serving as captain of the Florida Panthers of the National Hockey League (NHL).\",\"List of Florida Panthers players (1): By the end of the 201819 season, 33 goaltenders and 354 skaters (forwards and defensemen) have appeared in at least one regular-season game with the Panthers.\",\"201819 Florida Panthers season (1): The 201819 Florida Panthers season was the 26th season for the National Hockey League franchise that was established on June 14, 1993.\",\"Aleksander Barkov (2): In December 2011, Barkov was chosen to play for Finland as the youngest Finnish player in the Ice Hockey World Junior Championships.\",\"Aleksander Barkov (3): He is the son of former Russian hockey player Alexander Barkov Sr. and holds dual Finnish and Russian citizenship.\"]"
+      },
+      {
+        "negative_id": 3085,
+        "distance": 32.3567335088749,
+        "broad_topic": "Telugu Cinema",
+        "medium_topic": "Bollywood Songs",
+        "sentence_context": "[\"Manasaare (1): Manasaare (Kannada: ) is a 2009 Indian Kannada romantic psychological film directed by Yogaraj Bhat.\",\"Manasaare (2): The film soundtrack and score was composed by Mano Murthy with lyrics by Yogaraj Bhat and veteran lyricist Jayant Kaikini.\",\"Manasaare (3): The music of the film was composed by Mano Murthy with lyrics penned by Jayant Kaikini, Yogaraj Bhat and Sloka.\",\"Ondu Hennu Aaru Kannu (1): Rajeswara Rao]].\",\"Naanu Nanna Kanasu (1): Hamsalekha]].\"]"
+      },
+      {
+        "negative_id": 2776,
+        "distance": 29.913546076263014,
+        "broad_topic": "College Sports",
+        "medium_topic": "Sports News-3",
+        "sentence_context": "[\"2010 Winnipeg Blue Bombers season (1): The 2010 Winnipeg Blue Bombers season was the 53rd season for the team in the Canadian Football League and their 78th overall.\",\"Terrence Edwards (1): Terrence Edwards (born April 20, 1979) is a former Canadian football wide receiver who played for nine seasons with the Winnipeg Blue Bombers and Montreal Alouettes of the Canadian Football League.\",\"Adarius Bowman (1): Adarius Bowman (born July 10, 1985) is a former Canadian football wide receiver.\",\"Winnipeg Blue Bombers (1): The Winnipeg Blue Bombers are a professional Canadian football team based in Winnipeg, Manitoba and the current Grey Cup champions.\",\"Adarius Bowman (2): Despite missing half the season Bowman still had a strong year accumulating 697 receiving yards and 5 touchdowns.\"]"
+      }
+    ]
+  },
+  {
+    "anchor": {
+      "id": 1890,
+      "broad_topic": "Music Charts",
+      "medium_topic": "Geography",
+      "table_content": [
+        [
+          "year",
+          "population"
+        ],
+        [
+          "1803",
+          "202"
+        ],
+        [
+          "1850",
+          "226"
+        ],
+        [
+          "1900",
+          "233"
+        ],
+        [
+          "1950",
+          "266"
+        ],
+        [
+          "2000",
+          "321"
+        ]
+      ],
+      "caption": "",
+      "table_title": "Tomils"
+    },
+    "primary_positive": {
+      "id": 1890,
+      "distance": 0.0,
+      "broad_topic": "Music Charts",
+      "medium_topic": "Geography",
+      "sentence_context": "[\"Tomils (1): Tumegl/Tomils is a village in the municipality of Tomils in the district of Hinterrhein in the Swiss canton of Graubunden.\",\"Tomils (2): Tumegl/Tomils has a population (as of 2007) of 365, of which 5.2% are foreign nationals.\",\"Riverton Township, Clay County, Iowa (1): As of the 2000 census, its population was 321.\",\"Goree, Texas (1): As of the census of 2000, there were 321 people, 116 households, and 88 families residing in the city.\",\"Tomils (3): As of 2000, the gender distribution of the population was 51.5% male and 48.5% female.\"]"
+    },
+    "additional_positives": [
+      {
+        "id": 2432,
+        "distance": 0.25081210888480643,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": "[\"Sevgein (1): Sevgein is a former municipality in the district of Surselva in the Swiss canton of Graubunden.\",\"Sevgein (2): The former municipality is located in the Ilanz sub-district of the Surselva district.\",\"Sevgein (3): Sevgein had a population (as of 2011) of 198.\",\"Hugelshofen (1): The municipality had 442 inhabitants in 1850, which decreased to 360 in 1900, 359 in 1950 and 325 in 1990.\",\"Sevgein (4): The historical population is given in the following table:\"]"
+      },
+      {
+        "id": 1782,
+        "distance": 0.265048500464464,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": "[\"Verdabbio (1): Verdabbio had a population (as of 2015) of 163.\",\"Verdabbio (2): Verdabbio is a former municipality in the district of Moesa in the Swiss canton of Graubunden.\",\"Verdabbio (3): Over the last 10 years the population has decreased at a rate of -1.9%.\",\"Verdabbio (4): The age distribution, as of 2000, in Verdabbio is; 18 children or 11.0% of the population are between 0 and 9 years old.\",\"Verdabbio (5): Most of the population (as of 2000) speaks Italian (85.4%), with German being second most common (14.0%).\"]"
+      },
+      {
+        "id": 1663,
+        "distance": 0.31514361496142484,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": "[\"Scheid (1): Scheid has a population (as of 2007) of 148, of which 2.7% are foreign nationals.\",\"Scheid (2): The historical population is given in the following table:\",\"Scheid (3): The age distribution, as of 2000, in Scheid is; 99 people or 13.3% of the population are between 0 and 9 years old.\",\"Scheid (4): Scheid is a village in the municipality of Tomils in the district of Hinterrhein in the Swiss canton of Graubunden.\",\"Linda Scheid (1): Linda J. Scheid (June 16, 1942 June 15, 2011) was a Minnesota politician and a member of the Minnesota Senate who represented District 46, which includes portions of the northwestern suburbs of Hennepin County in the Twin Cities metro area.\"]"
+      },
+      {
+        "id": 1749,
+        "distance": 0.4795304121522992,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": "[\"Sufers (1): Sufers has a population (as of 31 December 2019) of 145.\",\"Sufers (2): Sufers (Romansh: Sur) is a municipality in the Viamala Region in the Swiss canton of Graubunden.\",\"Sufers (3): The historical population is given in the following table:\",\"Sufers (4): Over the last 10 years the population has decreased at a rate of -6.6%.\",\"Sufers (5): As of 2000, the gender distribution of the population was 52.0% male and 48.0% female.\"]"
+      },
+      {
+        "id": 1355,
+        "distance": 0.4885074505500759,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": "[\"Mesocco (1): The historical population is given in the following table:\",\"Mesocco (2): Mesocco is a municipality in the Moesa Region in the Swiss canton of Graubunden.\",\"Mesocco (3): Mesocco has a population (as of 31 December 2019) of 1,344.\",\"1850 United States census (1): The total population included 3,204,313 slaves.\",\"1850 United States census (2): The Utah Territorial census was taken in 1851.\"]"
+      },
+      {
+        "id": 1860,
+        "distance": 0.5388295157651674,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": "[\"Sils im Domleschg (1): Sils im Domleschg (Romansh: Seglias) is a municipality in the Viamala Region in the Swiss canton of Graubunden.\",\"Domleschg (1): Domleschg is a municipality in the Viamala Region in the Swiss canton of Graubunden.\",\"Sils im Domleschg (2): Sils im Domleschg has a population (as of December 2019) of 960.\",\"Sils im Domleschg (3): Sils im Domleschg is an industrial-tertiary municipality, a municipality where agriculture and manufacturing play a minor role in the economy.\",\"Sils im Domleschg (4): It is a linear village between the Albula and Hinterrhein rivers.\"]"
+      },
+      {
+        "id": 2211,
+        "distance": 0.5983759572683962,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": "[\"Sufers (1): Sufers has a population (as of 31 December 2019) of 145.\",\"Sufers (2): Sufers (Romansh: Sur) is a municipality in the Viamala Region in the Swiss canton of Graubunden.\",\"Sufers (3): Over the last 10 years the population has decreased at a rate of -6.6%.\",\"Sufers (4): It is a Haufendorf (an irregular, unplanned and quite closely packed village, built around a central square).\",\"Sufers (5): The historical population is given in the following table:\"]"
+      },
+      {
+        "id": 923,
+        "distance": 0.6045042603918044,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": "[\"Rongellen (1): Rongellen is a municipality in the canton of Graubunden in Switzerland, located in the Viamala Region.\",\"Rongellen (2): Rongellen has a population (as of 31 December 2019) of 53.\",\"Rongellen (3): The historical population is given in the following table:\",\"Rongellen (4): 2 people or 3.8% are 10 to 14, and 11 people or 20.8% are 15 to 19.\",\"Rongellen (5): 7 people or 13.2% are 30 to 39, 5 people or 9.4% are 40 to 49, and 8 people or 15.1% are 50 to 59.\"]"
+      },
+      {
+        "id": 1044,
+        "distance": 0.6093552116336409,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": "[\"Thusis (1): Thusis (Italian: Tosana, Romansh: Tusan) is a municipality in the Viamala Region in the Swiss canton of Graubunden.\",\"Thusis (2): Thusis has a population (as of 31 December 2019) of 9,409.\",\"Thusis (3): Over the last 10 years the population has grown at a rate of 0.7%.\",\"Thusis (4): The age distribution, as of 2000, in Thusis is; 304 people or 11.2% of the population are between 0 and 9 years old.\",\"Thusis (5): The historical population is given in the following table:\"]"
+      }
+    ],
+    "negatives": [
+      {
+        "negative_id": 1354,
+        "distance": 1.5706850521419775,
+        "broad_topic": "Sports (5)",
+        "medium_topic": "Geography-2",
+        "sentence_context": "[\"Communaute de communes des Savanes (1): Created in 2011, the communaute de communes had a population of 30,645 in 2017.\",\"Communaute de communes des Savanes (2): The Communaute de communes des Savanes (CCDS) is a communaute de communes, an intercommunal structure in the French departement d'outre-mer of French Guiana.\",\"Communaute de communes des Savanes (3): The administrative seat of the Communaute de communes des Savanes is located in Kourou at 1 rue Raymond Cresson.\",\"Communaute de communes des Trois Rivieres, Aisne (1): The Communaute de communes des Trois Rivieres (CC3R) (before January 2017: Communaute de communes du Pays des Trois Rivieres) is a federation of municipalities (communaute de communes) in the Aisne departement and in the Hauts-de-France region of France.\",\"Communaute de communes (1): A communaute de communes (French: [kmynote d kmyn, \\\"community of communes\\\") is a federation of municipalities (communes) in France.\"]"
+      },
+      {
+        "negative_id": 2438,
+        "distance": 37.46046007193634,
+        "broad_topic": "Sports (5)",
+        "medium_topic": "NASCAR Racing",
+        "sentence_context": "[\"Benny Parsons (1): Benjamin Stewart Parsons (July 12, 1941 January 16, 2007) was an American NASCAR driver, and later an announcer/analyst/pit reporter on SETN, TBS, ABC, ESPN, NBC, and TNT.\",\"1983 Miller High Life 500 (1): The 1983 Miller High Life 500 was a NASCAR Winston Cup Series racing event that took place at Charlotte Motor Speedway in Concord, North Carolina on October 9, 1983.\",\"Benny Parsons (2): Parsons was born in Wilkes County, North Carolina.\",\"1983 Miller High Life 500 (2): The race was held in Concord, North Carolina at Charlotte Motor Speedway, a 1.5-mile (2.4 km) quad-oval paved track.\",\"1983 Miller High Life 500 (3): and was one of the top paying races of the 1983 season.\"]"
+      },
+      {
+        "negative_id": 889,
+        "distance": 37.34340943420263,
+        "broad_topic": "Sports (4)",
+        "medium_topic": "Cycling",
+        "sentence_context": "[\"Juan Pablo Montoya (1): Juan Pablo Montoya Roldan (Spanish pronunciation: [xwan palo montoa roldan; born September 20, 1975), is a Colombian racing driver.\",\"Juan Pablo Montoya (2): This was his first IndyCar race win since 2000, when he won the Indianapolis 500.\",\"2000 Indianapolis 500 (1): Juan Pablo Montoya won the race from the 2nd starting position.\",\"Juan Pablo Montoya (3): The Ganassi team also competed in the 2000 Indianapolis 500 of the rival Indy Racing League series using a G-Force chassis and a Comptech-tuned Oldsmobile Aurora engine.\",\"2000 Indianapolis 500 (2): Juan Pablo Montoya settled into second, and Robby Gordon third.\"]"
+      },
+      {
+        "negative_id": 502,
+        "distance": 36.11313366437928,
+        "broad_topic": "Sports Leagues",
+        "medium_topic": "Hockey News",
+        "sentence_context": "[\"Jaden Schwartz (1): Jaden Schwartz (born June 25, 1992) is a Canadian ice hockey player for the [[St._Louis_Blues|St.\",\"NHL Centennial Classic (1): The 2017 Winter Classic was ultimately awarded to Busch Stadium, and would feature the [[St._Louis_Blues|St.\",\"Jaden Schwartz (2): Schwartz represents Canada internationally.\",\"Jaden Schwartz (3): He was also named to the league's First All-Star Team and was awarded Top Offensive Player honours.\",\"NHL Centennial Classic (2): As January 1, 2017 fell on a Sunday, the NHL followed the precedent of the 2012 Winter Classic and college football bowl games by scheduling the game Monday, January 2 instead of its traditional New Year's Day scheduling.\"]"
+      },
+      {
+        "negative_id": 2776,
+        "distance": 33.06471094099495,
+        "broad_topic": "College Sports",
+        "medium_topic": "Sports News-3",
+        "sentence_context": "[\"2010 Winnipeg Blue Bombers season (1): The 2010 Winnipeg Blue Bombers season was the 53rd season for the team in the Canadian Football League and their 78th overall.\",\"Terrence Edwards (1): Terrence Edwards (born April 20, 1979) is a former Canadian football wide receiver who played for nine seasons with the Winnipeg Blue Bombers and Montreal Alouettes of the Canadian Football League.\",\"Adarius Bowman (1): Adarius Bowman (born July 10, 1985) is a former Canadian football wide receiver.\",\"Winnipeg Blue Bombers (1): The Winnipeg Blue Bombers are a professional Canadian football team based in Winnipeg, Manitoba and the current Grey Cup champions.\",\"Adarius Bowman (2): Despite missing half the season Bowman still had a strong year accumulating 697 receiving yards and 5 touchdowns.\"]"
+      },
+      {
+        "negative_id": 3085,
+        "distance": 32.71566875577022,
+        "broad_topic": "Telugu Cinema",
+        "medium_topic": "Bollywood Songs",
+        "sentence_context": "[\"Manasaare (1): Manasaare (Kannada: ) is a 2009 Indian Kannada romantic psychological film directed by Yogaraj Bhat.\",\"Manasaare (2): The film soundtrack and score was composed by Mano Murthy with lyrics by Yogaraj Bhat and veteran lyricist Jayant Kaikini.\",\"Manasaare (3): The music of the film was composed by Mano Murthy with lyrics penned by Jayant Kaikini, Yogaraj Bhat and Sloka.\",\"Ondu Hennu Aaru Kannu (1): Rajeswara Rao]].\",\"Naanu Nanna Kanasu (1): Hamsalekha]].\"]"
+      }
+    ]
+  }
+]

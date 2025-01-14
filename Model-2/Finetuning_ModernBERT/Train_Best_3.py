@@ -8,8 +8,9 @@ import json
 import time
 import wandb
 from pathlib import Path
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Tuple
 from sentence_transformers.evaluation import SentenceEvaluator
+from sentence_transformers.training_args import BatchSamplers
 
 import torch
 import torch.cuda
@@ -180,214 +181,174 @@ def get_loss_function(loss_type: str, model: SentenceTransformer):
     
     return loss_types[loss_type]()
 
-class TrainingCallback(TrainerCallback):
-    """Callback to print training progress and results."""
-    def __init__(self, evaluator, loss_type: str, total_steps: int):
-        self.evaluator = evaluator
-        self.best_scores = None
-        self.epoch = 0
-        self.loss_type = loss_type
-        self.current_step = 0
-        self.total_steps = total_steps
-        self.progress_bar = None
-        self.last_log_time = time.time()
-        self.log_interval = 10  # Show metrics every 10 steps
-
-    def on_epoch_begin(self, args, state, control, **kwargs):
-        """Called at the start of each epoch."""
-        self.epoch += 1
-        print(f"\n{'='*20} Epoch {self.epoch} {'='*20}")
-        # Initialize progress bar for this epoch
-        self.progress_bar = tqdm(total=self.total_steps, desc=f"Training Epoch {self.epoch}")
-        self.current_step = 0
-        return control
-        
-    def on_step_end(self, args, state, control, model=None, **kwargs):
-        """Called at the end of each step."""
-        self.current_step += 1
-        if self.progress_bar is not None:
-            self.progress_bar.update(1)
-        
-            # Show metrics every log_interval steps
-            current_time = time.time()
-            if self.current_step % self.log_interval == 0 and state.log_history:
-                # Get current loss values safely
-                try:
-                    current_loss = state.log_history[-1].get('loss', None)
-                    if current_loss is not None:
-                        self.progress_bar.set_postfix({
-                            'loss': f'{current_loss:.4f}',
-                            'steps': f'{self.current_step}/{self.total_steps}'
-                        })
-                except (IndexError, KeyError):
-                    # If we can't get the loss, just show step progress
-                    self.progress_bar.set_postfix({
-                        'steps': f'{self.current_step}/{self.total_steps}'
-                    })
-                self.last_log_time = current_time
-        return control
-        
-    def on_epoch_end(self, args, state, control, model=None, **kwargs):
-        """Called at the end of each epoch."""
-        # Close the progress bar
-        if self.progress_bar is not None:
-            self.progress_bar.close()
-        
-        # Get metrics safely
-        train_loss = None
-        if state.log_history:
-            try:
-                # Try to get the most recent training loss
-                for log in reversed(state.log_history):
-                    if 'loss' in log:
-                        train_loss = log['loss']
-                        break
-            except Exception as e:
-                print(f"Warning: Could not retrieve training loss: {str(e)}")
-        
-        # Get evaluation scores
-        scores = None
-        try:
-            scores = self.evaluator(model) if model is not None else None
-        except Exception as e:
-            print(f"Warning: Error during evaluation: {str(e)}")
-            scores = {}
-        
-        # Update best scores
-        if scores:
-            if self.best_scores is None:
-                self.best_scores = scores.copy()
-            else:
-                # Update if f1 improved
-                if scores.get('eval_f1', 0) > self.best_scores.get('eval_f1', 0):
-                    self.best_scores = scores.copy()
-        
-        # Print epoch summary
-        print(f"\n{'-'*20} Epoch {self.epoch} Summary {'-'*20}")
-        print(f"Loss Function: {self.loss_type}")
-        if train_loss is not None:
-            print(f"Training Loss: {train_loss:.4f}")
-        
-        if scores:
-            print("\nCurrent Scores:")
-            for metric, value in scores.items():
-                if isinstance(value, (int, float)):
-                    print(f"{metric}: {value:.4f}")
-                else:
-                    print(f"{metric}: {value}")
-        
-        if self.best_scores:
-            print("\nBest Scores:")
-            for metric, value in self.best_scores.items():
-                if isinstance(value, (int, float)):
-                    print(f"{metric}: {value:.4f}")
-                else:
-                    print(f"{metric}: {value}")
-        
-        print("-"*60)
-        return control
-
-    def on_evaluate(self, args, state, control, metrics=None, **kwargs):
-        """Called after evaluation."""
-        return control
-
 class ComprehensiveEvaluator(SentenceEvaluator):
-    """
-    Enhanced evaluator that properly handles loss computation and metrics.
-    """
-    def __init__(self, eval_dataset: Dataset, name: str = ''):
+    """Evaluator that efficiently computes accuracy using cached embeddings."""
+    
+    def __init__(self, eval_dataset: Dataset, name: str = '', batch_size: int = 32):
+        """
+        Initialize the evaluator.
+        
+        Args:
+            eval_dataset: Dataset containing anchor, positive, and negative examples
+            name: Name of the evaluator
+            batch_size: Batch size for embedding computation
+        """
         self.eval_dataset = eval_dataset
         self.name = name
+        self.batch_size = batch_size
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         
-    def __call__(self, model, output_path: str = None, epoch: int = -1, steps: int = -1) -> Dict[str, float]:
+        # Pre-collect unique texts during initialization
+        self.unique_texts_map = {}
+        self.texts_to_encode = self._collect_unique_texts()
+        print(f"\nInitialized evaluator with {len(self.texts_to_encode)} unique texts")
+        
+    def _collect_unique_texts(self) -> List[Tuple[str, str]]:
         """
-        Evaluates the model and returns metrics without computing loss.
-        Loss computation is handled by the trainer separately.
+        Collect unique texts from the dataset once during initialization.
+        
+        Returns:
+            List of tuples (text_key, text) for all unique texts in the dataset
+        """
+        print("\nCollecting unique texts...")
+        for example in tqdm(self.eval_dataset, desc="Processing examples"):
+            # Cache anchor
+            anchor_key = f"anchor_{example['anchor']}"
+            if anchor_key not in self.unique_texts_map:
+                self.unique_texts_map[anchor_key] = example['anchor']
+            
+            # Cache positive
+            pos_key = f"pos_{example['positive']}"
+            if pos_key not in self.unique_texts_map:
+                self.unique_texts_map[pos_key] = example['positive']
+            
+            # Cache negatives
+            for neg in example['negatives']:
+                neg_key = f"neg_{neg}"
+                if neg_key not in self.unique_texts_map:
+                    self.unique_texts_map[neg_key] = neg
+                    
+        # Convert to list of tuples for batched processing
+        return list(self.unique_texts_map.items())
+        
+    def create_embeddings_cache(self, model: SentenceTransformer) -> Dict[str, torch.Tensor]:
+        """
+        Create cache of embeddings for all unique texts with batched processing.
+        
+        Args:
+            model: The SentenceTransformer model
+            
+        Returns:
+            Dict mapping text identifiers to their embeddings
+        """
+        cache = {}
+        
+        # Generate embeddings in batches using pre-collected texts
+        print(f"\nComputing embeddings for {len(self.texts_to_encode)} unique texts...")
+        with torch.no_grad():
+            for i in tqdm(range(0, len(self.texts_to_encode), self.batch_size), desc="Computing embeddings"):
+                batch = self.texts_to_encode[i:i + self.batch_size]
+                keys, texts = zip(*batch)
+                
+                # Compute embeddings for batch
+                embeddings = model.encode(
+                    list(texts),
+                    convert_to_tensor=True,
+                    normalize_embeddings=True,
+                    batch_size=self.batch_size
+                )
+                
+                # Store in cache
+                for j, key in enumerate(keys):
+                    cache[key] = embeddings[j].to(self.device)
+                
+                # Clear GPU memory if needed
+                if torch.cuda.is_available() and i % (5 * self.batch_size) == 0:
+                    torch.cuda.empty_cache()
+            
+        return cache
+
+    def compute_similarity_matrix(self, 
+                              anchor_emb: torch.Tensor,
+                              pos_emb: torch.Tensor,
+                              neg_embeddings: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
+        """
+        Compute similarity scores between anchor-positive and anchor-negative pairs.
+        """
+        # Ensure embeddings have correct dimensions
+        if anchor_emb.dim() == 1:
+            anchor_emb = anchor_emb.unsqueeze(0)  # [1, embed_dim]
+            
+        if pos_emb.dim() == 1:
+            pos_emb = pos_emb.unsqueeze(0)  # [1, embed_dim]
+            
+        # Calculate positive similarity
+        pos_sim = torch.nn.functional.cosine_similarity(anchor_emb, pos_emb, dim=1)  # [1]
+        
+        # Calculate negative similarities
+        neg_sims = torch.nn.functional.cosine_similarity(
+            anchor_emb.expand(neg_embeddings.size(0), -1),  # [n_neg, embed_dim]
+            neg_embeddings,  # [n_neg, embed_dim]
+            dim=1  # compute similarity along embedding dimension
+        )  # [n_neg]
+        
+        return pos_sim, neg_sims
+
+    def __call__(self, 
+                 model: SentenceTransformer, 
+                 output_path: Optional[str] = None,
+                 epoch: int = -1,
+                 steps: int = -1) -> Dict[str, float]:
+        """
+        Evaluate the model using cached embeddings.
         """
         if len(self.eval_dataset) == 0:
             return {}
             
-        total_tp = 0
-        total_fp = 0
-        total_tn = 0
-        total_fn = 0
+        model.to(self.device)
+        model.eval()
         
-        # Process each example
-        for example in tqdm(self.eval_dataset, desc="Evaluating"):
-            # Get embeddings
-            anchor_embedding = model.encode([example['anchor']], convert_to_tensor=True)
-            positive_embedding = model.encode([example['positive']], convert_to_tensor=True)
-            negative_embeddings = model.encode(example['negatives'], convert_to_tensor=True)
-            
-            # Calculate similarity scores
-            pos_sim = torch.nn.functional.cosine_similarity(anchor_embedding, positive_embedding)
-            neg_sims = torch.nn.functional.cosine_similarity(
-                anchor_embedding.repeat(len(example['negatives']), 1),
-                negative_embeddings
-            )
-            
-            # Use dynamic thresholding
-            threshold = (pos_sim + neg_sims.mean()) / 2
-            
-            # Update metrics
-            if pos_sim > threshold:
-                total_tp += 1
-            else:
-                total_fn += 1
+        # Create embeddings cache using pre-collected texts
+        embeddings_cache = self.create_embeddings_cache(model)
+        
+        correct_predictions = 0
+        total_comparisons = 0
+        
+        # Evaluate using cached embeddings
+        with torch.no_grad():
+            for example in tqdm(self.eval_dataset, desc="Evaluating"):
+                # Get embeddings from cache
+                anchor_emb = embeddings_cache[f"anchor_{example['anchor']}"]
+                pos_emb = embeddings_cache[f"pos_{example['positive']}"]
                 
-            total_tn += (neg_sims <= threshold).sum().item()
-            total_fp += (neg_sims > threshold).sum().item()
+                # Get all negative embeddings for this example
+                neg_embeddings = torch.stack([
+                    embeddings_cache[f"neg_{neg}"] 
+                    for neg in example['negatives']
+                ])
+                
+                # Compute similarities
+                pos_sim, neg_sims = self.compute_similarity_matrix(anchor_emb, pos_emb, neg_embeddings)
+                
+                # Compare similarities (positive should be higher than all negatives)
+                correct_predictions += torch.sum(pos_sim >= neg_sims).item()
+                total_comparisons += len(example['negatives'])
+                
+                # Clear memory periodically
+                if torch.cuda.is_available() and total_comparisons % 1000 == 0:
+                    torch.cuda.empty_cache()
         
         # Calculate final metrics
-        total_pairs = total_tp + total_tn + total_fp + total_fn
+        accuracy = correct_predictions / total_comparisons if total_comparisons > 0 else 0
         
-        accuracy = (total_tp + total_tn) / total_pairs if total_pairs > 0 else 0
-        precision = total_tp / (total_tp + total_fp) if (total_tp + total_fp) > 0 else 0
-        recall = total_tp / (total_tp + total_fn) if (total_tp + total_fn) > 0 else 0
-        f1 = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0
-        
-        # Calculate additional metrics
-        avg_neg_per_anchor = sum(len(example['negatives']) for example in self.eval_dataset) / len(self.eval_dataset)
-        
-        metrics = {
+        return {
             'eval_accuracy': accuracy,
-            'eval_precision': precision,
-            'eval_recall': recall,
-            'eval_f1': f1,
-            'eval_avg_negatives_per_anchor': avg_neg_per_anchor,
-            'eval_total_evaluated_pairs': total_pairs
+            'eval_total_comparisons': total_comparisons
         }
-        
-        return metrics
 
-    def compute_metrics(self, model) -> Dict[str, float]:
-        """Compute metrics for evaluation results."""
+    def compute_metrics(self, model: SentenceTransformer) -> Dict[str, float]:
+        """Compute metrics wrapper."""
         return self.__call__(model)
-    
-class EarlyStopping:
-    """Early stopping handler to prevent overfitting."""
-    def __init__(self, patience: int = 3, min_delta: float = 0.001):
-        self.patience = patience
-        self.min_delta = min_delta
-        self.counter = 0
-        self.best_loss = None
-        self.early_stop = False
-        self.best_model = None
-        
-    def __call__(self, current_value: float, model: SentenceTransformer) -> bool:
-        if self.best_loss is None:
-            self.best_loss = current_value
-            self.best_model = model
-        elif current_value < self.best_loss - self.min_delta:
-            self.best_loss = current_value
-            self.counter = 0
-            self.best_model = model
-        else:
-            self.counter += 1
-            if self.counter >= self.patience:
-                self.early_stop = True
-                
-        return self.early_stop
 
 class GPUMemoryManager:
     """Manages GPU memory during training."""
@@ -422,13 +383,138 @@ class GPUMemoryManager:
         print(f"  Cached: {stats['cached']:.2f} MB")
         print(f"  Max Allocated: {stats['max_allocated']:.2f} MB")
 
+class TrainingCallback(TrainerCallback):
+    def __init__(self, evaluator, loss_type: str, total_steps: int):
+        self.evaluator = evaluator
+        self.loss_type = loss_type
+        self.current_step = 0
+        self.total_steps = total_steps
+        self.progress_bar = None
+        self.last_log_time = time.time()
+        self.log_interval = 10
+        
+        # Best model tracking
+        self.best_accuracy = float('-inf')
+        self.best_model_state = None
+        self.best_epoch = 0
+        self.best_scores = None
+        self.epoch = 0
+
+    def on_epoch_begin(self, args, state, control, **kwargs):
+        """Called at the start of each epoch."""
+        self.epoch += 1
+        print(f"\n{'='*20} Epoch {self.epoch} {'='*20}")
+        self.progress_bar = tqdm(total=self.total_steps, desc=f"Training Epoch {self.epoch}")
+        self.current_step = 0
+        return control
+
+    def on_step_end(self, args, state, control, model=None, **kwargs):
+        """Called at the end of each step."""
+        self.current_step += 1
+        if self.progress_bar is not None:
+            self.progress_bar.update(1)
+            
+            current_time = time.time()
+            if self.current_step % self.log_interval == 0 and state.log_history:
+                try:
+                    current_loss = state.log_history[-1].get('loss', None)
+                    if current_loss is not None:
+                        self.progress_bar.set_postfix({
+                            'loss': f'{current_loss:.4f}',
+                            'steps': f'{self.current_step}/{self.total_steps}'
+                        })
+                except (IndexError, KeyError):
+                    self.progress_bar.set_postfix({
+                        'steps': f'{self.current_step}/{self.total_steps}'
+                    })
+                self.last_log_time = current_time
+        return control
+
+    def on_epoch_end(self, args, state, control, model=None, **kwargs):
+        """Called at the end of each epoch."""
+        if self.progress_bar is not None:
+            self.progress_bar.close()
+        
+        # Get metrics
+        train_loss = None
+        if state.log_history:
+            try:
+                for log in reversed(state.log_history):
+                    if 'loss' in log:
+                        train_loss = log['loss']
+                        break
+            except Exception as e:
+                print(f"Warning: Could not retrieve training loss: {str(e)}")
+        
+        # Get evaluation scores
+        scores = None
+        try:
+            scores = self.evaluator(model) if model is not None else None
+        except Exception as e:
+            print(f"Warning: Error during evaluation: {str(e)}")
+            scores = {}
+        
+        # Track best model
+        if scores and model is not None:
+            current_accuracy = scores.get('eval_accuracy', 0.0)
+            if current_accuracy > self.best_accuracy:
+                print(f"\nFound better model at epoch {self.epoch} with accuracy: {current_accuracy:.4f}")
+                
+                try:
+                    # Save the current state as best
+                    self.best_accuracy = current_accuracy
+                    self.best_scores = scores.copy()
+                    self.best_epoch = self.epoch
+                    self.best_model_state = {
+                        'state_dict': {
+                            name: param.detach().cpu().clone() 
+                            for name, param in model.state_dict().items()
+                        },
+                        'accuracy': current_accuracy
+                    }
+                    print("Successfully saved new best model state.")
+                except Exception as e:
+                    print(f"Error saving model state: {str(e)}")
+        
+        # Print epoch summary
+        print(f"\n{'-'*20} Epoch {self.epoch} Summary {'-'*20}")
+        print(f"Loss Function: {self.loss_type}")
+        if train_loss is not None:
+            print(f"Training Loss: {train_loss:.4f}")
+        
+        if scores:
+            print("\nCurrent Scores:")
+            for metric, value in scores.items():
+                if isinstance(value, (int, float)):
+                    print(f"{metric}: {value:.4f}")
+                else:
+                    print(f"{metric}: {value}")
+        
+        print("\nBest Model Info:")
+        print(f"Best Epoch: {self.best_epoch}")
+        print(f"Best Accuracy: {self.best_accuracy:.4f}")
+        print("-"*60)
+        return control
+
+    def get_best_model(self, model: SentenceTransformer) -> SentenceTransformer:
+        """Return the best model encountered during training."""
+        if self.best_model_state is not None:
+            try:
+                print(f"Loading best model from epoch {self.best_epoch}...")
+                model.load_state_dict(self.best_model_state['state_dict'])
+                print("Successfully loaded best model state")
+                return model
+            except Exception as e:
+                print(f"Error loading best model: {str(e)}")
+        return model
+
 def train_model(
     model: SentenceTransformer,
     train_dataset: Dataset,
     eval_dataset: Dataset,
     output_path: Path,
     run_name: str,
-    initial_metrics: Dict[str, float],  # Initial Results Before Training
+    initial_metrics: Dict[str, float],
     learning_rate: float = 8e-5,
     epochs: int = 3,
     train_batch_size: int = 64,
@@ -437,19 +523,12 @@ def train_model(
     warmup_ratio: float = 0.05,
     gradient_accumulation_steps: int = 8,
     max_grad_norm: float = 1.0,
-    early_stopping_patience: int = 3,
     enable_checkpointing: bool = True,
 ) -> SentenceTransformer:
-    """
-    Train the model with enhanced memory management and early stopping.
-    """
-    # Initialize memory manager and clear GPU memory
+    """Train the model with enhanced memory management and best model tracking."""
     memory_manager = GPUMemoryManager()
     memory_manager.clear_memory()
     memory_manager.log_memory_stats("Initial")
-    
-    # Initialize early stopping
-    early_stopping = EarlyStopping(patience=early_stopping_patience)
     
     try:
         # Define loss function
@@ -460,9 +539,6 @@ def train_model(
         if len(train_dataset) % (train_batch_size * gradient_accumulation_steps) != 0:
             total_steps_per_epoch += 1
         
-        # Configure progress bar display
-        tqdm.pandas()
-        
         # Create evaluator
         evaluator = ComprehensiveEvaluator(
             eval_dataset=eval_dataset,
@@ -471,15 +547,12 @@ def train_model(
         
         # Set up directories
         output_path = Path(output_path)
-        checkpoint_dir = output_path / run_name / "checkpoints"
-        checkpoint_dir.mkdir(parents=True, exist_ok=True)
-        
         best_model_dir = output_path / run_name / "best_model"
         best_model_dir.mkdir(parents=True, exist_ok=True)
-
+        
         # Define training arguments
         training_args = SentenceTransformerTrainingArguments(
-            output_dir=str(checkpoint_dir),
+            output_dir=str(output_path / run_name),
             num_train_epochs=epochs,
             per_device_train_batch_size=train_batch_size,
             per_device_eval_batch_size=eval_batch_size,
@@ -489,25 +562,23 @@ def train_model(
             fp16=True,
             bf16=False,
             learning_rate=learning_rate,
-            save_strategy="epoch",
+            save_strategy="no",  # Disable built-in saving
             eval_strategy="epoch",
-            save_total_limit=1,
-            load_best_model_at_end=True,
+            load_best_model_at_end=False,  # We handle this ourselves
             save_only_model=True,
-            metric_for_best_model="eval_f1",
+            metric_for_best_model="eval_accuracy",
             greater_is_better=True,
             logging_dir=str(output_path / run_name / "logs"),
             report_to=['wandb'],
             run_name=run_name,
-            gradient_checkpointing=True,  # Enable gradient checkpointing
-            use_flash_attention_2=True,  # Add this line to enable flash attention
+            gradient_checkpointing=enable_checkpointing,
         )
 
-        # Create callback for progress reporting
+        # Create callback for progress reporting and model tracking
         progress_callback = TrainingCallback(
             evaluator=evaluator,
             loss_type=loss_type,
-            total_steps=total_steps_per_epoch
+            total_steps=total_steps_per_epoch,
         )
 
         # Create trainer
@@ -521,9 +592,7 @@ def train_model(
             callbacks=[progress_callback]
         )
 
-        best_metrics = initial_metrics.copy()
-        # best_f1 = initial_metrics['eval_f1']
-        
+        # Print initial setup
         print("\nInitial Metrics:")
         for metric, value in initial_metrics.items():
             if isinstance(value, float):
@@ -531,7 +600,6 @@ def train_model(
             else:
                 print(f"{metric}: {value}")
 
-        # Train the model
         print("\n" + "="*50)
         print("Starting Training")
         print("="*50)
@@ -542,75 +610,65 @@ def train_model(
         print(f"Effective batch size: {train_batch_size * gradient_accumulation_steps}")
         
         # Train the model
-        trainer.train()
-        
-        # Final cleanup and memory check
+        try:
+            train_output = trainer.train()
+            
+            print("\nTraining complete. Processing best model...")
+            if progress_callback.best_model_state is not None:
+                # Load the best state we tracked during training
+                model = progress_callback.get_best_model(model)
+                
+                # Save best model
+                final_save_path = str(best_model_dir)
+                os.makedirs(final_save_path, exist_ok=True)
+                print(f"\nSaving best model to {final_save_path}...")
+                model.save(final_save_path)
+                
+                # Final verification of the saved model
+                print("\nPerforming final verification of saved model...")
+                loaded_model = SentenceTransformer(final_save_path)
+                verification_metrics = evaluator(loaded_model)
+                
+                print(f"\nBest model metrics:")
+                print(f"Epoch: {progress_callback.best_epoch}")
+                print(f"Best accuracy during training: {progress_callback.best_accuracy:.4f}")
+                print(f"Final verified accuracy: {verification_metrics['eval_accuracy']:.4f}")
+                
+                # Save all metrics
+                metrics = {
+                    'initial_metrics': initial_metrics,
+                    'best_metrics': progress_callback.best_scores,
+                    'verification_metrics': verification_metrics,
+                    'best_epoch': progress_callback.best_epoch,
+                    'training_params': {
+                        'learning_rate': learning_rate,
+                        'epochs': epochs,
+                        'train_batch_size': train_batch_size,
+                        'gradient_accumulation_steps': gradient_accumulation_steps,
+                        'effective_batch_size': train_batch_size * gradient_accumulation_steps,
+                        'warmup_ratio': warmup_ratio,
+                        'max_grad_norm': max_grad_norm,
+                        'loss_type': loss_type
+                    },
+                    'memory_stats': memory_manager.get_memory_stats(),
+                    'verification_successful': abs(verification_metrics['eval_accuracy'] - progress_callback.best_accuracy) < 1e-4
+                }
+                
+                metrics_path = output_path / run_name / 'training_metrics.json'
+                with open(metrics_path, 'w') as f:
+                    json.dump(metrics, f, indent=2)
+                    
+                print(f"\nMetrics saved to {metrics_path}")
+
+            else:
+                print("\nWarning: No best model state found!")
+
+        except Exception as e:
+            print(f"Error during training: {str(e)}")
+            raise
+
         memory_manager.clear_memory()
         memory_manager.log_memory_stats("Final")
-        
-        # Load best model and save
-        if early_stopping.best_model is not None:
-            model = early_stopping.best_model
-        
-        # Save best model
-        print("\nSaving best model...")
-        final_save_path = str(best_model_dir)
-        os.makedirs(final_save_path, exist_ok=True)
-        model.save(final_save_path)
-        
-        # Verify saved model
-        print("\nVerifying saved model...")
-        try:
-            loaded_model = SentenceTransformer(final_save_path)
-            verification_metrics = evaluator(loaded_model)
-            
-            print("\nMetrics from loaded model:")
-            for metric, value in verification_metrics.items():
-                if isinstance(value, float):
-                    print(f"{metric}: {value:.4f}")
-                else:
-                    print(f"{metric}: {value}")
-            
-            metrics_match = all(
-                abs(best_metrics[k] - verification_metrics[k]) < 1e-6 
-                for k in best_metrics 
-                if isinstance(best_metrics[k], (int, float))
-            )
-            
-            if metrics_match:
-                print("\nVerification successful: Saved model produces identical results")
-            else:
-                print("\nWarning: Saved model metrics differ from best model metrics!")
-                
-        except Exception as e:
-            print(f"\nError during model verification: {str(e)}")
-        
-        # Save all metrics
-        metrics = {
-            'initial_metrics': initial_metrics,
-            'best_metrics': best_metrics,
-            'verification_metrics': verification_metrics if 'verification_metrics' in locals() else None,
-            'training_params': {
-                'learning_rate': learning_rate,
-                'epochs': epochs,
-                'train_batch_size': train_batch_size,
-                'gradient_accumulation_steps': gradient_accumulation_steps,
-                'effective_batch_size': train_batch_size * gradient_accumulation_steps,
-                'warmup_ratio': warmup_ratio,
-                'max_grad_norm': max_grad_norm,
-                'loss_type': loss_type,
-                'early_stopping_patience': early_stopping_patience
-            },
-            'memory_stats': memory_manager.get_memory_stats(),
-            'verification_successful': metrics_match if 'metrics_match' in locals() else False
-        }
-        
-        metrics_path = output_path / run_name / 'training_metrics.json'
-        with open(metrics_path, 'w') as f:
-            json.dump(metrics, f, indent=2)
-            
-        print(f"\nBest model saved to {final_save_path}")
-        print(f"Metrics saved to {metrics_path}")
         
         return model
         
@@ -623,13 +681,13 @@ def main():
     parser = argparse.ArgumentParser(description='Train a sentence transformer model with comprehensive evaluation')
     
     # Model and data arguments
-    parser.add_argument("--lr", type=float, default=8e-5,
+    parser.add_argument("--lr", type=float, default=2e-4,
                        help="Learning rate for training")
     parser.add_argument("--model_name", type=str, default="answerdotai/ModernBERT-base",
                        help="Name or path of the base model to use")
-    parser.add_argument("--train_file", type=str, default="data/train_simple.json",
+    parser.add_argument("--train_file", type=str, default="small/train_simple.json",
                        help="Path to training data JSON file")
-    parser.add_argument("--eval_file", type=str, default="data/eval_simple.json",
+    parser.add_argument("--eval_file", type=str, default="small/eval_simple.json",
                        help="Path to evaluation data JSON file")
     parser.add_argument("--output_dir", type=str, default="output",
                        help="Directory to save model outputs")
@@ -637,25 +695,21 @@ def main():
     # Training hyperparameters
     parser.add_argument("--epochs", type=int, default=3,
                        help="Number of training epochs")
-    parser.add_argument("--train_batch_size", type=int, default=16,
+    parser.add_argument("--train_batch_size", type=int, default=2,
                        help="Training batch size")
-    parser.add_argument("--eval_batch_size", type=int, default=16,
+    parser.add_argument("--eval_batch_size", type=int, default=2,
                        help="Evaluation batch size")
     parser.add_argument("--loss_type", type=str, default="cached_mnr",
                        choices=['mnr', 'cached_mnr', 'cosine', 'mse', 'triplet'],
                        help="Type of loss function to use for training")
     
     # Additional training options
-    parser.add_argument("--gradient_accumulation_steps", type=int, default=4,
+    parser.add_argument("--gradient_accumulation_steps", type=int, default=1,
                        help="Number of gradient accumulation steps")
-    parser.add_argument("--max_grad_norm", type=float, default=1.0,
+    parser.add_argument("--max_grad_norm", type=float, default=2.0,
                        help="Maximum gradient norm for clipping")
-    parser.add_argument("--warmup_ratio", type=float, default=0.05,
+    parser.add_argument("--warmup_ratio", type=float, default=0.1,
                        help="Ratio of warmup steps")
-    
-    # Arguments for early stopping and checkpointing
-    parser.add_argument("--early_stopping_patience", type=int, default=3,
-                       help="Number of epochs with no improvement after which training will be stopped")
     parser.add_argument("--enable_checkpointing", type=bool, default=True,
                        help="Enable gradient checkpointing for memory efficiency")
     
@@ -676,7 +730,6 @@ def main():
                 "gradient_accumulation_steps": args.gradient_accumulation_steps,
                 "max_grad_norm": args.max_grad_norm,
                 "warmup_ratio": args.warmup_ratio,
-                "early_stopping_patience": args.early_stopping_patience,
                 "enable_checkpointing": args.enable_checkpointing
             }
         )
@@ -689,7 +742,6 @@ def main():
         # Initialize model
         print(f"\nInitializing model {args.model_name}...")
         model = SentenceTransformer(args.model_name)
-        model.config.use_flash_attention_2 = True  # Utilize flash attention
         print("Model initialized successfully")
 
         # Prepare datasets
@@ -756,38 +808,23 @@ def main():
         # Calculate and display improvements
         print("\nTraining Results Summary:")
         print("=" * 50)
-        print("\nFinal Metrics:")
-        for metric in final_metrics:
-            if metric in initial_metrics:
-                improvement = final_metrics[metric] - initial_metrics[metric]
-                rel_improvement = (improvement / initial_metrics[metric] * 100 
-                                 if initial_metrics[metric] != 0 else 0)
-                print(f"\n{metric}:")
-                print(f"  Initial: {initial_metrics[metric]:.4f}")
-                print(f"  Final: {final_metrics[metric]:.4f}")
-                print(f"  Absolute Improvement: {improvement:+.4f}")
-                print(f"  Relative Improvement: {rel_improvement:+.2f}%")
-            else:
-                print(f"\n{metric}: {final_metrics[metric]:.4f}")
-
-        # Save final metrics
-        metrics_path = output_path / "final_metrics.json"
-        final_results = {
-            "initial_metrics": initial_metrics,
-            "final_metrics": final_metrics,
-            "training_params": vars(args)
-        }
-        with open(metrics_path, 'w') as f:
-            json.dump(final_results, f, indent=2)
-        print(f"\nFinal metrics saved to {metrics_path}")
+        print("\nAccuracy Results:")
         
-        print(f"\nTraining completed successfully!")
-        print(f"Model and results saved to: {output_path}")
+        initial_accuracy = initial_metrics.get('eval_accuracy', 0)
+        final_accuracy = final_metrics.get('eval_accuracy', 0)
+        accuracy_improvement = final_accuracy - initial_accuracy
+        rel_improvement = (accuracy_improvement / initial_accuracy * 100 
+                         if initial_accuracy != 0 else 0)
         
-        # Add memory cleanup at the end
+        print(f"\nAccuracy:")
+        print(f"  Initial: {initial_accuracy:.4f}")
+        print(f"  Final: {final_accuracy:.4f}")
+        print(f"  Absolute Improvement: {accuracy_improvement:+.4f}")
+        print(f"  Relative Improvement: {rel_improvement:+.2f}%")
+        
+        print(f"\nTotal Comparisons: {final_metrics.get('eval_total_comparisons', 0)}")
+        
         memory_manager.clear_memory()
-        memory_manager.log_memory_stats("Final")
-        
         wandb.finish()
 
     except Exception as e:

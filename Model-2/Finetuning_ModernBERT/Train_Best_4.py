@@ -7,6 +7,7 @@ import argparse
 import json
 import time
 import wandb
+import warnings
 from pathlib import Path
 from typing import List, Dict, Any, Optional, Tuple
 from sentence_transformers.evaluation import SentenceEvaluator
@@ -184,7 +185,8 @@ def get_loss_function(loss_type: str, model: SentenceTransformer):
 class ComprehensiveEvaluator(SentenceEvaluator):
     """Evaluator that efficiently computes accuracy using cached embeddings."""
     
-    def __init__(self, eval_dataset: Dataset, name: str = '', batch_size: int = 32):
+    def __init__(self, eval_dataset: Dataset, name: str = '', batch_size: int = 32, 
+                 unique_texts: Optional[Dict[str, str]] = None):
         """
         Initialize the evaluator.
         
@@ -192,43 +194,57 @@ class ComprehensiveEvaluator(SentenceEvaluator):
             eval_dataset: Dataset containing anchor, positive, and negative examples
             name: Name of the evaluator
             batch_size: Batch size for embedding computation
+            unique_texts: Optional pre-computed unique texts dictionary
         """
         self.eval_dataset = eval_dataset
         self.name = name
         self.batch_size = batch_size
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         
-        # Pre-collect unique texts during initialization
-        self.unique_texts_map = {}
-        self.texts_to_encode = self._collect_unique_texts()
-        print(f"\nInitialized evaluator with {len(self.texts_to_encode)} unique texts")
-        
-    def _collect_unique_texts(self) -> List[Tuple[str, str]]:
+        # Use provided unique texts or collect them
+        if unique_texts is not None:
+            self.unique_texts_map = unique_texts
+            self.texts_to_encode = list(unique_texts.items())
+        else:
+            self.unique_texts_map = {}
+            self.texts_to_encode = self._collect_unique_texts()
+
+    @staticmethod
+    def collect_unique_texts(dataset: Dataset) -> Dict[str, str]:
         """
-        Collect unique texts from the dataset once during initialization.
+        Static method to collect unique texts from a dataset.
         
+        Args:
+            dataset: The dataset to collect unique texts from
+            
         Returns:
-            List of tuples (text_key, text) for all unique texts in the dataset
+            Dictionary mapping text identifiers to their content
         """
         print("\nCollecting unique texts...")
-        for example in tqdm(self.eval_dataset, desc="Processing examples"):
+        unique_texts = {}
+        for example in tqdm(dataset, desc="Processing examples"):
             # Cache anchor
             anchor_key = f"anchor_{example['anchor']}"
-            if anchor_key not in self.unique_texts_map:
-                self.unique_texts_map[anchor_key] = example['anchor']
+            if anchor_key not in unique_texts:
+                unique_texts[anchor_key] = example['anchor']
             
             # Cache positive
             pos_key = f"pos_{example['positive']}"
-            if pos_key not in self.unique_texts_map:
-                self.unique_texts_map[pos_key] = example['positive']
+            if pos_key not in unique_texts:
+                unique_texts[pos_key] = example['positive']
             
             # Cache negatives
             for neg in example['negatives']:
                 neg_key = f"neg_{neg}"
-                if neg_key not in self.unique_texts_map:
-                    self.unique_texts_map[neg_key] = neg
-                    
-        # Convert to list of tuples for batched processing
+                if neg_key not in unique_texts:
+                    unique_texts[neg_key] = neg
+        
+        print(f"Found {len(unique_texts)} unique texts")
+        return unique_texts
+
+    def _collect_unique_texts(self) -> List[Tuple[str, str]]:
+        """Internal method to collect unique texts if not provided."""
+        self.unique_texts_map = self.collect_unique_texts(self.eval_dataset)
         return list(self.unique_texts_map.items())
         
     def create_embeddings_cache(self, model: SentenceTransformer) -> Dict[str, torch.Tensor]:
@@ -242,6 +258,7 @@ class ComprehensiveEvaluator(SentenceEvaluator):
             Dict mapping text identifiers to their embeddings
         """
         cache = {}
+        start_time = time.time()
         
         # Generate embeddings in batches using pre-collected texts
         print(f"\nComputing embeddings for {len(self.texts_to_encode)} unique texts...")
@@ -265,7 +282,9 @@ class ComprehensiveEvaluator(SentenceEvaluator):
                 # Clear GPU memory if needed
                 if torch.cuda.is_available() and i % (5 * self.batch_size) == 0:
                     torch.cuda.empty_cache()
-            
+        
+        computation_time = time.time() - start_time
+        print(f"\nEmbedding computation completed in {computation_time:.2f} seconds")
         return cache
 
     def compute_similarity_matrix(self, 
@@ -274,6 +293,14 @@ class ComprehensiveEvaluator(SentenceEvaluator):
                               neg_embeddings: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
         """
         Compute similarity scores between anchor-positive and anchor-negative pairs.
+        
+        Args:
+            anchor_emb: Anchor embedding
+            pos_emb: Positive example embedding
+            neg_embeddings: Tensor of negative example embeddings
+            
+        Returns:
+            Tuple of (positive similarity score, negative similarity scores)
         """
         # Ensure embeddings have correct dimensions
         if anchor_emb.dim() == 1:
@@ -301,10 +328,14 @@ class ComprehensiveEvaluator(SentenceEvaluator):
                  steps: int = -1) -> Dict[str, float]:
         """
         Evaluate the model using cached embeddings.
+        
+        Returns:
+            Dictionary of evaluation metrics
         """
         if len(self.eval_dataset) == 0:
             return {}
             
+        eval_start_time = time.time()
         model.to(self.device)
         model.eval()
         
@@ -331,19 +362,25 @@ class ComprehensiveEvaluator(SentenceEvaluator):
                 pos_sim, neg_sims = self.compute_similarity_matrix(anchor_emb, pos_emb, neg_embeddings)
                 
                 # Compare similarities (positive should be higher than all negatives)
-                correct_predictions += torch.sum(pos_sim >= neg_sims).item()
+                correct_predictions += torch.sum(pos_sim > neg_sims).item()
                 total_comparisons += len(example['negatives'])
                 
                 # Clear memory periodically
                 if torch.cuda.is_available() and total_comparisons % 1000 == 0:
                     torch.cuda.empty_cache()
         
-        # Calculate final metrics
+        # Calculate metrics
         accuracy = correct_predictions / total_comparisons if total_comparisons > 0 else 0
+        eval_time = time.time() - eval_start_time
+        samples_per_sec = len(self.eval_dataset) / eval_time if eval_time > 0 else 0
         
+        # Return only the essential metrics
         return {
             'eval_accuracy': accuracy,
-            'eval_total_comparisons': total_comparisons
+            'eval_total_comparisons': total_comparisons,
+            'eval_runtime': eval_time,
+            'eval_steps_per_second': samples_per_sec,
+            'epoch': epoch if epoch != -1 else 0
         }
 
     def compute_metrics(self, model: SentenceTransformer) -> Dict[str, float]:
@@ -397,103 +434,69 @@ class TrainingCallback(TrainerCallback):
         self.best_accuracy = float('-inf')
         self.best_model_state = None
         self.best_epoch = 0
-        self.best_scores = None
         self.epoch = 0
+        
+        # Store latest evaluation results
+        self.latest_eval_results = None
 
     def on_epoch_begin(self, args, state, control, **kwargs):
         """Called at the start of each epoch."""
         self.epoch += 1
         print(f"\n{'='*20} Epoch {self.epoch} {'='*20}")
-        self.progress_bar = tqdm(total=self.total_steps, desc=f"Training Epoch {self.epoch}")
         self.current_step = 0
+        self.latest_eval_results = None
         return control
 
     def on_step_end(self, args, state, control, model=None, **kwargs):
         """Called at the end of each step."""
         self.current_step += 1
-        if self.progress_bar is not None:
-            self.progress_bar.update(1)
             
-            current_time = time.time()
-            if self.current_step % self.log_interval == 0 and state.log_history:
-                try:
-                    current_loss = state.log_history[-1].get('loss', None)
-                    if current_loss is not None:
-                        self.progress_bar.set_postfix({
-                            'loss': f'{current_loss:.4f}',
-                            'steps': f'{self.current_step}/{self.total_steps}'
-                        })
-                except (IndexError, KeyError):
-                    self.progress_bar.set_postfix({
-                        'steps': f'{self.current_step}/{self.total_steps}'
-                    })
-                self.last_log_time = current_time
+        current_time = time.time()
+        if self.current_step % self.log_interval == 0 and state.log_history:
+            try:
+                current_loss = state.log_history[-1].get('loss', None)
+                if current_loss is not None:
+                    print(f"\rStep {self.current_step}/{self.total_steps} - Loss: {current_loss:.4f}", end="")
+            except (IndexError, KeyError):
+                pass
+            self.last_log_time = current_time
+        return control
+
+    def on_evaluate(self, args, state, control, metrics=None, **kwargs):
+        """Called after evaluation."""
+        if metrics:
+            self.latest_eval_results = metrics
+            
+            print(f"\n{'-'*20} Epoch {self.epoch} Summary {'-'*20}")
+            print(f"Loss Function: {self.loss_type}")
+            print("\nCurrent Scores:")
+            print(f"eval_accuracy: {metrics['eval_accuracy']:.4f}")
+            print(f"eval_total_comparisons: {metrics['eval_total_comparisons']:.4f}")
+            
+            # Update best model tracking
+            current_accuracy = metrics['eval_accuracy']
+            if current_accuracy > self.best_accuracy:
+                self.best_accuracy = current_accuracy
+                self.best_epoch = self.epoch
+                if 'model' in kwargs:
+                    self.best_model_state = {
+                        'state_dict': {
+                            name: param.detach().cpu().clone() 
+                            for name, param in kwargs['model'].state_dict().items()
+                        },
+                        'accuracy': current_accuracy
+                    }
+                    print(f"\nFound new best model with accuracy: {current_accuracy:.4f}")
+            
+            print("\nBest Model Info:")
+            print(f"Best Epoch: {self.best_epoch}")
+            print(f"Best Accuracy: {self.best_accuracy:.4f}")
+            print("-" * 60)
+            
         return control
 
     def on_epoch_end(self, args, state, control, model=None, **kwargs):
         """Called at the end of each epoch."""
-        if self.progress_bar is not None:
-            self.progress_bar.close()
-        
-        # Get metrics
-        train_loss = None
-        if state.log_history:
-            try:
-                for log in reversed(state.log_history):
-                    if 'loss' in log:
-                        train_loss = log['loss']
-                        break
-            except Exception as e:
-                print(f"Warning: Could not retrieve training loss: {str(e)}")
-        
-        # Get evaluation scores
-        scores = None
-        try:
-            scores = self.evaluator(model) if model is not None else None
-        except Exception as e:
-            print(f"Warning: Error during evaluation: {str(e)}")
-            scores = {}
-        
-        # Track best model
-        if scores and model is not None:
-            current_accuracy = scores.get('eval_accuracy', 0.0)
-            if current_accuracy > self.best_accuracy:
-                print(f"\nFound better model at epoch {self.epoch} with accuracy: {current_accuracy:.4f}")
-                
-                try:
-                    # Save the current state as best
-                    self.best_accuracy = current_accuracy
-                    self.best_scores = scores.copy()
-                    self.best_epoch = self.epoch
-                    self.best_model_state = {
-                        'state_dict': {
-                            name: param.detach().cpu().clone() 
-                            for name, param in model.state_dict().items()
-                        },
-                        'accuracy': current_accuracy
-                    }
-                    print("Successfully saved new best model state.")
-                except Exception as e:
-                    print(f"Error saving model state: {str(e)}")
-        
-        # Print epoch summary
-        print(f"\n{'-'*20} Epoch {self.epoch} Summary {'-'*20}")
-        print(f"Loss Function: {self.loss_type}")
-        if train_loss is not None:
-            print(f"Training Loss: {train_loss:.4f}")
-        
-        if scores:
-            print("\nCurrent Scores:")
-            for metric, value in scores.items():
-                if isinstance(value, (int, float)):
-                    print(f"{metric}: {value:.4f}")
-                else:
-                    print(f"{metric}: {value}")
-        
-        print("\nBest Model Info:")
-        print(f"Best Epoch: {self.best_epoch}")
-        print(f"Best Accuracy: {self.best_accuracy:.4f}")
-        print("-"*60)
         return control
 
     def get_best_model(self, model: SentenceTransformer) -> SentenceTransformer:
@@ -515,6 +518,7 @@ def train_model(
     output_path: Path,
     run_name: str,
     initial_metrics: Dict[str, float],
+    unique_texts: Dict[str, str],
     learning_rate: float = 8e-5,
     epochs: int = 3,
     train_batch_size: int = 64,
@@ -539,10 +543,12 @@ def train_model(
         if len(train_dataset) % (train_batch_size * gradient_accumulation_steps) != 0:
             total_steps_per_epoch += 1
         
-        # Create evaluator
+        # Create evaluator with shared unique texts
         evaluator = ComprehensiveEvaluator(
             eval_dataset=eval_dataset,
-            name="table-text-eval"
+            name="table-text-eval",
+            batch_size=eval_batch_size,
+            unique_texts=unique_texts
         )
         
         # Set up directories
@@ -562,9 +568,9 @@ def train_model(
             fp16=True,
             bf16=False,
             learning_rate=learning_rate,
-            save_strategy="no",  # Disable built-in saving
+            save_strategy="no",
             eval_strategy="epoch",
-            load_best_model_at_end=False,  # We handle this ourselves
+            load_best_model_at_end=False,
             save_only_model=True,
             metric_for_best_model="eval_accuracy",
             greater_is_better=True,
@@ -572,6 +578,8 @@ def train_model(
             report_to=['wandb'],
             run_name=run_name,
             gradient_checkpointing=enable_checkpointing,
+            logging_strategy="steps",
+            logging_steps=100
         )
 
         # Create callback for progress reporting and model tracking
@@ -592,16 +600,8 @@ def train_model(
             callbacks=[progress_callback]
         )
 
-        # Print initial setup
-        print("\nInitial Metrics:")
-        for metric, value in initial_metrics.items():
-            if isinstance(value, float):
-                print(f"{metric}: {value:.4f}")
-            else:
-                print(f"{metric}: {value}")
-
-        print("\n" + "="*50)
-        print("Starting Training")
+        # Print training setup once
+        print("\nStarting Training")
         print("="*50)
         print(f"Total epochs: {epochs}")
         print(f"Steps per epoch: {total_steps_per_epoch}")
@@ -630,16 +630,19 @@ def train_model(
                 verification_metrics = evaluator(loaded_model)
                 
                 print(f"\nBest model metrics:")
-                print(f"Epoch: {progress_callback.best_epoch}")
-                print(f"Best accuracy during training: {progress_callback.best_accuracy:.4f}")
+                print(f"Best Epoch: {progress_callback.best_epoch}")
+                print(f"Best Accuracy: {progress_callback.best_accuracy:.4f}")
                 print(f"Final verified accuracy: {verification_metrics['eval_accuracy']:.4f}")
                 
-                # Save all metrics
+                # Save metrics
                 metrics = {
                     'initial_metrics': initial_metrics,
-                    'best_metrics': progress_callback.best_scores,
+                    'best_metrics': {
+                        'epoch': progress_callback.best_epoch,
+                        'accuracy': progress_callback.best_accuracy,
+                        'total_comparisons': verification_metrics['eval_total_comparisons']
+                    },
                     'verification_metrics': verification_metrics,
-                    'best_epoch': progress_callback.best_epoch,
                     'training_params': {
                         'learning_rate': learning_rate,
                         'epochs': epochs,
@@ -650,8 +653,7 @@ def train_model(
                         'max_grad_norm': max_grad_norm,
                         'loss_type': loss_type
                     },
-                    'memory_stats': memory_manager.get_memory_stats(),
-                    'verification_successful': abs(verification_metrics['eval_accuracy'] - progress_callback.best_accuracy) < 1e-4
+                    'memory_stats': memory_manager.get_memory_stats()
                 }
                 
                 metrics_path = output_path / run_name / 'training_metrics.json'
@@ -659,7 +661,6 @@ def train_model(
                     json.dump(metrics, f, indent=2)
                     
                 print(f"\nMetrics saved to {metrics_path}")
-
             else:
                 print("\nWarning: No best model state found!")
 
@@ -678,6 +679,8 @@ def train_model(
         raise
 
 def main():
+    warnings.filterwarnings("ignore", message="None of the inputs have requires_grad=True")
+
     parser = argparse.ArgumentParser(description='Train a sentence transformer model with comprehensive evaluation')
     
     # Model and data arguments
@@ -687,8 +690,10 @@ def main():
                        help="Name or path of the base model to use")
     parser.add_argument("--train_file", type=str, default="small/train_simple.json",
                        help="Path to training data JSON file")
-    parser.add_argument("--eval_file", type=str, default="small/eval_simple.json",
+    parser.add_argument("--eval_file", type=str, default="small/val_simple.json",
                        help="Path to evaluation data JSON file")
+    parser.add_argument("--test_file", type=str, default="small/test_simple.json",
+                       help="Path to test data JSON file (optional)")
     parser.add_argument("--output_dir", type=str, default="output",
                        help="Directory to save model outputs")
     
@@ -720,18 +725,7 @@ def main():
         wandb.init(
             project="LOKI",
             name=f"{args.model_name.split('/')[-1]}-TableText-{args.epochs}",
-            config={
-                "learning_rate": args.lr,
-                "epochs": args.epochs,
-                "train_batch_size": args.train_batch_size,
-                "eval_batch_size": args.eval_batch_size,
-                "model_name": args.model_name,
-                "loss_type": args.loss_type,
-                "gradient_accumulation_steps": args.gradient_accumulation_steps,
-                "max_grad_norm": args.max_grad_norm,
-                "warmup_ratio": args.warmup_ratio,
-                "enable_checkpointing": args.enable_checkpointing
-            }
+            config=vars(args)
         )
 
         # Initialize memory manager
@@ -765,21 +759,80 @@ def main():
             json.dump(vars(args), f, indent=2)
         print(f"\nTraining configuration saved to {config_path}")
 
-        # Initial model evaluation
-        print("\nPerforming initial model evaluation...")
+        # Print initial configuration
+        print("\n" + "="*50)
+        print("Training Configuration")
+        print("="*50)
+        print(f"Model: {args.model_name}")
+        print(f"Training examples: {len(train_dataset)}")
+        print(f"Evaluation examples: {len(eval_dataset)}")
+        print(f"Total epochs: {args.epochs}")
+        print(f"Steps per epoch: {len(train_dataset) // (args.train_batch_size * args.gradient_accumulation_steps)}")
+        print(f"Total training steps: {(len(train_dataset) // (args.train_batch_size * args.gradient_accumulation_steps)) * args.epochs}")
+        print(f"Batch size: {args.train_batch_size}")
+        print(f"Gradient accumulation steps: {args.gradient_accumulation_steps}")
+        print(f"Effective batch size: {args.train_batch_size * args.gradient_accumulation_steps}")
+        print("="*50 + "\n")
+
+        # Collect unique texts for validation set
+        unique_texts = ComprehensiveEvaluator.collect_unique_texts(eval_dataset)
+
+        # Initial model evaluation with shared unique texts
+        print("\nPerforming Initial Evaluation...")
+        print("-"*40)
         initial_evaluator = ComprehensiveEvaluator(
             eval_dataset=eval_dataset,
-            name="initial-eval"
+            name="initial-eval",
+            batch_size=args.eval_batch_size,
+            unique_texts=unique_texts
         )
         initial_metrics = initial_evaluator(model)
         
-        print("\nInitial Model Metrics:")
-        print("-" * 30)
-        for metric, value in initial_metrics.items():
-            print(f"{metric}: {value:.4f}")
+        print("\nInitial Scores:")
+        print(f"eval_accuracy: {initial_metrics['eval_accuracy']:.4f}")
+        print(f"eval_total_comparisons: {initial_metrics['eval_total_comparisons']}")
+        print("-"*30 + "\n")
 
-        # Train the model
-        print("\nStarting model training...")
+        # Initialize test-related variables
+        initial_test_metrics = None
+        test_dataset = None
+        test_evaluator = None
+        test_unique_texts = None
+
+        # If test file is provided, evaluate initial model on test set before training
+        if args.test_file:
+            print("\nPerforming Initial Test Set Evaluation...")
+            print("-"*40)
+            
+            # Load and prepare test dataset
+            print(f"\nLoading test dataset from {args.test_file}...")
+            test_dataset = prepare_dataset(args.test_file)
+            print(f"Test examples: {len(test_dataset)}")
+            
+            # Compute unique texts for test set
+            print("\nCollecting unique texts for test set...")
+            test_unique_texts = ComprehensiveEvaluator.collect_unique_texts(test_dataset)
+            
+            # Create test evaluator
+            test_evaluator = ComprehensiveEvaluator(
+                eval_dataset=test_dataset,
+                name="test-eval",
+                batch_size=args.eval_batch_size,
+                unique_texts=test_unique_texts
+            )
+            
+            # Evaluate initial model on test set
+            print("\nEvaluating initial model on test set...")
+            initial_test_metrics = test_evaluator(model)
+            
+            print("\nInitial Test Scores:")
+            print(f"Initial test accuracy: {initial_test_metrics['eval_accuracy']:.4f}")
+            print(f"Total test comparisons: {initial_test_metrics['eval_total_comparisons']}")
+            print("-"*30 + "\n")
+
+        # Train the model with shared unique texts
+        print("\nStarting Model Training...")
+        print("="*50)
         trained_model = train_model(
             model=model,
             train_dataset=train_dataset,
@@ -787,6 +840,7 @@ def main():
             output_path=output_path,
             run_name=run_name,
             initial_metrics=initial_metrics,
+            unique_texts=unique_texts,
             learning_rate=args.lr,
             epochs=args.epochs,
             train_batch_size=args.train_batch_size,
@@ -797,18 +851,22 @@ def main():
             max_grad_norm=args.max_grad_norm
         )
 
-        # Final evaluation
-        print("\nPerforming final evaluation...")
+        # Final evaluation using same unique texts
+        print("\nPerforming Final Evaluation...")
+        print("="*50)
         final_evaluator = ComprehensiveEvaluator(
             eval_dataset=eval_dataset,
-            name="final-eval"
+            name="final-eval",
+            batch_size=args.eval_batch_size,
+            unique_texts=unique_texts
         )
         final_metrics = final_evaluator(trained_model)
         
-        # Calculate and display improvements
-        print("\nTraining Results Summary:")
-        print("=" * 50)
-        print("\nAccuracy Results:")
+        # Training summary
+        print("\nResults Summary:")
+        print("="*50)
+        print("Accuracy Improvement on Evaluation Set:")
+        print("-"*30)
         
         initial_accuracy = initial_metrics.get('eval_accuracy', 0)
         final_accuracy = final_metrics.get('eval_accuracy', 0)
@@ -816,19 +874,73 @@ def main():
         rel_improvement = (accuracy_improvement / initial_accuracy * 100 
                          if initial_accuracy != 0 else 0)
         
-        print(f"\nAccuracy:")
-        print(f"  Initial: {initial_accuracy:.4f}")
-        print(f"  Final: {final_accuracy:.4f}")
-        print(f"  Absolute Improvement: {accuracy_improvement:+.4f}")
-        print(f"  Relative Improvement: {rel_improvement:+.2f}%")
-        
-        print(f"\nTotal Comparisons: {final_metrics.get('eval_total_comparisons', 0)}")
-        
+        print(f"Initial: {initial_accuracy:.4f}")
+        print(f"Final:   {final_accuracy:.4f}")
+        print(f"Absolute Improvement: {accuracy_improvement:+.4f}")
+        print(f"Relative Improvement: {rel_improvement:+.2f}%")
+        print("-"*30)
+        print(f"Total Comparisons: {final_metrics.get('eval_total_comparisons', 0)}")
+        print("\n" + "="*50)
+
+        # Test set final evaluation (only if test file was provided)
+        if args.test_file and initial_test_metrics is not None:
+            print("\nPerforming Final Test Set Evaluation...")
+            print("="*50)
+            
+            # Load best model from disk
+            best_model_path = output_path / run_name / "best_model"
+            print(f"\nLoading best model from {best_model_path}...")
+            best_model = SentenceTransformer(str(best_model_path))
+            
+            print("\nEvaluating best model on test set...")
+            final_test_metrics = test_evaluator(best_model)
+            
+            # Calculate improvements
+            test_initial_accuracy = initial_test_metrics['eval_accuracy']
+            test_final_accuracy = final_test_metrics['eval_accuracy']
+            test_accuracy_improvement = test_final_accuracy - test_initial_accuracy
+            test_rel_improvement = (test_accuracy_improvement / test_initial_accuracy * 100 
+                                  if test_initial_accuracy != 0 else 0)
+            
+            print("\nTest Set Results:")
+            print("="*50)
+            print("Accuracy Results:")
+            print("-"*30)
+            print(f"Initial: {test_initial_accuracy:.4f}")
+            print(f"Final:   {test_final_accuracy:.4f}")
+            print(f"Absolute Improvement: {test_accuracy_improvement:+.4f}")
+            print(f"Relative Improvement: {test_rel_improvement:+.2f}%")
+            print("-"*30)
+            print(f"Total Test Comparisons: {final_test_metrics['eval_total_comparisons']}")
+            print(f"Test Runtime: {final_test_metrics['eval_runtime']:.2f}s")
+            
+            # Save metrics
+            metrics_path = output_path / run_name / 'training_metrics.json'
+            try:
+                with open(metrics_path, 'r') as f:
+                    all_metrics = json.load(f)
+            except FileNotFoundError:
+                all_metrics = {}
+                
+            all_metrics['test_metrics'] = {
+                'initial_accuracy': test_initial_accuracy,
+                'final_accuracy': test_final_accuracy,
+                'absolute_improvement': test_accuracy_improvement,
+                'relative_improvement': test_rel_improvement,
+                'total_comparisons': final_test_metrics['eval_total_comparisons'],
+                'runtime': final_test_metrics['eval_runtime']
+            }
+            
+            with open(metrics_path, 'w') as f:
+                json.dump(all_metrics, f, indent=2)
+                
+            print(f"\nTest metrics saved to {metrics_path}")
+
         memory_manager.clear_memory()
         wandb.finish()
 
     except Exception as e:
-        print(f"\nError during training: {str(e)}")
+        print(f"\nError during training or evaluation: {str(e)}")
         traceback.print_exc()
         wandb.finish()
         sys.exit(1)

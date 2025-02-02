@@ -12,11 +12,14 @@ from pathlib import Path
 from typing import List, Dict, Any, Optional, Tuple
 from sentence_transformers.evaluation import SentenceEvaluator
 from sentence_transformers.training_args import BatchSamplers
+from scipy.stats import pearsonr, spearmanr
+from sklearn.metrics.pairwise import paired_cosine_distances
 
 import torch
 import torch.cuda
 from datasets import Dataset
 from tqdm.auto import tqdm
+from transformers import AutoTokenizer, AutoModel
 from sentence_transformers import (
     SentenceTransformer,
     SentenceTransformerTrainer,
@@ -33,45 +36,55 @@ from sentence_transformers.losses import (
     MultipleNegativesRankingLoss
 )
 
+# This will disable the loggings from Triton
+import logging.config
+logging.config.dictConfig({
+    'version': 1,
+    'disable_existing_loggers': True,
+})
+
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
+torch.set_float32_matmul_precision('high')
+
 def format_table(table_content: List[List[str]], table_title: str = "", caption: str = "") -> str:
-    """Format table content into a single string representation."""
+    """Format table content into a structured representation with proper punctuation.
+    
+    Args:
+        table_content: List of lists containing table data (first row is headers)
+        table_title: Optional table title
+        caption: Optional table caption
+        
+    Returns:
+        str: Structured representation of the table
+    """
     parts = []
     
-    # Add title and caption if present and not empty
-    if table_title and table_title.strip():
-        parts.append(f"Title: {table_title}")
-    if caption and caption.strip() and caption.lower() != "null":
-        parts.append(f"Caption: {caption}")
+    # Add title if present
+    if table_title := table_title.strip():
+        parts.append(f"Title: {table_title}.")
+    
+    # Add caption if present and not null
+    if caption := caption.strip():
+        if caption.lower() != "null":
+            parts.append(f"Caption: {caption}.")
     
     if table_content and len(table_content) > 0:
         headers = table_content[0]
-        # Add table content
-        parts.append("Table Content:")
+        # Headers as a list
+        parts.append("Columns: " + ", ".join(map(str, headers)) + ".")
         
-        # Add header row
-        parts.append("Headers: " + " | ".join(str(h) for h in headers))
-        
-        # Process data rows
+        # Each row as key-value pairs
         for i, row in enumerate(table_content[1:], 1):
-            # Ensure row and headers have same length
-            if len(row) > len(headers):
-                row = row[:len(headers)]  # Truncate row if too long
-            elif len(row) < len(headers):
-                row = row + [''] * (len(headers) - len(row))  # Pad row if too short
-            
-            # Create row representation
-            try:
-                row_data = [f"{headers[j]}: {cell}" for j, cell in enumerate(row)]
-                parts.append(f"Row {i}: " + " | ".join(row_data))
-            except Exception as e:
-                print(f"Warning: Error processing row {i}: {e}")
-                print(f"Headers: {headers}")
-                print(f"Row: {row}")
-                continue
+            # Ensure row length matches headers
+            row = (row + [''] * len(headers))[:len(headers)]
+            # Create key-value pairs
+            row_content = "; ".join(f"{h}: {c}" for h, c in zip(headers, row) if c and str(c).strip())
+            if row_content:
+                parts.append(f"Row {i}: {row_content}.")
     
     return "\n".join(parts)
 
-def prepare_dataset(file_path: str) -> Dataset:
+def prepare_dataset(file_path: str, model: SentenceTransformer) -> Dataset:
     """Load and prepare the dataset from JSON file."""
     print(f"\nProcessing {file_path}...")
     try:
@@ -83,8 +96,18 @@ def prepare_dataset(file_path: str) -> Dataset:
         
     print(f"Found {len(data)} examples in {file_path}")
     
+    # Add tracking variables
+    total_positives = 0
+    total_negatives = 0
+    max_lengths = {
+        'table_chars': 0,
+        'table_tokens': 0,
+        'context_chars': 0,
+        'context_tokens': 0
+    }
+    tokenizer = model.tokenizer
+    
     processed_data = []
-    total_pairs = 0
     for idx, item in enumerate(tqdm(data, desc="Processing examples", unit="example")):
         try:
             # Format the complete table as one unit
@@ -93,6 +116,10 @@ def prepare_dataset(file_path: str) -> Dataset:
                 item['anchor']['table_title'],
                 item['anchor']['caption']
             )
+            
+            # Update table lengths
+            max_lengths['table_chars'] = max(max_lengths['table_chars'], len(table_text))
+            max_lengths['table_tokens'] = max(max_lengths['table_tokens'], len(tokenizer.encode(table_text)))
             
             # Process primary positive
             if isinstance(item['primary_positive']['sentence_context'], str):
@@ -104,6 +131,10 @@ def prepare_dataset(file_path: str) -> Dataset:
                 except Exception as e:
                     print(f"Warning: Error processing primary context in example {idx}: {e}")
                     continue
+            
+            # Update context lengths for primary positive
+            max_lengths['context_chars'] = max(max_lengths['context_chars'], len(primary_context))
+            max_lengths['context_tokens'] = max(max_lengths['context_tokens'], len(tokenizer.encode(primary_context)))
                 
             # Process additional positives
             additional_positives = []
@@ -143,7 +174,8 @@ def prepare_dataset(file_path: str) -> Dataset:
                 'positive': primary_context,
                 'negatives': negatives  # Include all negatives
             })
-            total_pairs += 1
+            total_positives += 1
+            total_negatives += len(negatives)
             
             # Create pairs with additional positives and all negatives
             for pos_text in additional_positives:
@@ -152,14 +184,27 @@ def prepare_dataset(file_path: str) -> Dataset:
                     'positive': pos_text,
                     'negatives': negatives  # Include all negatives
                 })
-                total_pairs += 1
+                total_positives += 1
+                total_negatives += len(negatives)
                 
         except Exception as e:
             print(f"Warning: Error processing example {idx}: {e}")
             continue
             
-    print(f"Successfully processed {len(processed_data)} training pairs")
-    print(f"Average negatives per pair: {sum(len(item['negatives']) for item in processed_data) / total_pairs:.2f}")
+    print(f"\nDataset Statistics:")
+    print(f"Total examples processed: {len(processed_data)}")
+    if len(data) > 0:
+        print(f"Average positives per anchor: {total_positives/len(data):.2f}")
+        print(f"Average negatives per anchor: {total_negatives/len(data):.2f}")
+    print("\nLength Statistics:")
+    print(f"Table representations:")
+    print(f"  Max characters: {max_lengths['table_chars']}")
+    print(f"  Max tokens: {max_lengths['table_tokens']}")
+    print(f"Sentence contexts:")
+    print(f"  Max characters: {max_lengths['context_chars']}")
+    print(f"  Max tokens: {max_lengths['context_tokens']}")
+    print(f"\nSuccessfully processed {len(processed_data)} training pairs")
+    
     return Dataset.from_list(processed_data)
 
 def get_loss_function(loss_type: str, model: SentenceTransformer):
@@ -183,9 +228,9 @@ def get_loss_function(loss_type: str, model: SentenceTransformer):
     return loss_types[loss_type]()
 
 class ComprehensiveEvaluator(SentenceEvaluator):
-    """Evaluator that efficiently computes accuracy using cached embeddings."""
+    """Evaluator that focuses on accuracy metrics."""
     
-    def __init__(self, eval_dataset: Dataset, name: str = '', batch_size: int = 32, 
+    def __init__(self, eval_dataset: Dataset, name: str = '', batch_size: int = 32,
                  unique_texts: Optional[Dict[str, str]] = None):
         """
         Initialize the evaluator.
@@ -212,126 +257,165 @@ class ComprehensiveEvaluator(SentenceEvaluator):
     @staticmethod
     def collect_unique_texts(dataset: Dataset) -> Dict[str, str]:
         """
-        Static method to collect unique texts from a dataset.
-        
-        Args:
-            dataset: The dataset to collect unique texts from
-            
-        Returns:
-            Dictionary mapping text identifiers to their content
+        Static method to collect unique texts from a dataset more efficiently.
+        Returns a dictionary mapping unique keys to their text content.
         """
         print("\nCollecting unique texts...")
         unique_texts = {}
-        for example in tqdm(dataset, desc="Processing examples"):
-            # Cache anchor
-            anchor_key = f"anchor_{example['anchor']}"
-            if anchor_key not in unique_texts:
-                unique_texts[anchor_key] = example['anchor']
-            
-            # Cache positive
-            pos_key = f"pos_{example['positive']}"
-            if pos_key not in unique_texts:
-                unique_texts[pos_key] = example['positive']
-            
-            # Cache negatives
-            for neg in example['negatives']:
-                neg_key = f"neg_{neg}"
-                if neg_key not in unique_texts:
-                    unique_texts[neg_key] = neg
+        anchor_count = 0
+        pos_count = 0
+        neg_count = 0
         
-        print(f"Found {len(unique_texts)} unique texts")
+        # First pass: collect basic counts for progress bar
+        total_items = len(dataset)
+        total_negatives = sum(len(example['negatives']) for example in dataset)
+        total_operations = total_items * 2 + total_negatives  # anchors + positives + negatives
+        
+        with tqdm(total=total_operations, desc="Processing texts") as pbar:
+            for example in dataset:
+                # Cache anchor
+                anchor_key = f"anchor_{example['anchor']}"
+                if anchor_key not in unique_texts:
+                    unique_texts[anchor_key] = example['anchor']
+                    anchor_count += 1
+                pbar.update(1)
+                
+                # Cache positive
+                pos_key = f"pos_{example['positive']}"
+                if pos_key not in unique_texts:
+                    unique_texts[pos_key] = example['positive']
+                    pos_count += 1
+                pbar.update(1)
+                
+                # Cache negatives
+                for neg in example['negatives']:
+                    neg_key = f"neg_{neg}"
+                    if neg_key not in unique_texts:
+                        unique_texts[neg_key] = neg
+                        neg_count += 1
+                    pbar.update(1)
+        
+        # Print detailed statistics
+        print(f"\nUnique texts collected:")
+        print(f"- Unique anchors: {anchor_count}")
+        print(f"- Unique positives: {pos_count}")
+        print(f"- Unique negatives: {neg_count}")
+        print(f"Total unique texts: {len(unique_texts)}")
+        
+        # Calculate memory usage estimate (rough approximation)
+        total_chars = sum(len(text) for text in unique_texts.values())
+        memory_mb = total_chars * 2 / 1024 / 1024  # Rough estimate: 2 bytes per character
+        print(f"Approximate memory usage: {memory_mb:.2f} MB")
+        
         return unique_texts
 
     def _collect_unique_texts(self) -> List[Tuple[str, str]]:
         """Internal method to collect unique texts if not provided."""
         self.unique_texts_map = self.collect_unique_texts(self.eval_dataset)
         return list(self.unique_texts_map.items())
-        
+
     def create_embeddings_cache(self, model: SentenceTransformer) -> Dict[str, torch.Tensor]:
         """
         Create cache of embeddings for all unique texts with batched processing.
-        
-        Args:
-            model: The SentenceTransformer model
-            
-        Returns:
-            Dict mapping text identifiers to their embeddings
         """
         cache = {}
         start_time = time.time()
         
-        # Generate embeddings in batches using pre-collected texts
         print(f"\nComputing embeddings for {len(self.texts_to_encode)} unique texts...")
-        with torch.no_grad():
-            for i in tqdm(range(0, len(self.texts_to_encode), self.batch_size), desc="Computing embeddings"):
-                batch = self.texts_to_encode[i:i + self.batch_size]
-                keys, texts = zip(*batch)
-                
-                # Compute embeddings for batch
-                embeddings = model.encode(
-                    list(texts),
-                    convert_to_tensor=True,
-                    normalize_embeddings=True,
-                    batch_size=self.batch_size
-                )
-                
-                # Store in cache
-                for j, key in enumerate(keys):
-                    cache[key] = embeddings[j].to(self.device)
-                
-                # Clear GPU memory if needed
-                if torch.cuda.is_available() and i % (5 * self.batch_size) == 0:
-                    torch.cuda.empty_cache()
         
+        try:
+            with torch.no_grad():
+                for i in tqdm(range(0, len(self.texts_to_encode), self.batch_size), desc="Computing embeddings"):
+                    batch = self.texts_to_encode[i:i + self.batch_size]
+                    keys, texts = zip(*batch)
+                    
+                    # Compute embeddings for batch
+                    try:
+                        embeddings = model.encode(
+                            list(texts),
+                            convert_to_tensor=True,
+                            normalize_embeddings=True,
+                            batch_size=self.batch_size,
+                            show_progress_bar=False  # Disable internal progress bar
+                        )
+                        
+                        # Store in cache
+                        for j, key in enumerate(keys):
+                            cache[key] = embeddings[j].to(self.device)
+                        
+                    except RuntimeError as e:
+                        if "out of memory" in str(e):
+                            print(f"\nWarning: Out of memory with batch size {self.batch_size}")
+                            # Try to process the problematic batch one by one
+                            for j, (key, text) in enumerate(batch):
+                                try:
+                                    embedding = model.encode(
+                                        [text],
+                                        convert_to_tensor=True,
+                                        normalize_embeddings=True,
+                                        batch_size=1
+                                    )
+                                    cache[key] = embedding[0].to(self.device)
+                                except Exception as e2:
+                                    print(f"Error processing individual item {j}: {str(e2)}")
+                        else:
+                            raise e
+                    
+                    # Clear GPU memory if needed
+                    if torch.cuda.is_available():
+                        if i % (5 * self.batch_size) == 0:
+                            torch.cuda.empty_cache()
+            
+        except Exception as e:
+            print(f"Error during embedding computation: {str(e)}")
+            raise
+            
         computation_time = time.time() - start_time
         print(f"\nEmbedding computation completed in {computation_time:.2f} seconds")
+        print(f"Cache size: {len(cache)} embeddings")
+        
         return cache
 
     def compute_similarity_matrix(self, 
-                              anchor_emb: torch.Tensor,
-                              pos_emb: torch.Tensor,
-                              neg_embeddings: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
+                                anchor_emb: torch.Tensor,
+                                pos_emb: torch.Tensor,
+                                neg_embeddings: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
         """
-        Compute similarity scores between anchor-positive and anchor-negative pairs.
+        Compute similarity scores between anchor-positive and anchor-negative pairs efficiently.
         
         Args:
-            anchor_emb: Anchor embedding
-            pos_emb: Positive example embedding
-            neg_embeddings: Tensor of negative example embeddings
-            
+            anchor_emb: Anchor embedding [1, embed_dim] or [embed_dim]
+            pos_emb: Positive embedding [1, embed_dim] or [embed_dim]
+            neg_embeddings: Negative embeddings [n_neg, embed_dim]
+        
         Returns:
             Tuple of (positive similarity score, negative similarity scores)
         """
-        # Ensure embeddings have correct dimensions
+        # Handle both single vectors and batched inputs
         if anchor_emb.dim() == 1:
             anchor_emb = anchor_emb.unsqueeze(0)  # [1, embed_dim]
             
         if pos_emb.dim() == 1:
             pos_emb = pos_emb.unsqueeze(0)  # [1, embed_dim]
             
-        # Calculate positive similarity
-        pos_sim = torch.nn.functional.cosine_similarity(anchor_emb, pos_emb, dim=1)  # [1]
+        # Compute positive similarity - ensure it's a 1D tensor
+        pos_sim = torch.nn.functional.cosine_similarity(
+            anchor_emb.view(1, -1), 
+            pos_emb.view(1, -1)
+        ).squeeze()  # Make sure it's 1D
         
-        # Calculate negative similarities
+        # Compute negative similarities using broadcasting
         neg_sims = torch.nn.functional.cosine_similarity(
-            anchor_emb.expand(neg_embeddings.size(0), -1),  # [n_neg, embed_dim]
-            neg_embeddings,  # [n_neg, embed_dim]
-            dim=1  # compute similarity along embedding dimension
+            anchor_emb.view(1, -1),
+            neg_embeddings,
+            dim=1
         )  # [n_neg]
         
         return pos_sim, neg_sims
 
-    def __call__(self, 
-                 model: SentenceTransformer, 
-                 output_path: Optional[str] = None,
-                 epoch: int = -1,
-                 steps: int = -1) -> Dict[str, float]:
-        """
-        Evaluate the model using cached embeddings.
-        
-        Returns:
-            Dictionary of evaluation metrics
-        """
+    def __call__(self, model: SentenceTransformer, output_path: Optional[str] = None,
+                epoch: int = -1, steps: int = -1) -> Dict[str, float]:
+        """Evaluate the model using accuracy metrics."""
         if len(self.eval_dataset) == 0:
             return {}
             
@@ -339,53 +423,52 @@ class ComprehensiveEvaluator(SentenceEvaluator):
         model.to(self.device)
         model.eval()
         
-        # Create embeddings cache using pre-collected texts
+        # Create embeddings cache
         embeddings_cache = self.create_embeddings_cache(model)
         
-        correct_predictions = 0
-        total_comparisons = 0
+        # Pre-allocate lists with known sizes for better memory efficiency
+        total_comparisons = sum(len(example['negatives']) for example in self.eval_dataset)
         
-        # Evaluate using cached embeddings
+        correct_predictions = 0
+        
         with torch.no_grad():
-            for example in tqdm(self.eval_dataset, desc="Evaluating"):
+            for example in tqdm(self.eval_dataset, desc="Computing metrics"):
                 # Get embeddings from cache
                 anchor_emb = embeddings_cache[f"anchor_{example['anchor']}"]
                 pos_emb = embeddings_cache[f"pos_{example['positive']}"]
-                
-                # Get all negative embeddings for this example
                 neg_embeddings = torch.stack([
-                    embeddings_cache[f"neg_{neg}"] 
+                    embeddings_cache[f"neg_{neg}"]
                     for neg in example['negatives']
                 ])
                 
                 # Compute similarities
                 pos_sim, neg_sims = self.compute_similarity_matrix(anchor_emb, pos_emb, neg_embeddings)
                 
-                # Compare similarities (positive should be higher than all negatives)
+                # Update accuracy metrics
                 correct_predictions += torch.sum(pos_sim > neg_sims).item()
-                total_comparisons += len(example['negatives'])
                 
-                # Clear memory periodically
+                # Periodically clear cuda cache if needed
                 if torch.cuda.is_available() and total_comparisons % 1000 == 0:
                     torch.cuda.empty_cache()
         
-        # Calculate metrics
+        # Calculate accuracy
         accuracy = correct_predictions / total_comparisons if total_comparisons > 0 else 0
         eval_time = time.time() - eval_start_time
         samples_per_sec = len(self.eval_dataset) / eval_time if eval_time > 0 else 0
         
-        # Return only the essential metrics
-        return {
+        metrics = {
             'eval_accuracy': accuracy,
             'eval_total_comparisons': total_comparisons,
             'eval_runtime': eval_time,
             'eval_steps_per_second': samples_per_sec,
             'epoch': epoch if epoch != -1 else 0
         }
-
-    def compute_metrics(self, model: SentenceTransformer) -> Dict[str, float]:
-        """Compute metrics wrapper."""
-        return self.__call__(model)
+        
+        # Print results
+        print(f"\nEvaluation completed in {eval_time:.2f} seconds ({samples_per_sec:.1f} samples/sec)")
+        print(f"Accuracy: {accuracy:.4f}")
+        
+        return metrics
 
 class GPUMemoryManager:
     """Manages GPU memory during training."""
@@ -421,19 +504,20 @@ class GPUMemoryManager:
         print(f"  Max Allocated: {stats['max_allocated']:.2f} MB")
 
 class TrainingCallback(TrainerCallback):
+    """Callback for tracking training progress with accuracy metrics."""
+    
     def __init__(self, evaluator, loss_type: str, total_steps: int):
         self.evaluator = evaluator
         self.loss_type = loss_type
         self.current_step = 0
         self.total_steps = total_steps
-        self.progress_bar = None
         self.last_log_time = time.time()
         self.log_interval = 10
         
         # Best model tracking
-        self.best_accuracy = float('-inf')
-        self.best_model_state = None
-        self.best_epoch = 0
+        self.best_metrics = {
+            'accuracy': {'value': float('-inf'), 'epoch': 0, 'state_dict': None},
+        }
         self.epoch = 0
         
         # Store latest evaluation results
@@ -464,51 +548,97 @@ class TrainingCallback(TrainerCallback):
 
     def on_evaluate(self, args, state, control, metrics=None, **kwargs):
         """Called after evaluation."""
-        if metrics:
-            self.latest_eval_results = metrics
+        if not metrics:
+            return control
             
-            print(f"\n{'-'*20} Epoch {self.epoch} Summary {'-'*20}")
-            print(f"Loss Function: {self.loss_type}")
-            print("\nCurrent Scores:")
-            print(f"eval_accuracy: {metrics['eval_accuracy']:.4f}")
-            print(f"eval_total_comparisons: {metrics['eval_total_comparisons']:.4f}")
+        self.latest_eval_results = metrics
+        
+        print(f"\n{'-'*20} Epoch {self.epoch} Summary {'-'*20}")
+        print(f"Loss Function: {self.loss_type}")
+        
+        # Extract current metrics
+        current_accuracy = metrics['eval_accuracy']
+        
+        # Track improvements for each metric
+        improvements = {
+            'accuracy': current_accuracy > self.best_metrics['accuracy']['value'],
+        }
+        
+        # Update best metrics and save model state if improved
+        if 'model' in kwargs:
+            current_state = {
+                name: param.detach().cpu().clone()
+                for name, param in kwargs['model'].state_dict().items()
+            }
             
-            # Update best model tracking
-            current_accuracy = metrics['eval_accuracy']
-            if current_accuracy > self.best_accuracy:
-                self.best_accuracy = current_accuracy
-                self.best_epoch = self.epoch
-                if 'model' in kwargs:
-                    self.best_model_state = {
-                        'state_dict': {
-                            name: param.detach().cpu().clone() 
-                            for name, param in kwargs['model'].state_dict().items()
-                        },
-                        'accuracy': current_accuracy
-                    }
-                    print(f"\nFound new best model with accuracy: {current_accuracy:.4f}")
+            if improvements['accuracy']:
+                self.best_metrics['accuracy'].update({
+                    'value': current_accuracy,
+                    'epoch': self.epoch,
+                    'state_dict': current_state
+                })
+        
+        # Print current scores
+        print("\nCurrent Scores:")
+        print(f"Accuracy: {current_accuracy:.4f}")
+        
+        # Print best scores
+        print("\nBest Scores:")
+        print(f"Best Accuracy: {self.best_metrics['accuracy']['value']:.4f} (Epoch {self.best_metrics['accuracy']['epoch']})")
+        
+        if any(improvements.values()):
+            print("\nNew best score(s) achieved!")
             
-            print("\nBest Model Info:")
-            print(f"Best Epoch: {self.best_epoch}")
-            print(f"Best Accuracy: {self.best_accuracy:.4f}")
-            print("-" * 60)
-            
+        print("-" * 60)
         return control
 
-    def on_epoch_end(self, args, state, control, model=None, **kwargs):
+    def on_epoch_end(self, args, state, control, **kwargs):
         """Called at the end of each epoch."""
         return control
 
-    def get_best_model(self, model: SentenceTransformer) -> SentenceTransformer:
-        """Return the best model encountered during training."""
-        if self.best_model_state is not None:
+    def get_best_model_state(self, metric: str = 'accuracy') -> Optional[Dict]:
+        """
+        Get the best model state for a specific metric.
+        
+        Args:
+            metric: Which metric to use ('accuracy', 'precision', 'recall', 'f1' etc)
+            
+        Returns:
+            Best model state dict or None if no state is available
+        """
+        if metric not in self.best_metrics:
+            print(f"Warning: Unknown metric '{metric}'. Using 'accuracy' instead.")
+            metric = 'accuracy'
+            
+        best_state = self.best_metrics[metric].get('state_dict')
+        if best_state is None:
+            print(f"Warning: No model state available for metric '{metric}'")
+            return None
+            
+        return best_state
+
+    def get_best_model(self, model: SentenceTransformer, metric: str = 'accuracy') -> SentenceTransformer:
+        """
+        Load the best model state for a specific metric into the provided model.
+        
+        Args:
+            model: The model to load the state into
+            metric: Which metric to use ('accuracy', 'precision', 'recall', 'f1' etc)
+            
+        Returns:
+            Model with the best state loaded
+        """
+        best_state = self.get_best_model_state(metric)
+        if best_state is not None:
             try:
-                print(f"Loading best model from epoch {self.best_epoch}...")
-                model.load_state_dict(self.best_model_state['state_dict'])
+                print(f"\nLoading best model for {metric}:")
+                print(f"Epoch: {self.best_metrics[metric]['epoch']}")
+                print(f"Score: {self.best_metrics[metric]['value']:.4f}")
+                model.load_state_dict(best_state)
                 print("Successfully loaded best model state")
-                return model
             except Exception as e:
                 print(f"Error loading best model: {str(e)}")
+                
         return model
 
 def train_model(
@@ -529,7 +659,7 @@ def train_model(
     max_grad_norm: float = 1.0,
     enable_checkpointing: bool = True,
 ) -> SentenceTransformer:
-    """Train the model with enhanced memory management and best model tracking."""
+    """Train the model with memory management and best model tracking."""
     memory_manager = GPUMemoryManager()
     memory_manager.clear_memory()
     memory_manager.log_memory_stats("Initial")
@@ -543,22 +673,23 @@ def train_model(
         if len(train_dataset) % (train_batch_size * gradient_accumulation_steps) != 0:
             total_steps_per_epoch += 1
         
-        # Create evaluator with shared unique texts
+        # Create evaluator with shared unique texts - now reusing unique_texts throughout training
         evaluator = ComprehensiveEvaluator(
             eval_dataset=eval_dataset,
             name="table-text-eval",
             batch_size=eval_batch_size,
-            unique_texts=unique_texts
+            unique_texts=unique_texts  # Pass the pre-computed unique texts
         )
         
         # Set up directories
         output_path = Path(output_path)
-        best_model_dir = output_path / run_name / "best_model"
+        model_dir = output_path / run_name
+        best_model_dir = model_dir / "best_models"
         best_model_dir.mkdir(parents=True, exist_ok=True)
         
         # Define training arguments
         training_args = SentenceTransformerTrainingArguments(
-            output_dir=str(output_path / run_name),
+            output_dir=str(model_dir),
             num_train_epochs=epochs,
             per_device_train_batch_size=train_batch_size,
             per_device_eval_batch_size=eval_batch_size,
@@ -574,7 +705,7 @@ def train_model(
             save_only_model=True,
             metric_for_best_model="eval_accuracy",
             greater_is_better=True,
-            logging_dir=str(output_path / run_name / "logs"),
+            logging_dir=str(model_dir / "logs"),
             report_to=['wandb'],
             run_name=run_name,
             gradient_checkpointing=enable_checkpointing,
@@ -613,56 +744,59 @@ def train_model(
         try:
             train_output = trainer.train()
             
-            print("\nTraining complete. Processing best model...")
-            if progress_callback.best_model_state is not None:
-                # Load the best state we tracked during training
-                model = progress_callback.get_best_model(model)
-                
-                # Save best model
-                final_save_path = str(best_model_dir)
-                os.makedirs(final_save_path, exist_ok=True)
-                print(f"\nSaving best model to {final_save_path}...")
-                model.save(final_save_path)
-                
-                # Final verification of the saved model
-                print("\nPerforming final verification of saved model...")
-                loaded_model = SentenceTransformer(final_save_path)
-                verification_metrics = evaluator(loaded_model)
-                
-                print(f"\nBest model metrics:")
-                print(f"Best Epoch: {progress_callback.best_epoch}")
-                print(f"Best Accuracy: {progress_callback.best_accuracy:.4f}")
-                print(f"Final verified accuracy: {verification_metrics['eval_accuracy']:.4f}")
-                
-                # Save metrics
-                metrics = {
-                    'initial_metrics': initial_metrics,
-                    'best_metrics': {
-                        'epoch': progress_callback.best_epoch,
-                        'accuracy': progress_callback.best_accuracy,
-                        'total_comparisons': verification_metrics['eval_total_comparisons']
-                    },
-                    'verification_metrics': verification_metrics,
-                    'training_params': {
-                        'learning_rate': learning_rate,
-                        'epochs': epochs,
-                        'train_batch_size': train_batch_size,
-                        'gradient_accumulation_steps': gradient_accumulation_steps,
-                        'effective_batch_size': train_batch_size * gradient_accumulation_steps,
-                        'warmup_ratio': warmup_ratio,
-                        'max_grad_norm': max_grad_norm,
-                        'loss_type': loss_type
-                    },
-                    'memory_stats': memory_manager.get_memory_stats()
-                }
-                
-                metrics_path = output_path / run_name / 'training_metrics.json'
-                with open(metrics_path, 'w') as f:
-                    json.dump(metrics, f, indent=2)
+            print("\nTraining complete. Processing best model states...")
+            
+            # Save best models
+            metrics_to_save = ['accuracy']
+            saved_metrics = {}
+            
+            for metric in metrics_to_save:
+                if progress_callback.get_best_model_state(metric) is not None:
+                    metric_dir = best_model_dir / metric
+                    os.makedirs(metric_dir, exist_ok=True)
                     
-                print(f"\nMetrics saved to {metrics_path}")
-            else:
-                print("\nWarning: No best model state found!")
+                    # Load and save best model for this metric
+                    best_model = progress_callback.get_best_model(model, metric)
+                    best_model.save(str(metric_dir))
+                    
+                    # Verify the saved model using the same evaluator instance
+                    # This reuses the cached embeddings and pairs
+                    loaded_model = SentenceTransformer(str(metric_dir))
+                    verification_metrics = evaluator(loaded_model)
+                    
+                    saved_metrics[metric] = {
+                        'epoch': progress_callback.best_metrics[metric]['epoch'],
+                        'value': progress_callback.best_metrics[metric]['value'],
+                        'verification': verification_metrics
+                    }
+                    
+                    print(f"\nSaved best model for {metric}:")
+                    print(f"Epoch: {saved_metrics[metric]['epoch']}")
+                    print(f"Score: {saved_metrics[metric]['value']:.4f}")
+                    print(f"Verification accuracy: {verification_metrics['eval_accuracy']:.4f}")
+            
+            # Save comprehensive metrics
+            metrics = {
+                'initial_metrics': initial_metrics,
+                'best_metrics': saved_metrics,
+                'training_params': {
+                    'learning_rate': learning_rate,
+                    'epochs': epochs,
+                    'train_batch_size': train_batch_size,
+                    'gradient_accumulation_steps': gradient_accumulation_steps,
+                    'effective_batch_size': train_batch_size * gradient_accumulation_steps,
+                    'warmup_ratio': warmup_ratio,
+                    'max_grad_norm': max_grad_norm,
+                    'loss_type': loss_type
+                },
+                'memory_stats': memory_manager.get_memory_stats()
+            }
+            
+            metrics_path = model_dir / 'training_metrics.json'
+            with open(metrics_path, 'w') as f:
+                json.dump(metrics, f, indent=2)
+                
+            print(f"\nMetrics saved to {metrics_path}")
 
         except Exception as e:
             print(f"Error during training: {str(e)}")
@@ -671,7 +805,8 @@ def train_model(
         memory_manager.clear_memory()
         memory_manager.log_memory_stats("Final")
         
-        return model
+        # Return the best overall model (using accuracy metric)
+        return progress_callback.get_best_model(model, 'accuracy')
         
     except Exception as e:
         memory_manager.clear_memory()
@@ -688,6 +823,10 @@ def main():
                        help="Learning rate for training")
     parser.add_argument("--model_name", type=str, default="answerdotai/ModernBERT-base",
                        help="Name or path of the base model to use")
+    # parser.add_argument("--model_name", type=str, default="lightonai/modernbert-embed-large",
+    #                    help="Name or path of the base model to use")
+    # parser.add_argument("--model_name", type=str, default="nomic-ai/modernbert-embed-base",
+    #                    help="Name or path of the base model to use")
     parser.add_argument("--train_file", type=str, default="small/train_simple.json",
                        help="Path to training data JSON file")
     parser.add_argument("--eval_file", type=str, default="small/val_simple.json",
@@ -698,11 +837,11 @@ def main():
                        help="Directory to save model outputs")
     
     # Training hyperparameters
-    parser.add_argument("--epochs", type=int, default=3,
+    parser.add_argument("--epochs", type=int, default=5,
                        help="Number of training epochs")
-    parser.add_argument("--train_batch_size", type=int, default=2,
+    parser.add_argument("--train_batch_size", type=int, default=32,
                        help="Training batch size")
-    parser.add_argument("--eval_batch_size", type=int, default=2,
+    parser.add_argument("--eval_batch_size", type=int, default=32,
                        help="Evaluation batch size")
     parser.add_argument("--loss_type", type=str, default="cached_mnr",
                        choices=['mnr', 'cached_mnr', 'cosine', 'mse', 'triplet'],
@@ -735,15 +874,29 @@ def main():
 
         # Initialize model
         print(f"\nInitializing model {args.model_name}...")
-        model = SentenceTransformer(args.model_name)
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+
+        try:
+            # Initialize with Flash Attention if available
+            model = SentenceTransformer(
+                args.model_name,
+                model_kwargs={"attn_implementation": "flash_attention_2"},
+                device=device
+            )
+            print("Initialized model with Flash Attention")
+        except:
+            model = SentenceTransformer(args.model_name, device=device)
+            print("Initialized model without Flash Attention")
+
+        model.to(device)
         print("Model initialized successfully")
 
         # Prepare datasets
         print("\nPreparing datasets...")
-        train_dataset = prepare_dataset(args.train_file)
+        train_dataset = prepare_dataset(args.train_file, model)
         print(f"Training examples: {len(train_dataset)}")
         
-        eval_dataset = prepare_dataset(args.eval_file)
+        eval_dataset = prepare_dataset(args.eval_file, model)
         print(f"Evaluation examples: {len(eval_dataset)}")
 
         # Setup output directory with timestamp
@@ -775,6 +928,7 @@ def main():
         print("="*50 + "\n")
 
         # Collect unique texts for validation set
+        print("\nCollecting unique texts from validation set...")
         unique_texts = ComprehensiveEvaluator.collect_unique_texts(eval_dataset)
 
         # Initial model evaluation with shared unique texts
@@ -789,8 +943,7 @@ def main():
         initial_metrics = initial_evaluator(model)
         
         print("\nInitial Scores:")
-        print(f"eval_accuracy: {initial_metrics['eval_accuracy']:.4f}")
-        print(f"eval_total_comparisons: {initial_metrics['eval_total_comparisons']}")
+        print(f"Accuracy: {initial_metrics['eval_accuracy']:.4f}")
         print("-"*30 + "\n")
 
         # Initialize test-related variables
@@ -799,14 +952,14 @@ def main():
         test_evaluator = None
         test_unique_texts = None
 
-        # If test file is provided, evaluate initial model on test set before training
+        # If test file is provided, evaluate initial model on test set
         if args.test_file:
             print("\nPerforming Initial Test Set Evaluation...")
             print("-"*40)
             
             # Load and prepare test dataset
             print(f"\nLoading test dataset from {args.test_file}...")
-            test_dataset = prepare_dataset(args.test_file)
+            test_dataset = prepare_dataset(args.test_file, model)
             print(f"Test examples: {len(test_dataset)}")
             
             # Compute unique texts for test set
@@ -826,8 +979,7 @@ def main():
             initial_test_metrics = test_evaluator(model)
             
             print("\nInitial Test Scores:")
-            print(f"Initial test accuracy: {initial_test_metrics['eval_accuracy']:.4f}")
-            print(f"Total test comparisons: {initial_test_metrics['eval_total_comparisons']}")
+            print(f"Accuracy: {initial_test_metrics['eval_accuracy']:.4f}")
             print("-"*30 + "\n")
 
         # Train the model with shared unique texts
@@ -848,7 +1000,8 @@ def main():
             loss_type=args.loss_type,
             warmup_ratio=args.warmup_ratio,
             gradient_accumulation_steps=args.gradient_accumulation_steps,
-            max_grad_norm=args.max_grad_norm
+            max_grad_norm=args.max_grad_norm,
+            enable_checkpointing=args.enable_checkpointing
         )
 
         # Final evaluation using same unique texts
@@ -862,24 +1015,24 @@ def main():
         )
         final_metrics = final_evaluator(trained_model)
         
-        # Training summary
+        # Training summary for evaluation set
         print("\nResults Summary:")
         print("="*50)
-        print("Accuracy Improvement on Evaluation Set:")
+        print("Evaluation Set Metrics:")
         print("-"*30)
         
-        initial_accuracy = initial_metrics.get('eval_accuracy', 0)
-        final_accuracy = final_metrics.get('eval_accuracy', 0)
-        accuracy_improvement = final_accuracy - initial_accuracy
-        rel_improvement = (accuracy_improvement / initial_accuracy * 100 
-                         if initial_accuracy != 0 else 0)
+        # Calculate improvements
+        accuracy_improvement = final_metrics['eval_accuracy'] - initial_metrics['eval_accuracy']
+        rel_accuracy_improvement = (accuracy_improvement / initial_metrics['eval_accuracy'] * 100) if initial_metrics['eval_accuracy'] != 0 else 0
         
-        print(f"Initial: {initial_accuracy:.4f}")
-        print(f"Final:   {final_accuracy:.4f}")
-        print(f"Absolute Improvement: {accuracy_improvement:+.4f}")
-        print(f"Relative Improvement: {rel_improvement:+.2f}%")
+        print("\nAccuracy:")
+        print(f"  Initial: {initial_metrics['eval_accuracy']:.4f}")
+        print(f"  Final:   {final_metrics['eval_accuracy']:.4f}")
+        print(f"  Absolute Improvement: {accuracy_improvement:+.4f}")
+        print(f"  Relative Improvement: {rel_accuracy_improvement:+.2f}%")
+            
         print("-"*30)
-        print(f"Total Comparisons: {final_metrics.get('eval_total_comparisons', 0)}")
+        print(f"Total Comparisons: {final_metrics['eval_total_comparisons']}")
         print("\n" + "="*50)
 
         # Test set final evaluation (only if test file was provided)
@@ -887,52 +1040,36 @@ def main():
             print("\nPerforming Final Test Set Evaluation...")
             print("="*50)
             
-            # Load best model from disk
-            best_model_path = output_path / run_name / "best_model"
-            print(f"\nLoading best model from {best_model_path}...")
-            best_model = SentenceTransformer(str(best_model_path))
+            # Load best model from disk for each metric
+            best_model_metrics = {}
+            for metric in ['accuracy']:
+                metric_dir = output_path / run_name / "best_models" / metric
+                if metric_dir.exists():
+                    print(f"\nEvaluating best model for {metric}...")
+                    best_model = SentenceTransformer(str(metric_dir))
+                    best_model_metrics[metric] = test_evaluator(best_model)
+                    
+                    # Calculate and print improvements for test set
+                    test_accuracy_improvement = best_model_metrics[metric]['eval_accuracy'] - initial_test_metrics['eval_accuracy']
+                    test_rel_accuracy_improvement = (test_accuracy_improvement / initial_test_metrics['eval_accuracy'] * 100) if initial_test_metrics['eval_accuracy'] != 0 else 0
+                    
+                    print(f"\nTest Set Results for Best {metric.capitalize()} Model:")
+                    print("\nAccuracy:")
+                    print(f"  Initial: {initial_test_metrics['eval_accuracy']:.4f}")
+                    print(f"  Final:   {best_model_metrics[metric]['eval_accuracy']:.4f}")
+                    print(f"  Absolute Improvement: {test_accuracy_improvement:+.4f}")
+                    print(f"  Relative Improvement: {test_rel_accuracy_improvement:+.2f}%")
+                    print("-"*30)
             
-            print("\nEvaluating best model on test set...")
-            final_test_metrics = test_evaluator(best_model)
-            
-            # Calculate improvements
-            test_initial_accuracy = initial_test_metrics['eval_accuracy']
-            test_final_accuracy = final_test_metrics['eval_accuracy']
-            test_accuracy_improvement = test_final_accuracy - test_initial_accuracy
-            test_rel_improvement = (test_accuracy_improvement / test_initial_accuracy * 100 
-                                  if test_initial_accuracy != 0 else 0)
-            
-            print("\nTest Set Results:")
-            print("="*50)
-            print("Accuracy Results:")
-            print("-"*30)
-            print(f"Initial: {test_initial_accuracy:.4f}")
-            print(f"Final:   {test_final_accuracy:.4f}")
-            print(f"Absolute Improvement: {test_accuracy_improvement:+.4f}")
-            print(f"Relative Improvement: {test_rel_improvement:+.2f}%")
-            print("-"*30)
-            print(f"Total Test Comparisons: {final_test_metrics['eval_total_comparisons']}")
-            print(f"Test Runtime: {final_test_metrics['eval_runtime']:.2f}s")
-            
-            # Save metrics
-            metrics_path = output_path / run_name / 'training_metrics.json'
-            try:
-                with open(metrics_path, 'r') as f:
-                    all_metrics = json.load(f)
-            except FileNotFoundError:
-                all_metrics = {}
-                
-            all_metrics['test_metrics'] = {
-                'initial_accuracy': test_initial_accuracy,
-                'final_accuracy': test_final_accuracy,
-                'absolute_improvement': test_accuracy_improvement,
-                'relative_improvement': test_rel_improvement,
-                'total_comparisons': final_test_metrics['eval_total_comparisons'],
-                'runtime': final_test_metrics['eval_runtime']
+            # Save test metrics
+            metrics_path = output_path / run_name / 'test_metrics.json'
+            test_metrics = {
+                'initial_metrics': initial_test_metrics,
+                'best_model_metrics': best_model_metrics
             }
             
             with open(metrics_path, 'w') as f:
-                json.dump(all_metrics, f, indent=2)
+                json.dump(test_metrics, f, indent=2)
                 
             print(f"\nTest metrics saved to {metrics_path}")
 

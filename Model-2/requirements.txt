@@ -1,0 +1,33 @@
+conda create -n "myenv" python==3.12.0 ipython
+conda activate myenv
+
+pip install --upgrade pip
+pip install --upgrade setuptools
+pip install --upgrade wheel
+
+pip install notebook
+pip install ipywidgets
+python -m ipykernel install --user --name=myvenv
+
+# You need to intall PyTorch with CUDA if you want to use GPU - check appropriate cuda version by "nvcc --versio"
+pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
+
+#Sentence Transformer Latest Edition - This will also install torch and transformer
+pip install git+https://github.com/UKPLab/sentence-transformers.git
+pip install datasets
+pip install accelerate
+
+#You need to either disable wandb or set it up with you own key.
+pip install wandb
+
+# This is only used for the evaluation - Tested on Python 3.9
+pip install pytrec_eval
+
+# [OPTIONAL] If you are with windows, good luck with the time it takes to build flash-attn :p
+pip install ninja
+ninja --version
+pip install flash-attn --no-build-isolation
+
+# [OPTIONAL] You will also need Triton (for windows use the following) - https://github.com/woct0rdho/triton-windows
+
+pip install https://github.com/woct0rdho/triton-windows/releases/download/v3.2.0-windows.post9/triton-3.2.0-cp312-cp312-win_amd64.whl

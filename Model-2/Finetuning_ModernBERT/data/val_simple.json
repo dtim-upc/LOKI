@@ -1,0 +1,1926 @@
+[
+  {
+    "threshold": 11.65998116630307,
+    "anchor": {
+      "id": 421,
+      "broad_topic": "Music Charts",
+      "medium_topic": "Geography",
+      "table_content": [
+        [
+          "Rank",
+          "Settlement name",
+          "Country",
+          "Population",
+          "Latitude/longitude",
+          "Koppen climate classification"
+        ],
+        [
+          "1",
+          "Puerto Williams",
+          "Chile",
+          "2,874",
+          "",
+          "Cfc"
+        ],
+        [
+          "2",
+          "Ushuaia",
+          "Argentina",
+          "56,956",
+          "",
+          "ET"
+        ],
+        [
+          "3",
+          "Tolhuin",
+          "Argentina",
+          "3,004",
+          "",
+          "ET"
+        ],
+        [
+          "4",
+          "Rio Grande",
+          "Argentina",
+          "55,231",
+          "",
+          "Cfc/Dfc"
+        ],
+        [
+          "5",
+          "Porvenir",
+          "Chile",
+          "4,807",
+          "",
+          "Cfc"
+        ],
+        [
+          "6",
+          "Punta Arenas",
+          "Chile",
+          "130,136",
+          "",
+          "Cfc"
+        ],
+        [
+          "7",
+          "Puerto Natales",
+          "Chile",
+          "19,116",
+          "",
+          "Csb"
+        ],
+        [
+          "8",
+          "Stanley",
+          "Falkland Islands (UK)",
+          "2,115",
+          "",
+          "Cfc"
+        ],
+        [
+          "9",
+          "Veintiocho de Noviembre",
+          "Argentina",
+          "4,686",
+          "",
+          "Cfc"
+        ],
+        [
+          "10",
+          "Rio Gallegos",
+          "Argentina",
+          "110,435",
+          "",
+          "BSk"
+        ],
+        [
+          "11",
+          "Rio Turbio",
+          "Argentina",
+          "6,650",
+          "",
+          "Cfc"
+        ],
+        [
+          "11",
+          "El Calafate",
+          "Argentina",
+          "6,410",
+          "",
+          "BSk"
+        ],
+        [
+          "12",
+          "Puerto Santa Cruz",
+          "Argentina",
+          "3,397",
+          "",
+          "BSk"
+        ],
+        [
+          "13",
+          "Comandante Luis Piedrabuena",
+          "Argentina",
+          "4,175",
+          "",
+          "BSk"
+        ],
+        [
+          "14",
+          "Gobernador Gregores",
+          "Argentina",
+          "2,519",
+          "",
+          "BWk"
+        ],
+        [
+          "15",
+          "Puerto San Julian",
+          "Argentina",
+          "6,143",
+          "",
+          "BSk"
+        ],
+        [
+          "16",
+          "Puerto Deseado",
+          "Argentina",
+          "10,237",
+          "",
+          "BSk"
+        ],
+        [
+          "17",
+          "Cochrane",
+          "Chile",
+          "2,217",
+          "",
+          "Cfb"
+        ],
+        [
+          "18",
+          "Pico Truncado",
+          "Argentina",
+          "14,985",
+          "",
+          "BWk"
+        ],
+        [
+          "19",
+          "Bluff",
+          "New Zealand",
+          "1,850",
+          "",
+          "Cfb"
+        ],
+        [
+          "20",
+          "Perito Moreno",
+          "Argentina",
+          "3,588",
+          "",
+          "BSk"
+        ],
+        [
+          "21",
+          "Las Heras",
+          "Argentina",
+          "10,688",
+          "",
+          "BWk"
+        ],
+        [
+          "22",
+          "Los Antiguos",
+          "Argentina",
+          "2,047",
+          "",
+          "BSk"
+        ],
+        [
+          "23",
+          "Chile Chico",
+          "Chile",
+          "3,042",
+          "",
+          "Csb"
+        ],
+        [
+          "24",
+          "Caleta Olivia",
+          "Argentina",
+          "36,077",
+          "",
+          "BSk"
+        ],
+        [
+          "25",
+          "Invercargill",
+          "New Zealand",
+          "50,200",
+          "",
+          "Cfb"
+        ],
+        [
+          "26",
+          "Riverton",
+          "New Zealand",
+          "1,700",
+          "",
+          "Cfb"
+        ],
+        [
+          "27",
+          "Balclutha",
+          "New Zealand",
+          "4,230",
+          "",
+          "Cfb"
+        ],
+        [
+          "28",
+          "Mataura",
+          "New Zealand",
+          "1,710",
+          "",
+          "Cfb"
+        ],
+        [
+          "29",
+          "Winton",
+          "New Zealand",
+          "2,470",
+          "",
+          "Cfb"
+        ],
+        [
+          "30",
+          "Milton",
+          "New Zealand",
+          "2,210",
+          "",
+          "Cfb"
+        ],
+        [
+          "31",
+          "Gore",
+          "New Zealand",
+          "8,230",
+          "",
+          "Cfb"
+        ],
+        [
+          "32",
+          "Rada Tilly",
+          "Argentina",
+          "6,208",
+          "",
+          "BSk"
+        ],
+        [
+          "33",
+          "Comodoro Rivadavia",
+          "Argentina",
+          "182,631",
+          "",
+          "BSk"
+        ],
+        [
+          "34",
+          "Dunedin",
+          "New Zealand",
+          "106,200",
+          "",
+          "Cfb"
+        ],
+        [
+          "35",
+          "Rio Mayo",
+          "Argentina",
+          "2,939",
+          "",
+          "BSk"
+        ],
+        [
+          "36",
+          "Sarmiento",
+          "Argentina",
+          "8,028",
+          "",
+          "BSk"
+        ],
+        [
+          "37",
+          "Waikouaiti",
+          "New Zealand",
+          "1,250",
+          "",
+          "Cfb"
+        ],
+        [
+          "38",
+          "Coihaique",
+          "Chile",
+          "50,041",
+          "",
+          "Cfb"
+        ],
+        [
+          "39",
+          "Puerto Chacabuco",
+          "Chile",
+          "1,243",
+          "",
+          "Cfb"
+        ],
+        [
+          "40",
+          "Te Anau",
+          "New Zealand",
+          "2,940",
+          "",
+          "Cfb"
+        ],
+        [
+          "41",
+          "Puerto Aisen",
+          "Chile",
+          "16,936",
+          "",
+          "Cfb"
+        ],
+        [
+          "42",
+          "Alexandra",
+          "New Zealand",
+          "5,790",
+          "",
+          "BSk"
+        ],
+        [
+          "43",
+          "Clyde",
+          "New Zealand",
+          "1,200",
+          "",
+          "Cfb"
+        ],
+        [
+          "44",
+          "Oamaru",
+          "New Zealand",
+          "13,700",
+          "",
+          "Cfb"
+        ],
+        [
+          "45",
+          "Cromwell",
+          "New Zealand",
+          "6,480",
+          "",
+          "Cfb"
+        ],
+        [
+          "46",
+          "Queenstown",
+          "New Zealand",
+          "16,000",
+          "",
+          "Cfb"
+        ],
+        [
+          "47",
+          "Alto Rio Senguer",
+          "Argentina",
+          "1,454",
+          "",
+          "Csc/Dsc"
+        ]
+      ],
+      "caption": "",
+      "table_title": "Southernmost settlements"
+    },
+    "primary_positive": {
+      "id": 421,
+      "distance": 0.0,
+      "broad_topic": "Music Charts",
+      "medium_topic": "Geography",
+      "sentence_context": [
+        "Porvenir, Chile (1): It is one of Chile's southernmost towns, and has 4,734 inhabitants, including several thousand soldiers.",
+        "Pico Truncado (1): Pico Truncado is a town and municipality in Santa Cruz Province in southern Argentina.",
+        "Porvenir, Chile (2): It is the largest settlement in the Chilean half of the island of Tierra del Fuego.",
+        "Southernmost settlements (1): This is a list of the all settlements south of the 45th parallel south with over 1,000 permanent inhabitants.",
+        "Southernmost settlements (2): Southernmost settlements are cities, towns, weather stations or permanent military bases which are farther south than latitude 45°S."
+      ]
+    },
+    "additional_positives": [
+      {
+        "id": 398,
+        "distance": 0.16712368277404413,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Guadalupe y Calvo Municipality (1): Guadalupe y Calvo is one of the 67 municipalities of Chihuahua, in northern Mexico.",
+          "Guadalupe, Nuevo Leon (1): Guadalupe is a city and surrounding municipality located in the state of Nuevo Leon, in northern Mexico.",
+          "Guadalupe y Calvo Municipality (2): Other than the town of Guadalupe y Calvo, the municipality had 1,416 localities, the largest of which (with 2010 populations in parentheses) were: Baborigame (3,294), classified as urban, and Atascaderos (1,559), Las Yerbitas (Aserradero) (1,200), and Turuachi (1,131), classified as rural.",
+          "Guadalupe, Nuevo Leon (2): It is the second-largest city and municipality in the state.",
+          "Guadalupe Municipality, Chihuahua (1): Guadalupe is one of the 67 municipalities of Chihuahua, in northern Mexico."
+        ]
+      },
+      {
+        "id": 681,
+        "distance": 0.21152900989953463,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Altar, Sonora (1): Altar (O'odham: Wawuk) is small city and municipal seat of Altar Municipality in the Mexican state of Sonora.",
+          "Altar Municipality (1): Altar is a municipality in Sonora in north-western Mexico.",
+          "Altar Municipality (2): The largest localities (cities, towns, and villages) are:",
+          "Altar Municipality (3): Surrounding municipalities are Saric, Tubutama, Atil, Trincheras, Pitiquito, Caborca and Oquitoa.",
+          "Altar Municipality (4): state]] of Arizona."
+        ]
+      },
+      {
+        "id": 902,
+        "distance": 0.22173731882889272,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Pacasmayo Province (1): The Pacasmayo Province is one of twelve provinces of the La Libertad Region in Peru; also Pacasmayo is the name of one of its districts.",
+          "Pacasmayo Province (2): The province is divided into five districts, which are:",
+          "San Pedro de Lloc District (1): San Pedro de Lloc District is one of five districts of the province Pacasmayo in Peru.",
+          "Pataz Province (1): The province is divided into thirteen districts, which are:",
+          "Pacasmayo Province (3): The capital of this province is the city of San Pedro de Lloc."
+        ]
+      },
+      {
+        "id": 1991,
+        "distance": 0.2690360118702577,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Meoqui Municipality (1): Meoqui is one of the 67 municipalities of Chihuahua, in northern Mexico.",
+          "Lazaro Cardenas, Michoacan (1): Lazaro Cardenas is located in the southern part of the Mexican state of Michoacan.",
+          "Lazaro Cardenas, Michoacan (2): Lazaro Cardenas (Spanish: [lasao kardenas (listen)) is a port city in Michoacan bordered to the west by Guerrero.",
+          "Meoqui Municipality (2): The municipality had 882 localities, the largest of which (with 2010 populations in parentheses) were: Pedro Meoqui (22,574), Lazaro Cardenas (8,704), classified as urban, and Estacion Consuelo (1,981), Colonia Felipe Angeles (1,254), and Guadalupe Victoria (1,045), classified as rural.",
+          "Lazaro Cardenas, Michoacan (3): The municipality of Lazaro Cardenas, which has an area of 1,160.24 km (447.97 sq mi), had a total population of 162,997 in 2005, and includes the metropolitan area of city, which includes the communities of Las Guacamayas, La Orilla, and La Mira."
+        ]
+      },
+      {
+        "id": 2942,
+        "distance": 0.3247488397092048,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Potosi Municipality (1): The people are predominantly indigenous citizens of Quechua descent.",
+          "Potosi Municipality (2): Potosi Municipality is the capital municipality of the Tomas Frias Province in the Potosi Department in Bolivia.",
+          "Potosi Department (1): Potosi (Spanish pronunciation: [potosi; Aymara: Putusi; Quechua: P'utuqsi) is a department in southwestern Bolivia.",
+          "San Luis Potosi City (1): San Luis Potosi, commonly called SLP or simply San Luis, is the capital and the most populous city of the Mexican state of San Luis Potosi.",
+          "San Luis Potosi City (2): With a population of approximately one million inhabitants, it is now the tenth-largest metropolitan area in Mexico."
+        ]
+      },
+      {
+        "id": 1867,
+        "distance": 0.3554228610731475,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "San Antonio de Esmoruco Municipality (1): The people are predominantly indigenous citizens of Quechua descent.",
+          "San Antonio de Esmoruco Municipality (2): San Antonio de Esmoruco is the third municipal section of the Sur Lipez Province in the Potosi Department in Bolivia.",
+          "San Antonio (1): San Antonio (/sæn æntonio/; in Spanish, \"Saint Anthony\"), officially the City of San Antonio, is the seventh-most populous city in the United States, and the second-most populous city in both Texas and the Southern United States, with 1,547,253 residents in 2019.",
+          "San Antonio (2): San Antonio-based TV stations are WOAI channel 4 (NBC), KSAT channel 12 (ABC), KENS channel 5 (CBS), KABB channel 29 (FOX), KCWX channel 2 (myNetworkTV), KMYS channel 35 (The CW) and KLRN channel 9 (PBS).",
+          "Guadalupe, Sud Lipez (1): It is the seat of the Guadalupe Canton, one of the two cantons of the San Antonio de Esmoruco Municipality which is the third municipal section of the Sud Lipez Province."
+        ]
+      },
+      {
+        "id": 309,
+        "distance": 0.38267445670652905,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "San Antonio de Esmoruco Municipality (1): The people are predominantly indigenous citizens of Quechua descent.",
+          "Guarani people (1): Guarani are a group of culturally-related indigenous peoples of South America.",
+          "San Antonio (1): San Antonio (/sæn æntonio/; in Spanish, \"Saint Anthony\"), officially the City of San Antonio, is the seventh-most populous city in the United States, and the second-most populous city in both Texas and the Southern United States, with 1,547,253 residents in 2019.",
+          "San Antonio de Esmoruco Municipality (2): San Antonio de Esmoruco is the third municipal section of the Sur Lipez Province in the Potosi Department in Bolivia.",
+          "Tarabuco Municipality (1): Its population is overwhelmingly indigenous: of 10,530 people 15 or older in the 2001 Census, 9,834 (or 93,40%) self-identified with an indigenous people; 9,779 to the Quechua people, 29 Aymara, 15 to another indigenous people, and 7 as Guarani."
+        ]
+      },
+      {
+        "id": 1904,
+        "distance": 0.48422605579299516,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Uyuni Municipality (1): The people are predominantly indigenous citizens of Quechua and Aymara descent.",
+          "Uyuni Municipality (2): Uyuni Municipality is the first municipal section of the Antonio Quijarro Province in the Potosi Department in Bolivia.",
+          "Indigenous peoples in Bolivia (1): Aymara and Quechua are the largest groups.",
+          "Tarabuco Municipality (1): Its population is overwhelmingly indigenous: of 10,530 people 15 or older in the 2001 Census, 9,834 (or 93,40%) self-identified with an indigenous people; 9,779 to the Quechua people, 29 Aymara, 15 to another indigenous people, and 7 as Guarani.",
+          "Tomave Municipality (1): The people are predominantly indigenous citizens of Quechua descent."
+        ]
+      },
+      {
+        "id": 2954,
+        "distance": 0.5349212108178959,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Uncia Municipality (1): The people are predominantly indigenous citizens of Quechua and Aymara descent.",
+          "Uncia Municipality (2): Uncia Municipality is the first municipal section of the Rafael Bustillo Province in the Potosi Department in Bolivia.",
+          "Uncia Municipality (3): The municipality consists of the following cantons:",
+          "Chimboata Canton (1): Chimboata Canton (Quechua: Chimpuwata) is one of the cantons of the Pocona Municipality, the third municipal section of the Carrasco Province in the Cochabamba Department in central Bolivia.",
+          "Uncia Municipality (4): Its seat is Uncia."
+        ]
+      }
+    ],
+    "negatives": [
+      {
+        "negative_id": 2681,
+        "distance": 9.617823971761426,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Airports",
+        "sentence_context": [
+          "Dubai International Airport (1): Dubai International Airport (IATA: DXB, ICAO: OMDB) (Arabic: ) is the primary international airport serving Dubai, United Arab Emirates, and is the world's busiest airport by international passenger traffic.",
+          "Dubai International Airport Cargo Gateway (1): Dnata is the handling operator of Dubai's air cargo terminals.",
+          "Dubai International Airport Cargo Gateway (2): Dubai International Airport Cargo Gateway is strategically located adjacent to Dubai International Airport, in the United Arab Emirates.",
+          "Dubai International Airport (2): The boarding area is more spacious, with more natural light.",
+          "Dubai International Airport Cargo Gateway (3): In 2008, DCG handled 1.8 million tons of cargo, and 25,279 cargo aircraft, and ACI ranks DCG as the world's 8th busiest air cargo terminal."
+        ]
+      },
+      {
+        "negative_id": 1074,
+        "distance": 7.7432250767215995,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Biochemistry",
+        "sentence_context": [
+          "Saccharomyces cerevisiae (1): Saccharomyces cerevisiae (/srvsi.i/) is a species of yeast (single-celled fungus microorganisms).",
+          "SMC1A (1): Structural maintenance of chromosomes protein 1A (SMC1A) is a protein that in humans is encoded by the SMC1A gene.",
+          "STAG1 (1): Cohesin subunit SA-1 (SA1) is a protein that in humans is encoded by the STAG1 gene.",
+          "Cohesin (1): Cohesin is a multi-subunit protein complex, made up of SMC1, SMC3, RAD21 and SCC3 (SA1 or SA2).",
+          "Saccharomyces cerevisiae (2): Saccharomyces cerevisiae was found in the skin, oral cavity, oropharinx, duodenal mucosa, digestive tract, and vagina of healthy humans (one review found it to be reported for 6% of samples from human intestine)."
+        ]
+      },
+      {
+        "negative_id": 2047,
+        "distance": 4.658422701876895,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Census Data",
+        "sentence_context": [
+          "Ghogalpur (1): Ghogalpur is a village in the Bhopal district of Madhya Pradesh, India.",
+          "Pano (caste) (1): It was the most populous of the scheduled castes of Odisha.",
+          "Ghitorni (1): The population consists mainly of Gujjars (80%), as well as the Brahmans (10%), Scheduled Castes (5%), Aggarwals and others (5%) (estimated).It comes between Aya Nagar and Sultanpur",
+          "Chothe Naga (1): They are listed as a Scheduled Tribe, in accordance with The Scheduled Castes and Scheduled Tribes Orders (Amendment) Act, 1976 Indian Constitution.",
+          "Ghogalpur (2): According to the 2011 census of India, Ghogalpur has 103 households."
+        ]
+      },
+      {
+        "negative_id": 1489,
+        "distance": 6.818848010171927,
+        "broad_topic": "Music Charts",
+        "medium_topic": "European Politics",
+        "sentence_context": [
+          "Harju County (1): Harju County (Estonian: Harju maakond or Estonian: Harjumaa), (German: Harrien or Rugel, Latin: Harria) is one of the fifteen counties of Estonia.",
+          "Harju County (2): Harju County is the largest county in Estonia in terms of population, as almost half (45%) of the Estonia's population lives in Harju County.",
+          "Jarva County (1): Jarva County (Estonian: Jarva maakond), or Jarvamaa (German: Jerwen, Latin: Jervia), is one of 15 counties of Estonia.",
+          "Harju County (3): The capital and largest city of Estonia, Tallinn, is situated in Harju County.",
+          "Harju County (4): It is situated in Northern Estonia, on the southern coast of the Gulf of Finland, and borders Laane-Viru County to the east, Jarva County to the southeast, Rapla County to the south, and Laane County to the southwest."
+        ]
+      },
+      {
+        "negative_id": 2210,
+        "distance": 1.4402903442974642,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Ireland Geography",
+        "sentence_context": [
+          "Sant Vicent del Raspeig (1): San Vicente del Raspeig (Spanish name, pronounced [sam biente ðel raspet), or Sant Vicent del Raspeig (Valencian name, pronounced [sam visn del raspet), is a municipality located in the comarca of Alacanti, in the province of Alicante, Spain, inside the conurbation of Alicante city (6 km away and perfectly communicated).",
+          "Sant Vicent del Raspeig (2): San Vicente del Raspeig is twinned with:",
+          "San Vicente del Valle (1): In the decade since 2001, the population ranged between 34 (2001) and 52 (2004), with 45 inhabitants documented in the 2007 census, but recently the municipality had only 31 inhabitants in 2014.",
+          "San Vicente del Valle (2): The earliest documentation for the hamlet of San Vicente del Valle is in the year 945 in records of the monastery of San Millan de la Cogolla as viam that vadit ad Vicentium.",
+          "San Vicente del Valle (3): San Vicente del Valle is a municipality and hamlet located in the province of Burgos, Castile and Leon, Spain."
+        ]
+      },
+      {
+        "negative_id": 2255,
+        "distance": 26.832307386054353,
+        "broad_topic": "College Football (2)",
+        "medium_topic": "College Athletics",
+        "sentence_context": [
+          "1979 Western Michigan Broncos football team (1): In their fifth season under head coach Elliot Uzelac, the Broncos compiled a 65 record (54 against MAC opponents), finished in third place in the MAC, and outscored their opponents, 186 to 120.",
+          "1979 Western Michigan Broncos football team (2): The 1979 Western Michigan Broncos football team represented Western Michigan University in the Mid-American Conference (MAC) during the 1979 NCAA Division I-A football season.",
+          "Elliot Uzelac (1): Before St. Joseph, Uzelac coached at Bowling Green University, the University of Michigan, Indiana University, Ohio State University, the University of Colorado, the University of Kentucky, the University of Minnesota, the University of Maryland, and the NFL's Cleveland Browns.",
+          "Elliot Uzelac (2): Elliot Uzelac (born July 24, 1941) is an American football coach.",
+          "Elliot Uzelac (3): He served as the head football coach at Western Michigan University from 1975 to 1981 and the United States Naval Academy from 1987 to 1989, compiling a career college football coaching record of 4664."
+        ]
+      },
+      {
+        "negative_id": 2457,
+        "distance": 22.910377116941795,
+        "broad_topic": "College Sports",
+        "medium_topic": "College Football",
+        "sentence_context": [
+          "1895 Tennessee Volunteers football team (1): The 1895 Tennessee Volunteers football team unofficially represented the University of Tennessee in the 1895 season.",
+          "Tennessee Volunteers football (1): The Tennessee Volunteers football program (variously called \"Tennessee\", \"Vols\" and \"UT\") represents the University of Tennessee (UT).",
+          "Tennessee Volunteers (1): The Tennessee Volunteers and Lady Volunteers are the 20 male and female varsity intercollegiate athletics programs that represent the University of Tennessee in Knoxville, Tennessee.",
+          "1895 Tennessee Volunteers football team (2): 1895 was the second and final student-coached team.",
+          "1895 Tennessee Volunteers football team (3): In October 1894, the Athletic Association had resolved to drop varsity football and look forward to baseball in the spring of 1895."
+        ]
+      },
+      {
+        "negative_id": 1603,
+        "distance": 26.66332200477746,
+        "broad_topic": "Entertainment Industry",
+        "medium_topic": "Actresses",
+        "sentence_context": [
+          "Shinique Smith (1): Shinique Smith (born January 9, 1971) is an American visual artist, known for her colorful installation art and paintings that incorporate found textiles and collage materials.",
+          "Shinique Smith (2): Smith's sculptural works were also prominently featured in the acclaimed launch exhibition of the New Museum, Unmonumental: The Object in the 21st Century, which featured works by Sam Durant, Urs Fischer, Isa Genzken, Elliott Hundley, and Jim Lambie to name a few.",
+          "Shinique Smith (3): Her work gained critical attention when The Studio Museum of Harlem exhibited her first bale sculpture in Frequency in 2005, an exhibition that helped launch the careers of other artists of Smith's generation such as Nick Cave, Kalup Linzy, Xaviera Simmons, and Hank Willis Thomas.",
+          "Shinique Smith (4): Smith's art was featured in 30 Americans, an exhibition of works by African American artists (including Jean-Michel Basquiat, Rashid Johnson, Kerry James Marshall, Lorna Simpson, Mickalene Thomas, Carrie Mae Weems, and Kehinde Wiley among others) in the permanent collection of the Rubell Museum in Miami that has toured extensively since 2009 and been a favored by critics and viewers at many museums across the U.S.",
+          "Shinique Smith (5): Smith's art has been described as \"kaleidoscopic,\" collecting \"the vibrant, carefully collected debris of her life and career\" and creating \"graceful yet forceful combinations of many different materials and ideas.\""
+        ]
+      },
+      {
+        "negative_id": 2373,
+        "distance": 31.20142053270894,
+        "broad_topic": "Sports (4)",
+        "medium_topic": "Cycling",
+        "sentence_context": [
+          "Jasper Stuyven (1): Jasper Stuyven (born 17 April 1992) is a Belgian cyclist, who currently rides for UCI WorldTeam TrekSegafredo.",
+          "2020 Omloop Het Nieuwsblad (1): Belgian rider Jasper Stuyven of TrekSegafredo beat fellow Belgian rider Yves Lampaert of DeceuninckQuick-Step in a two-up sprint to take the victory.",
+          "Jasper Stuyven (2): Stuyven joined UCI WorldTeam Trek Factory Racing in 2014 at the age of 22.",
+          "2020 Omloop Het Nieuwsblad (2): The 2020 Omloop Het Nieuwsblad was a road cycling one-day race that took place on 29 February 2020 in Belgium, starting in Gent and finishing in Ninove.",
+          "2020 Omloop Het Nieuwsblad (3): It was the 75th edition of the Omloop Het Nieuwsblad and the fourth event of the 2020 UCI World Tour."
+        ]
+      },
+      {
+        "negative_id": 1257,
+        "distance": 18.485225142903523,
+        "broad_topic": "Sports (5)",
+        "medium_topic": "African Colleges",
+        "sentence_context": [
+          "IBMC College (1): IBMC College was founded in 1987 in Fort Collins, Colorado, operating originally as the Medical Careers Training Center.",
+          "IBMC College (2): IBMC College is a private for-profit career college with 3 campuses in northern Colorado.",
+          "IBMC College (3): The college is headquartered in Fort Collins, Colorado.",
+          "IBMC College (4): This accelerated for-profit career training institution has additional campuses in Longmont and Greeley.",
+          "Colorado College (1): The Colorado College is a private liberal arts college in Colorado Springs, Colorado."
+        ]
+      }
+    ]
+  },
+  {
+    "threshold": 11.707206407552455,
+    "anchor": {
+      "id": 2809,
+      "broad_topic": "Music Charts",
+      "medium_topic": "Geography",
+      "table_content": [
+        [
+          "Ethnic group",
+          "%"
+        ],
+        [
+          "Quechua",
+          "57.0"
+        ],
+        [
+          "Aymara",
+          "1.7"
+        ],
+        [
+          "Guarani, Chiquitos, Moxos",
+          "0.2"
+        ],
+        [
+          "Not indigenous",
+          "38.5"
+        ],
+        [
+          "Other indigenous groups",
+          "2.5"
+        ]
+      ],
+      "caption": "",
+      "table_title": "Tupiza Municipality"
+    },
+    "primary_positive": {
+      "id": 2809,
+      "distance": 0.0,
+      "broad_topic": "Music Charts",
+      "medium_topic": "Geography",
+      "sentence_context": [
+        "Tupiza Municipality (1): The people are predominantly indigenous citizens of Quechua descent.",
+        "Tupiza Municipality (2): Tupiza Municipality is the first municipal section of the Sud Chichas Province in the Potosi Department in Bolivia.",
+        "Tupiza Municipality (3): The municipality consists of the following cantons:",
+        "Languages of Bolivia (1): The languages of Bolivia include Spanish; several dozen indigenous languages, most prominently Aymara, Quechua, Chiquitano and Tupi Guarani; Bolivian Sign Language (closely related to American Sign Language); and language of immigrants such as Plautdietsch.",
+        "Indigenous peoples in Bolivia (1): Indigenous March Against TIPNIS: 2011"
+      ]
+    },
+    "additional_positives": [
+      {
+        "id": 400,
+        "distance": 0.700379396054199,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Quechua people (1): Quechua people (/ktu/, US also /ktw/; Spanish: [ketwa) or Quecha people, may refer to any of the indigenous people of South America who speak the Quechua languages, which originated among the indigenous people of Peru.",
+          "Porco Municipality (1): The people are predominantly indigenous citizens of Quechua descent.",
+          "Porco Municipality (2): Porco Municipality is the third municipal section of the Antonio Quijarro Province in the Potosi Department in Bolivia.",
+          "Indigenous peoples in Bolivia (1): Aymara and Quechua are the largest groups.",
+          "Indigenous peoples in Bolivia (2): Indigenous peoples in Bolivia, or Native Bolivians, are Bolivian people who are of indigenous ancestry."
+        ]
+      },
+      {
+        "id": 2942,
+        "distance": 1.1112385783077288,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Potosi Municipality (1): The people are predominantly indigenous citizens of Quechua descent.",
+          "Potosi Municipality (2): Potosi Municipality is the capital municipality of the Tomas Frias Province in the Potosi Department in Bolivia.",
+          "Potosi Department (1): Potosi (Spanish pronunciation: [potosi; Aymara: Putusi; Quechua: P'utuqsi) is a department in southwestern Bolivia.",
+          "San Luis Potosi City (1): San Luis Potosi, commonly called SLP or simply San Luis, is the capital and the most populous city of the Mexican state of San Luis Potosi.",
+          "San Luis Potosi City (2): With a population of approximately one million inhabitants, it is now the tenth-largest metropolitan area in Mexico."
+        ]
+      },
+      {
+        "id": 2795,
+        "distance": 1.1470949797842098,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Popocatepetl (1): Popocatepetl (Spanish pronunciation: [popokatepetl (listen); Nahuatl: Popocatepetl Nahuatl pronunciation: [popokatepet) is an active stratovolcano, located in the states of Puebla, Morelos and Mexico, in central Mexico, and lies in the eastern half of the Trans-Mexican volcanic belt.",
+          "List of Ultras of Mexico (1): The following sortable table comprises the 26 ultra-prominent summits of Mexico.",
+          "List of Ultras of Mexico (2): Each of these peaks has at least 1,500 meters (5,000 feet) of topographic prominence.",
+          "List of Ultras of Mexico (3): Of these 26 ultra-prominent summits of Mexico, four are located in Puebla, four in Oaxaca, four in Nuevo Leon, three in Mexico, three in Jalisco, two in Veracruz, two in Michoacan, two in Baja California Sur, two in Coahuila, and one each in Morelos, Guerrero, Baja California, Tlaxcala, and Queretaro.",
+          "Popocatepetl and Iztaccihuatl (1): Popocatepetl and Iztaccihuatl refers to the volcanoes Popocatepetl (\"the Smoking Mountain\") and Iztaccihuatl (\"white woman\" in Nahuatl, sometimes called the Mujer Dormida \"sleeping woman\" in Spanish) in Izta-Popo Zoquiapan National Park, which overlook the Valley of Mexico and the various myths explaining their existence."
+        ]
+      },
+      {
+        "id": 2195,
+        "distance": 1.2868398156173146,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Uyuni Municipality (1): Uyuni Municipality is the first municipal section of the Antonio Quijarro Province in the Potosi Department in Bolivia.",
+          "Uyuni Municipality (2): The people are predominantly indigenous citizens of Quechua and Aymara descent.",
+          "Uyuni Municipality (3): Its seat is Uyuni.",
+          "Tomave Municipality (1): The people are predominantly indigenous citizens of Quechua descent.",
+          "Antonio Quijarro Province (1): 50% of the population are employed in agriculture, 8% in mining, 5% in industry, 37% in general services."
+        ]
+      },
+      {
+        "id": 309,
+        "distance": 1.3023755215560642,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "San Antonio de Esmoruco Municipality (1): The people are predominantly indigenous citizens of Quechua descent.",
+          "Guarani people (1): Guarani are a group of culturally-related indigenous peoples of South America.",
+          "San Antonio (1): San Antonio (/sæn æntonio/; in Spanish, \"Saint Anthony\"), officially the City of San Antonio, is the seventh-most populous city in the United States, and the second-most populous city in both Texas and the Southern United States, with 1,547,253 residents in 2019.",
+          "San Antonio de Esmoruco Municipality (2): San Antonio de Esmoruco is the third municipal section of the Sur Lipez Province in the Potosi Department in Bolivia.",
+          "Tarabuco Municipality (1): Its population is overwhelmingly indigenous: of 10,530 people 15 or older in the 2001 Census, 9,834 (or 93,40%) self-identified with an indigenous people; 9,779 to the Quechua people, 29 Aymara, 15 to another indigenous people, and 7 as Guarani."
+        ]
+      },
+      {
+        "id": 421,
+        "distance": 1.3472504601318875,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Porvenir, Chile (1): It is one of Chile's southernmost towns, and has 4,734 inhabitants, including several thousand soldiers.",
+          "Pico Truncado (1): Pico Truncado is a town and municipality in Santa Cruz Province in southern Argentina.",
+          "Porvenir, Chile (2): It is the largest settlement in the Chilean half of the island of Tierra del Fuego.",
+          "Southernmost settlements (1): This is a list of the all settlements south of the 45th parallel south with over 1,000 permanent inhabitants.",
+          "Southernmost settlements (2): Southernmost settlements are cities, towns, weather stations or permanent military bases which are farther south than latitude 45°S."
+        ]
+      },
+      {
+        "id": 681,
+        "distance": 1.3934034889090188,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Altar, Sonora (1): Altar (O'odham: Wawuk) is small city and municipal seat of Altar Municipality in the Mexican state of Sonora.",
+          "Altar Municipality (1): Altar is a municipality in Sonora in north-western Mexico.",
+          "Altar Municipality (2): The largest localities (cities, towns, and villages) are:",
+          "Altar Municipality (3): Surrounding municipalities are Saric, Tubutama, Atil, Trincheras, Pitiquito, Caborca and Oquitoa.",
+          "Altar Municipality (4): state]] of Arizona."
+        ]
+      },
+      {
+        "id": 1991,
+        "distance": 1.4000403206544763,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Meoqui Municipality (1): Meoqui is one of the 67 municipalities of Chihuahua, in northern Mexico.",
+          "Lazaro Cardenas, Michoacan (1): Lazaro Cardenas is located in the southern part of the Mexican state of Michoacan.",
+          "Lazaro Cardenas, Michoacan (2): Lazaro Cardenas (Spanish: [lasao kardenas (listen)) is a port city in Michoacan bordered to the west by Guerrero.",
+          "Meoqui Municipality (2): The municipality had 882 localities, the largest of which (with 2010 populations in parentheses) were: Pedro Meoqui (22,574), Lazaro Cardenas (8,704), classified as urban, and Estacion Consuelo (1,981), Colonia Felipe Angeles (1,254), and Guadalupe Victoria (1,045), classified as rural.",
+          "Lazaro Cardenas, Michoacan (3): The municipality of Lazaro Cardenas, which has an area of 1,160.24 km (447.97 sq mi), had a total population of 162,997 in 2005, and includes the metropolitan area of city, which includes the communities of Las Guacamayas, La Orilla, and La Mira."
+        ]
+      },
+      {
+        "id": 902,
+        "distance": 1.4016641180188179,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Pacasmayo Province (1): The Pacasmayo Province is one of twelve provinces of the La Libertad Region in Peru; also Pacasmayo is the name of one of its districts.",
+          "Pacasmayo Province (2): The province is divided into five districts, which are:",
+          "San Pedro de Lloc District (1): San Pedro de Lloc District is one of five districts of the province Pacasmayo in Peru.",
+          "Pataz Province (1): The province is divided into thirteen districts, which are:",
+          "Pacasmayo Province (3): The capital of this province is the city of San Pedro de Lloc."
+        ]
+      }
+    ],
+    "negatives": [
+      {
+        "negative_id": 2918,
+        "distance": 11.114933672032539,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Airports",
+        "sentence_context": [
+          "Nordwind Airlines (1): Nordwind Airlines, LLC (Russian: « », romanized: Severny veter) is a Russian leisure airline.",
+          "Volgograd International Airport (1): Volgograd International Airport (Russian: ) (IATA: VOG, ICAO: URWW) is an airport located 15 km northwest of the city of Volgograd, formerly Stalingrad, in Russia.",
+          "Nordwind Airlines (2): The company is headquartered in Moscow, and its hub is at Sheremetyevo International Airport.",
+          "Nordwind Airlines (3): Nordwind Airlines primarily operates service between airports in Russia and holiday destinations around the Mediterranean Sea and the Indian Ocean.",
+          "Pegas Fly (1): Ikar Airlines LLC, operating as Pegas Fly, is a Russian airline headquartered in Krasnoyarsk and based at Yemelyanovo International Airport but operates most flights from Zhukovsky International Airport."
+        ]
+      },
+      {
+        "negative_id": 1267,
+        "distance": 6.928844322165144,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Biochemistry",
+        "sentence_context": [
+          "Rabies virus (1): These genes code for nucleoprotein (N), phosphoprotein (P), matrix protein (M), glycoprotein (G) and the viral RNA polymerase (L).",
+          "Lyssavirus (1): Lyssavirus genomes consist of a negative-sense, single-stranded RNA molecule that encodes five viral proteins: polymerase L, matrix protein M, phosphoprotein P, nucleoprotein N, and glycoprotein G. Genomes are linear, around 11kb in length.",
+          "Influenza virus nucleoprotein (1): Influenza virus nucleoprotein (NP) is a structural protein which encapsidates the negative strand viral RNA.",
+          "Rabies virus (2): Associated with the nucleocapsid are copies of P (phosphoprotein) and L (large) protein.",
+          "Rabies virus (3): The rabies genome encodes five proteins: nucleoprotein (N), phosphoprotein (P), matrix protein (M), glycoprotein (G) and polymerase (L)."
+        ]
+      },
+      {
+        "negative_id": 559,
+        "distance": 6.172434189394573,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Census Data",
+        "sentence_context": [
+          "Neem Khedi (1): Neem Khedi is a village in the Bhopal district of Madhya Pradesh, India.",
+          "Scheduled Castes and Scheduled Tribes (1): The terms are recognised in the Constitution of India and the groups are designated in one or other of the categories.",
+          "Scheduled Castes and Scheduled Tribes (2): The Scheduled Caste (SCs) and Scheduled Tribes (STs) are officially designated groups of people in India.",
+          "Tribes of Assam (1): The Constitution of India categorizes the tribes of Assam into two groups: Scheduled Tribes (Hills) and Scheduled Tribes (Plains).",
+          "Scheduled Castes and Scheduled Tribes (3): The Constitution (Scheduled Castes) Order, 1950 lists 1,108 castes across 28 states in its First Schedule, and the Constitution (Scheduled Tribes) Order, 1950 lists 744 tribes across 22 states in its First Schedule."
+        ]
+      },
+      {
+        "negative_id": 1190,
+        "distance": 9.609722562062768,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geopolitics",
+        "sentence_context": [
+          "Sindila Hydroelectric Power Station (1): Sindila HEPS is a run-of-river mini-hydro power plant whose planned maximum installed capacity is 5.25MW.",
+          "Sindila Hydroelectric Power Station (2): Sindila Hydroelectric Power Station, also Sindila Power Station, is an operational 5.25 MW (7,040 hp) mini-hydropower station in the Western Region of Uganda.",
+          "Sindila Hydroelectric Power Station (3): The project is owned by a consortium of investors as depicted in the ownership table below.",
+          "KMRI (1): The station is owned by KMRI LLC.",
+          "Sindila Hydroelectric Power Station (4): The special company vehicle known as Sindila Power Company Uganda Limited, is owned by the following corporate entities:"
+        ]
+      },
+      {
+        "negative_id": 2072,
+        "distance": 9.950220634839885,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Ireland Geography",
+        "sentence_context": [
+          "Urhannagh (1): Urhannagh (from Irish: Uaranach, meaning 'Abounding in wells or cold springs') is a townland in the civil parish of Templeport, County Cavan, Ireland.",
+          "Urhannagh (2): The townland covers 68 statute acres.",
+          "Urhannagh (3): The 1790 Cavan Carvaghs list spells the name as Urhannagh.",
+          "Urhannagh (4): A 1630 Inquisition spells it Dowerhannagh.",
+          "Urhannagh (5): Urhannagh is bounded on the north by Clontycarnaghan townland, on the west by Munlough North townland, on the east by Bofealan townland and on the south by Cavanaquill and Killynaff townlands."
+        ]
+      },
+      {
+        "negative_id": 265,
+        "distance": 27.931145621604006,
+        "broad_topic": "College Football (2)",
+        "medium_topic": "College Athletics",
+        "sentence_context": [
+          "1984 Western Michigan Broncos football team (1): The 1984 Western Michigan Broncos football team represented Western Michigan University in the Mid-American Conference (MAC) during the 1984 NCAA Division I-A football season.",
+          "1984 Western Michigan Broncos football team (2): In their third season under head coach Jack Harbaugh, the Broncos compiled a 56 record (36 against MAC opponents), finished in a tie for eighth place in the MAC, and outscored their opponents, 234 to 213.",
+          "Western Michigan Broncos football (1): The Western Michigan Broncos football program represents Western Michigan University in the Football Bowl Subdivision of Division I and the Mid-American Conference (MAC).",
+          "Western Michigan Broncos (1): The Western Michigan Broncos are a National Collegiate Athletic Association (NCAA) Division I program representing Western Michigan University (WMU) in college athletics.",
+          "Western Michigan Broncos (2): They compete in the Mid-American Conference in men's baseball, basketball, football (within the Football Bowl Subdivision), soccer and tennis; and women's basketball, cross-country, golf, gymnastics, soccer, softball, track and field, and volleyball."
+        ]
+      },
+      {
+        "negative_id": 3136,
+        "distance": 25.281052316565148,
+        "broad_topic": "College Sports",
+        "medium_topic": "College Football",
+        "sentence_context": [
+          "1901 Tennessee Volunteers football team (1): The 1901 Tennessee Volunteers football team was an American football team that represented the University of Tennessee as a member of the Southern Intercollegiate Athletic Association (SIAA) during the 1901 SIAA football season.",
+          "1901 Clemson Tigers football team (1): The 1901 Clemson Tigers football team was an American football team that represented Clemson Agricultural College as a member of the Southern Intercollegiate Athletic Association (SIAA) during the 1901 SIAA football season.",
+          "Tennessee Volunteers football (1): The first game between the two sides was played in 1901 in Birmingham, ending in a 66 tie.",
+          "Tennessee Volunteers football (2): The Tennessee Volunteers football program (variously called \"Tennessee\", \"Vols\" and \"UT\") represents the University of Tennessee (UT).",
+          "1901 Kentucky State College Blue and White football team (1): The 1901 Kentucky State College Blue and White football team was an American football team that represented Kentucky State College (now known as the University of Kentucky) as a member of the Southern Intercollegiate Athletic Association (SIAA) during the 1901 college football season."
+        ]
+      },
+      {
+        "negative_id": 957,
+        "distance": 23.134828393924153,
+        "broad_topic": "Entertainment Industry",
+        "medium_topic": "Actresses",
+        "sentence_context": [
+          "Saskia Reeves (1): Saskia Reeves (born 16 August 1961) is an English actress, best known for her roles in the films Close My Eyes (1991) and I.D.",
+          "Saskia Reeves (2): (1995),the 2000 miniseries Frank Herbert's Dune and the 2016 film Our Kind of Traitor.",
+          "Saskia Reeves (3): Born and brought up in Twickenham and Paddington, London with her younger sister Imogen, by her Dutch mother and English father, Reeves attended the Lady Eleanor Holles School in Hampton and then studied at London's Guildhall School of Music and Drama.",
+          "Close My Eyes (film) (1): Close My Eyes is a 1991 film written and directed by Stephen Poliakoff and starring Alan Rickman, Clive Owen and Saskia Reeves as well as Lesley Sharp and Karl Johnson.",
+          "Saskia Reeves (4): In 2008, she starred in English Touring Theatre's revival of Athol Fugard's Hello and Goodbye at the Trafalgar Studios in London."
+        ]
+      },
+      {
+        "negative_id": 126,
+        "distance": 33.89623463384781,
+        "broad_topic": "Sports (4)",
+        "medium_topic": "Cycling",
+        "sentence_context": [
+          "William Dunlop (motorcyclist) (1): Dunlop sustained fatal injuries as a result of a crash during practice for the 2018 Skerries 100 Road Races in County Dublin.",
+          "William Dunlop (motorcyclist) (2): William Dunlop (23 July 1985 7 July 2018) was a professional motorcycle racer from Northern Ireland who died as a result of a racing incident.",
+          "William Dunlop (motorcyclist) (3): He died as a result of a crash at a racing event in the Republic of Ireland.",
+          "Joey Dunlop (1): William Joseph Dunlop OBE (25 February 1952 2 July 2000) was a Northern Irish motorcyclist from Ballymoney.",
+          "2011 Ulster Grand Prix (1): 2011 Ulster Grand Prix races to be held on the Dundrod Circuit between 713 August 2011 in County Antrim, Northern Ireland."
+        ]
+      },
+      {
+        "negative_id": 2781,
+        "distance": 23.88802936721362,
+        "broad_topic": "Sports (5)",
+        "medium_topic": "African Colleges",
+        "sentence_context": [
+          "Kwame Karikari (1): Kwame Karikari (born 21 January 1992) is a Ghanaian footballer who plays as a striker.",
+          "Komenda College of Education (1): Komenda College of Education is a co-educational teacher education college in Komenda, Central Region (Ghana).",
+          "Komenda College of Education (2): Komenda College was established in 1948, on a site which had been used by the British Navy during World War II.",
+          "Komenda College of Education (3): It is one of 46 public colleges of education in Ghana and participated in the DFID-funded Transforming Teacher Education and Learning Ghana (T-TEL) programme.",
+          "Komenda College of Education (4): The first principal of the college was Mr. Lawrence Alfred Creedy, a British citizen."
+        ]
+      }
+    ]
+  },
+  {
+    "threshold": 10.916557096392205,
+    "anchor": {
+      "id": 1948,
+      "broad_topic": "Music Charts",
+      "medium_topic": "Geography",
+      "table_content": [
+        [
+          "Chief Name",
+          "Translation + (Location)"
+        ],
+        [
+          "Tats'abaelghi'aa Denen",
+          "Person of Where Spruce Stands in Water (chief of village opposite Canyon Creek)"
+        ],
+        [
+          "Taghael Denen",
+          "Person of Barrier in Water (chief of Taral)"
+        ],
+        [
+          "Ts'es K'e Denen",
+          "Person of on the Rock (chief of site on W bank at Mile 127)"
+        ],
+        [
+          "Hwt'aa Cae'e Denen",
+          "Person of Beneath (the mountains) Stream Mouth (chief of Fox Creek village)"
+        ],
+        [
+          "C'elax Denen",
+          "Person of Fish Run Place (chief of Long Lake/Lakina village)"
+        ],
+        [
+          "Bes Cene Ghaxen",
+          "Person of Riverbank Flat (chief of Riverstag village)"
+        ],
+        [
+          "Sdaghaay Denen",
+          "Person of End of the Point (chief of village north of mouth of Chetaslina River)"
+        ],
+        [
+          "Tsedi Kulaen Denen",
+          "Person of Copper Exists Place (chief of Copper Village, five mi. below Dadina River on east bank)"
+        ],
+        [
+          "Hwt'akughi'aa Denen",
+          "Person of Area Extends below a Place (chief of site 1 mi. below Dadina R on W bank)"
+        ],
+        [
+          "Nic'akuni'aa Denen",
+          "Person of Where Land Extends Out (chief of Stickwan's village south of Wood Camp)"
+        ],
+        [
+          "K'aay Denen",
+          "Person of Ridge (chief of Kaina Ck site on Tazlina Lake)"
+        ],
+        [
+          "Bendil Denen",
+          "Person of Where Stream Flows into Lake (chief of Mendeltna Creek site on Tazlina Lake)"
+        ],
+        [
+          "Sday'dinaesi Ghaxen",
+          "Person of Long Point (chief of point site near Glennallen)"
+        ],
+        [
+          "C'ecae'e Denen",
+          "Person of the River Mouth (chief of site near Gulkana River mouth)"
+        ],
+        [
+          "Satigi Ghaxen",
+          "Person of Satigi (chief of Tyone Lake)"
+        ],
+        [
+          "Stl'aa Caegge Ghaxen",
+          "Person of Rear River Mouth (chief of Slana village"
+        ],
+        [
+          "Mendaes Ghaxen",
+          "Person of Shallows Lake (chief of Mentasta)"
+        ]
+      ],
+      "caption": "Inherited titles",
+      "table_title": "Ahtna"
+    },
+    "primary_positive": {
+      "id": 1948,
+      "distance": 0.0,
+      "broad_topic": "Music Charts",
+      "medium_topic": "Geography",
+      "sentence_context": [
+        "Ahtna (1): The Ahtna (also Ahtena, Atna, Ahtna-kohtaene, or Copper River) are an Alaska Native Athabaskan people of the Athabaskan-speaking ethnolinguistic group.",
+        "Ahtna (2): The Ahtna are an Athabaskan languages speaking tribe of the Subarctic cultural area, which classifies them as both Athabaskan and Subarctic Indians.",
+        "Ahtna (disambiguation) (1): The Ahtna are an Alaska Native Athabaskan people of Alaska.",
+        "Alaskan Athabaskans (1): The Alaskan Athabascans, Alaskan Athabaskans, Alaskan Athapaskans (Russian: , ) are Alaska Native peoples of the Athabaskan-speaking ethnolinguistic group.",
+        "Upper Kuskokwim people (1): The Upper Kuskokwim people or Upper Kuskokwim Athabaskans, Upper Kuskokwim Athabascans (own native name Dichinanek' Hwt'ana), and historically Kolchan, Goltsan, Tundra Kolosh, and McGrath Ingalik are an Alaskan Athabaskan people of the Athabaskan-speaking ethnolinguistic group."
+      ]
+    },
+    "additional_positives": [
+      {
+        "id": 2194,
+        "distance": 0.4908369121365747,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Ahtna (1): The Ahtna (also Ahtena, Atna, Ahtna-kohtaene, or Copper River) are an Alaska Native Athabaskan people of the Athabaskan-speaking ethnolinguistic group.",
+          "Ahtna (2): The Ahtna are an Athabaskan languages speaking tribe of the Subarctic cultural area, which classifies them as both Athabaskan and Subarctic Indians.",
+          "Ahtna (3): The Ahata operate Ahtna, Inc., an Alaska Native corporation founded in 1971.",
+          "Ahtna (4): Thus, \"Ahtna\" refers to the People of the 'Atna' River (i.e.",
+          "Ahtna (5): About 80 Ahtnas are believed to still speak the language."
+        ]
+      },
+      {
+        "id": 2430,
+        "distance": 0.7158142431080252,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Natioro language (1): Natioro (Natyoro), or Koo'ra, is a NigerCongo language of Burkina Faso spoken by a caste of blacksmiths.",
+          "Timbo (disambiguation) (1): Timbo is a town in Guinea.",
+          "Natioro language (2): Sample basic vocabulary of Natioro dialects:",
+          "Timbo (disambiguation) (2): Timbo may also refer to several places:",
+          "Kwoma language (1): The Kwoma refer to clans women from their generation as \"true sisters.\""
+        ]
+      },
+      {
+        "id": 1927,
+        "distance": 1.1287856659693891,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Wayuu language (1): Wayuu (Wayuu: Wayuunaiki [wajunaiki), or Guajiro, is a major Arawakan language spoken by 305,000 indigenous Wayuu people in northwestern Venezuela and northeastern Colombia on the Guajira Peninsula.",
+          "Wayuu people (1): The Wayuu language, called wayuunaiki, is part of the Arawak language family predominant in different parts of the Caribbean.",
+          "Wayuu people (2): Wayuu (also Wayu, Wayuu, Guajiro, Wahiro) is an Indigenous American ethnic group of the Guajira Peninsula in northernmost part of Colombia and northwest Venezuela.",
+          "Wayuu language (2): There are 200,000 speakers in Venezuela and 120,000 in Colombia.",
+          "Wayuu people (3): The Wayuu language is part of the Maipuran (Arawak) language family."
+        ]
+      },
+      {
+        "id": 199,
+        "distance": 1.2426615561130878,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Tangut language (1): Tangut (Tangut: ; Chinese: ; pinyin: Xi Xia Yu; lit.",
+          "Tangut language (2): 'Western Xia language') is an ancient northeastern Tibeto-Burman language once spoken in the Western Xia, also known as the Tangut Empire.",
+          "Tangut language (3): The consonants are divided into the following categories:",
+          "Tangut language (4): It is classified by some linguists as a Qiangic language, which includes the Northern and Southern Qiang languages and the Rgyalrong languages, among others.",
+          "Tangut language (5): Tangut was one of the official languages of the Western Xia (known in Tibetan as Mi nyag and in Chinese as Miyao), which was founded by the Tangut people and obtained its independence from the Song dynasty at the beginning of the 11th century."
+        ]
+      },
+      {
+        "id": 2922,
+        "distance": 1.247960955183827,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Ireland Geography",
+        "sentence_context": [
+          "Forth and Bargy dialect (1): The Forth and Bargy dialect, also known as Yola, is an extinct Anglic language once spoken in the baronies of Forth and Bargy in County Wexford, Ireland.",
+          "Forth and Bargy dialect (2): The dialect was spoken in County Wexford, particularly in the baronies of Forth and Bargy.",
+          "Forth and Bargy dialect (3): As such, it was similar to the Fingallian dialect of the Fingal area.",
+          "Forth (County Wexford barony) (1): The distinctive Forth and Bargy dialect of English survived until the 18th century.",
+          "Forth and Bargy dialect (4): It is thought to have evolved from Middle English, which was brought to Ireland during the Norman invasion, beginning in 1169."
+        ]
+      },
+      {
+        "id": 2631,
+        "distance": 1.3683037911231335,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Religious History",
+        "sentence_context": [
+          "Kurmanji (1): Kurmanji (Kurdish: ,Kurmanci, meaning Kurdish), also termed Northern Kurdish, is the northern dialect of the Kurdish languages, spoken predominantly in southeast Turkey, northwest and northeast Iran, northern Iraq, northern Syria and the Caucasus and Khorasan regions.",
+          "Bible translations into Kurdish (1): In 1919, Ludvig Olsen Fossum of the United Norwegian Lutheran Church of America finished those parts under the Arabic script under the title Injil Muqqades.",
+          "Bible translations into Chinese (1): By the twentieth century, Chinese scholars and preachers studied and quoted the Bible, contributing to distinctive forms of Chinese Christianity.",
+          "Bible translations into Chinese (2): The Bible did not play a primary role in Church preaching in sixteenth-century Europe or in the first Jesuit China missions; translation of the Bible was not a major concern.",
+          "Bible translations into Kurdish (2): Modern translations are being done into many different dialects."
+        ]
+      },
+      {
+        "id": 2961,
+        "distance": 1.4085027674976114,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Sihui (1): Sihui, formerly romanized as Szewui, is a county-level city in the west of the Pearl River Delta region in Guangdong province, China.",
+          "Sihui (disambiguation) (1): Sihui () is a county-level city in Guangdong, China.",
+          "Romanization of Chinese (1): There are many uses for Chinese Romanization.",
+          "Romanization of Chinese (2): \"The Chinese and Japanese repository\" stated that romanization would standardize the various differing pronunciations Chinese often had for one word, which was common for all mostly unwritten languages.",
+          "Romanization of Chinese (3): A new voluntary working subcommittee was independently formed by a group of five scholars who strongly advocated romanization."
+        ]
+      },
+      {
+        "id": 182,
+        "distance": 1.473143449463448,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Songhay languages (1): The Songhay or Songhai languages ([soaj or [sooj) are a group of closely related languages/dialects centred on the middle stretches of the Niger River in the West African countries of Mali, Niger, Benin, Burkina Faso and Nigeria.",
+          "Songhay languages (2): Songhay is mostly a tonal, SOV group of languages, an exception being the divergent Koyra Chiini of Timbuktu, which is non-tonal and uses SVO order.",
+          "Songhay languages (3): Here are some Proto-Songhay reconstructions:",
+          "Southern Songhay languages (1): Southern Songhay is the more populous branch of the Songhay languages, centered on the Niger River, including Timbuktu and the old capital of Gao.",
+          "Songhay languages (4): Some Proto-Eastern Songhay reconstructions are:"
+        ]
+      },
+      {
+        "id": 662,
+        "distance": 1.7592733196700394,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Lewu language (1): Lewu is an unclassified extinct Loloish language of Jingdong Yi Autonomous County, Yunnan, China.",
+          "Lewu language (2): Lewu may have been related to the Lawu language of Xinping County, Yunnan, but classification remains uncertain due to the paucity of data.",
+          "Lewu language (3): The language is already extinct, and was recorded in 1985 from 85-year-old Zhu Zhaojin of Puya Village , who could remember only some words.",
+          "Lewu language (4): Yao language speakers, known as the Lewu Yao , are found in Puya Village , Chaqing Township (Jingdong County Ethnic Gazetteer 2012:144).",
+          "Lao cuisine (1): Feu (Lao: ) or Mee (Lao: )."
+        ]
+      }
+    ],
+    "negatives": [
+      {
+        "negative_id": 1493,
+        "distance": 10.331244853288274,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Airports",
+        "sentence_context": [
+          "Small Planet Airlines (Germany) (1): Small Planet Airlines GmbH was a German charter airline headquartered in Berlin and a subsidiary of now-defunct Small Planet Airlines from Lithuania.",
+          "Small Planet Airlines (1): In 2013 Small Planet Airlines became the first Lithuanian capital company to fly a million passengers.",
+          "Small Planet Airlines (Cambodia) (1): It was a subsidiary of the now defunct Small Planet Airlines from Lithuania.",
+          "Small Planet Airlines (Poland) (1): was a Polish leisure charter airline and a subsidiary of now-defunct Small Planet Airlines from Lithuania.",
+          "Small Planet Airlines (2): Small Planet Airlines was a Lithuanian leisure airline based at Vilnius Airport with further bases throughout Europe."
+        ]
+      },
+      {
+        "negative_id": 1994,
+        "distance": 5.699719539134518,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Biochemistry",
+        "sentence_context": [
+          "Overpotential (1): Each step is associated with multiple forms of overpotential.",
+          "Gold (1): It is one of the least reactive chemical elements and is solid under standard conditions.",
+          "Overpotential (2): The quantity of overpotential is specific to each cell design and varies across cells and operational conditions, even for the same reaction.",
+          "Overpotential (3): In electrochemistry, overpotential is the potential difference (voltage) between a half-reaction's thermodynamically determined reduction potential and the potential at which the redox event is experimentally observed.",
+          "Gold (2): Gold is a chemical element with the symbol Au (from Latin: aurum) and atomic number 79, making it one of the higher atomic number elements that occur naturally."
+        ]
+      },
+      {
+        "negative_id": 2047,
+        "distance": 4.006490764187804,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Census Data",
+        "sentence_context": [
+          "Ghogalpur (1): Ghogalpur is a village in the Bhopal district of Madhya Pradesh, India.",
+          "Pano (caste) (1): It was the most populous of the scheduled castes of Odisha.",
+          "Ghitorni (1): The population consists mainly of Gujjars (80%), as well as the Brahmans (10%), Scheduled Castes (5%), Aggarwals and others (5%) (estimated).It comes between Aya Nagar and Sultanpur",
+          "Chothe Naga (1): They are listed as a Scheduled Tribe, in accordance with The Scheduled Castes and Scheduled Tribes Orders (Amendment) Act, 1976 Indian Constitution.",
+          "Ghogalpur (2): According to the 2011 census of India, Ghogalpur has 103 households."
+        ]
+      },
+      {
+        "negative_id": 2707,
+        "distance": 1.9211522582171612,
+        "broad_topic": "Music Charts",
+        "medium_topic": "European Politics",
+        "sentence_context": [
+          "List of endangered languages in South America (1): An endangered language is a language that it is at risk of falling out of use, generally because it has few surviving speakers.",
+          "List of endangered languages in South America (2): South America is a continent of the Americas, situated entirely in the Western Hemisphere and mostly in the Southern Hemisphere, with a relatively small portion in the Northern Hemisphere.",
+          "Lists of endangered languages (1): Lists of endangered languages are mainly based on the definitions used by UNESCO.",
+          "List of endangered languages in South America (3): UNESCO defines four levels of language endangerment between \"safe\" (not endangered) and \"extinct\":",
+          "List of endangered languages in South America (4): If it loses all of its native speakers, it becomes an extinct language."
+        ]
+      },
+      {
+        "negative_id": 462,
+        "distance": 7.141017342328242,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geopolitics",
+        "sentence_context": [
+          "Transportation in Seremban (1): Many of the renamed streets are currently named in honour of local figures.",
+          "Seremban (1): Seremban (Minangkabau: Soghomban or Somban) in the Seremban District, is a city and the capital of Negeri Sembilan, Malaysia.",
+          "Transportation in Seremban (2): Several streets were named after local landmarks, but others were predominantly named after prominent Federated Malay States officials, especially those who served in Negeri Sembilan.",
+          "Transportation in Seremban (3): Many of the town's streets were originally referred to in English with a handful of Malay street names included in the mix.",
+          "Seremban (2): It was hoped that it would continue to be used by all walks of life, not just for the present but would continue to be a valuable heritage for the future generation."
+        ]
+      },
+      {
+        "negative_id": 611,
+        "distance": 26.56206821486631,
+        "broad_topic": "College Football (2)",
+        "medium_topic": "College Athletics",
+        "sentence_context": [
+          "1999 Western Michigan Broncos football team (1): The 1999 Western Michigan Broncos football team represented Western Michigan University in the Mid-American Conference (MAC) during the 1999 NCAA Division I-A football season.",
+          "Western Michigan Broncos football (1): The Western Michigan Broncos football program represents Western Michigan University in the Football Bowl Subdivision of Division I and the Mid-American Conference (MAC).",
+          "Western Michigan Broncos (1): The Western Michigan Broncos are a National Collegiate Athletic Association (NCAA) Division I program representing Western Michigan University (WMU) in college athletics.",
+          "Western Michigan Broncos football (2): The win was the Broncos' sixth in the last eight contests against the Chippewas.",
+          "Western Michigan Broncos (2): They compete in the Mid-American Conference in men's baseball, basketball, football (within the Football Bowl Subdivision), soccer and tennis; and women's basketball, cross-country, golf, gymnastics, soccer, softball, track and field, and volleyball."
+        ]
+      },
+      {
+        "negative_id": 911,
+        "distance": 25.533520761929967,
+        "broad_topic": "College Sports",
+        "medium_topic": "College Football",
+        "sentence_context": [
+          "1937 Duquesne Dukes football team (1): The team played its home games at Forbes Field in Pittsburgh.",
+          "Duquesne Dukes football (1): The team plays its home games at the 2,200-seat Arthur J. Rooney Athletic Field in Pittsburgh, Pennsylvania.",
+          "1937 Duquesne Dukes football team (2): The 1937 Duquesne Dukes football team was an American football team that represented Duquesne University as an independent during the 1937 college football season.",
+          "Duquesne Dukes football (2): The Duquesne Dukes football program is the intercollegiate American football team for Duquesne University located in the U.S. state of Pennsylvania.",
+          "Duquesne Dukes (1): Duquesne has played football as a club team from 1891 to 1894, 1896 to 1903, 1913 to 1914, and 1920 to 1928, in the NCAA Division I Football Bowl Subdivision (FBS) from 1929 to 1942 and 1947 to 1950, again as a club team from 1969 to 1978, in NCAA Division III from 1979 to 1992, and in the NCAA Division I Football Championship Subdivision (FCS) from 1993present."
+        ]
+      },
+      {
+        "negative_id": 45,
+        "distance": 21.907105369829864,
+        "broad_topic": "Entertainment Industry",
+        "medium_topic": "Actresses",
+        "sentence_context": [
+          "Claire Rushbrook (1): Claire Louise Rushbrook (born 25 August 1971) is an English actress.",
+          "Claire Rushbrook (2): On television, she has starred in The Sins (2000), Linda Green (200102), the sitcom Carrie And Barry (200405), Whitechapel (200913) and My Mad Fat Diary (201315), for which she received a 2014 BAFTA TV Award nomination for Best Supporting Actress.",
+          "Claire Rushbrook (3): Claire Louise Rushbrook was born on 25 August 1971 in Hitchin, Hertfordshire.",
+          "The Sins (1): For other uses, see sin (disambiguation).",
+          "Tina Seabrook (1): Tina was initially billed as \"over-keen\" and clumsy, but \"a promising member of staff\"."
+        ]
+      },
+      {
+        "negative_id": 1365,
+        "distance": 29.483345105927746,
+        "broad_topic": "Sports (4)",
+        "medium_topic": "Cycling",
+        "sentence_context": [
+          "2011 Rallye Sanremo (1): The 2011 Rallye Sanremo (53º Rallye Sanremo), was the 9th round of the 2011 Intercontinental Rally Challenge (IRC) season.",
+          "Thierry Neuville (1): Thierry Jean Neuville (born 16 June 1988) is a Belgian rally driver who is competing in the World Rally Championship for Hyundai Motorsport.",
+          "Rallye Sanremo (1): Rallye Sanremo is a rally competition held in Sanremo, Italy.",
+          "Thierry Neuville (2): The car was repaired and Thierry Neuville and co-driver Nicolas Gilsoul finished the rally in first position.",
+          "Thierry Neuville (3): He finished ahead of Ogier, who was third, but the two extra points Ogier scored on the Power stage meant the Frenchman was crowned world champion for a fifth consecutive time."
+        ]
+      },
+      {
+        "negative_id": 111,
+        "distance": 16.34086291755578,
+        "broad_topic": "Sports (5)",
+        "medium_topic": "African Colleges",
+        "sentence_context": [
+          "Makerere University (1): Makerere University, Kampala (/mkrri/ ; Mak) is Uganda's largest and oldest institution of higher learning, first established as a technical school in 1922.",
+          "Makerere University School of Public Health (1): Makerere University School of Public Health (MUSPH) is one of the schools that comprise the Makerere University College of Health Sciences, a constituent college of Makerere University, Uganda's oldest and largest public university.",
+          "Makerere University School of Public Health (2): The institute was elevated to a full-fledged School of Public Health and made a constituent school of the Makerere University College of Health Sciences in 2007.",
+          "Makerere University School of Health Sciences (1): The school was established in 2007 by consolidating the training offered by the University in the disciplines of Dentistry, Pharmacy, Nursing and Physical Therapy under one school.",
+          "Makerere University School of Health Sciences (2): Makerere University School of Health Sciences (MUSM), is one of the schools that constitute Makerere University College of Health Sciences (MUCHS), a semi-autonomous constituent college of Makerere University, Uganda's oldest university."
+        ]
+      }
+    ]
+  },
+  {
+    "threshold": 11.490000019644697,
+    "anchor": {
+      "id": 2195,
+      "broad_topic": "Music Charts",
+      "medium_topic": "Geography",
+      "table_content": [
+        [
+          "Ethnic group",
+          "%"
+        ],
+        [
+          "Quechua",
+          "52.9"
+        ],
+        [
+          "Aymara",
+          "24.2"
+        ],
+        [
+          "Guarani, Chiquitos, Moxos",
+          "0.2"
+        ],
+        [
+          "Not indigenous",
+          "22.6"
+        ],
+        [
+          "Other indigenous groups",
+          "0.2"
+        ]
+      ],
+      "caption": "",
+      "table_title": "Uyuni Municipality"
+    },
+    "primary_positive": {
+      "id": 2195,
+      "distance": 0.0,
+      "broad_topic": "Music Charts",
+      "medium_topic": "Geography",
+      "sentence_context": [
+        "Uyuni Municipality (1): Uyuni Municipality is the first municipal section of the Antonio Quijarro Province in the Potosi Department in Bolivia.",
+        "Uyuni Municipality (2): The people are predominantly indigenous citizens of Quechua and Aymara descent.",
+        "Uyuni Municipality (3): Its seat is Uyuni.",
+        "Tomave Municipality (1): The people are predominantly indigenous citizens of Quechua descent.",
+        "Antonio Quijarro Province (1): 50% of the population are employed in agriculture, 8% in mining, 5% in industry, 37% in general services."
+      ]
+    },
+    "additional_positives": [
+      {
+        "id": 1904,
+        "distance": 0.15222824561791629,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Uyuni Municipality (1): The people are predominantly indigenous citizens of Quechua and Aymara descent.",
+          "Uyuni Municipality (2): Uyuni Municipality is the first municipal section of the Antonio Quijarro Province in the Potosi Department in Bolivia.",
+          "Indigenous peoples in Bolivia (1): Aymara and Quechua are the largest groups.",
+          "Tarabuco Municipality (1): Its population is overwhelmingly indigenous: of 10,530 people 15 or older in the 2001 Census, 9,834 (or 93,40%) self-identified with an indigenous people; 9,779 to the Quechua people, 29 Aymara, 15 to another indigenous people, and 7 as Guarani.",
+          "Tomave Municipality (1): The people are predominantly indigenous citizens of Quechua descent."
+        ]
+      },
+      {
+        "id": 309,
+        "distance": 0.1695255679782445,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "San Antonio de Esmoruco Municipality (1): The people are predominantly indigenous citizens of Quechua descent.",
+          "Guarani people (1): Guarani are a group of culturally-related indigenous peoples of South America.",
+          "San Antonio (1): San Antonio (/sæn æntonio/; in Spanish, \"Saint Anthony\"), officially the City of San Antonio, is the seventh-most populous city in the United States, and the second-most populous city in both Texas and the Southern United States, with 1,547,253 residents in 2019.",
+          "San Antonio de Esmoruco Municipality (2): San Antonio de Esmoruco is the third municipal section of the Sur Lipez Province in the Potosi Department in Bolivia.",
+          "Tarabuco Municipality (1): Its population is overwhelmingly indigenous: of 10,530 people 15 or older in the 2001 Census, 9,834 (or 93,40%) self-identified with an indigenous people; 9,779 to the Quechua people, 29 Aymara, 15 to another indigenous people, and 7 as Guarani."
+        ]
+      },
+      {
+        "id": 2954,
+        "distance": 0.17571593746232114,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Uncia Municipality (1): The people are predominantly indigenous citizens of Quechua and Aymara descent.",
+          "Uncia Municipality (2): Uncia Municipality is the first municipal section of the Rafael Bustillo Province in the Potosi Department in Bolivia.",
+          "Uncia Municipality (3): The municipality consists of the following cantons:",
+          "Chimboata Canton (1): Chimboata Canton (Quechua: Chimpuwata) is one of the cantons of the Pocona Municipality, the third municipal section of the Carrasco Province in the Cochabamba Department in central Bolivia.",
+          "Uncia Municipality (4): Its seat is Uncia."
+        ]
+      },
+      {
+        "id": 2795,
+        "distance": 0.17875173823289217,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Popocatepetl (1): Popocatepetl (Spanish pronunciation: [popokatepetl (listen); Nahuatl: Popocatepetl Nahuatl pronunciation: [popokatepet) is an active stratovolcano, located in the states of Puebla, Morelos and Mexico, in central Mexico, and lies in the eastern half of the Trans-Mexican volcanic belt.",
+          "List of Ultras of Mexico (1): The following sortable table comprises the 26 ultra-prominent summits of Mexico.",
+          "List of Ultras of Mexico (2): Each of these peaks has at least 1,500 meters (5,000 feet) of topographic prominence.",
+          "List of Ultras of Mexico (3): Of these 26 ultra-prominent summits of Mexico, four are located in Puebla, four in Oaxaca, four in Nuevo Leon, three in Mexico, three in Jalisco, two in Veracruz, two in Michoacan, two in Baja California Sur, two in Coahuila, and one each in Morelos, Guerrero, Baja California, Tlaxcala, and Queretaro.",
+          "Popocatepetl and Iztaccihuatl (1): Popocatepetl and Iztaccihuatl refers to the volcanoes Popocatepetl (\"the Smoking Mountain\") and Iztaccihuatl (\"white woman\" in Nahuatl, sometimes called the Mujer Dormida \"sleeping woman\" in Spanish) in Izta-Popo Zoquiapan National Park, which overlook the Valley of Mexico and the various myths explaining their existence."
+        ]
+      },
+      {
+        "id": 2942,
+        "distance": 0.33164874218235507,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Potosi Municipality (1): The people are predominantly indigenous citizens of Quechua descent.",
+          "Potosi Municipality (2): Potosi Municipality is the capital municipality of the Tomas Frias Province in the Potosi Department in Bolivia.",
+          "Potosi Department (1): Potosi (Spanish pronunciation: [potosi; Aymara: Putusi; Quechua: P'utuqsi) is a department in southwestern Bolivia.",
+          "San Luis Potosi City (1): San Luis Potosi, commonly called SLP or simply San Luis, is the capital and the most populous city of the Mexican state of San Luis Potosi.",
+          "San Luis Potosi City (2): With a population of approximately one million inhabitants, it is now the tenth-largest metropolitan area in Mexico."
+        ]
+      },
+      {
+        "id": 902,
+        "distance": 0.36892434719798156,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Pacasmayo Province (1): The Pacasmayo Province is one of twelve provinces of the La Libertad Region in Peru; also Pacasmayo is the name of one of its districts.",
+          "Pacasmayo Province (2): The province is divided into five districts, which are:",
+          "San Pedro de Lloc District (1): San Pedro de Lloc District is one of five districts of the province Pacasmayo in Peru.",
+          "Pataz Province (1): The province is divided into thirteen districts, which are:",
+          "Pacasmayo Province (3): The capital of this province is the city of San Pedro de Lloc."
+        ]
+      },
+      {
+        "id": 1867,
+        "distance": 0.4080850186233981,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "San Antonio de Esmoruco Municipality (1): The people are predominantly indigenous citizens of Quechua descent.",
+          "San Antonio de Esmoruco Municipality (2): San Antonio de Esmoruco is the third municipal section of the Sur Lipez Province in the Potosi Department in Bolivia.",
+          "San Antonio (1): San Antonio (/sæn æntonio/; in Spanish, \"Saint Anthony\"), officially the City of San Antonio, is the seventh-most populous city in the United States, and the second-most populous city in both Texas and the Southern United States, with 1,547,253 residents in 2019.",
+          "San Antonio (2): San Antonio-based TV stations are WOAI channel 4 (NBC), KSAT channel 12 (ABC), KENS channel 5 (CBS), KABB channel 29 (FOX), KCWX channel 2 (myNetworkTV), KMYS channel 35 (The CW) and KLRN channel 9 (PBS).",
+          "Guadalupe, Sud Lipez (1): It is the seat of the Guadalupe Canton, one of the two cantons of the San Antonio de Esmoruco Municipality which is the third municipal section of the Sud Lipez Province."
+        ]
+      },
+      {
+        "id": 421,
+        "distance": 0.5502035820530871,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Porvenir, Chile (1): It is one of Chile's southernmost towns, and has 4,734 inhabitants, including several thousand soldiers.",
+          "Pico Truncado (1): Pico Truncado is a town and municipality in Santa Cruz Province in southern Argentina.",
+          "Porvenir, Chile (2): It is the largest settlement in the Chilean half of the island of Tierra del Fuego.",
+          "Southernmost settlements (1): This is a list of the all settlements south of the 45th parallel south with over 1,000 permanent inhabitants.",
+          "Southernmost settlements (2): Southernmost settlements are cities, towns, weather stations or permanent military bases which are farther south than latitude 45°S."
+        ]
+      },
+      {
+        "id": 398,
+        "distance": 0.6227176505910625,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Guadalupe y Calvo Municipality (1): Guadalupe y Calvo is one of the 67 municipalities of Chihuahua, in northern Mexico.",
+          "Guadalupe, Nuevo Leon (1): Guadalupe is a city and surrounding municipality located in the state of Nuevo Leon, in northern Mexico.",
+          "Guadalupe y Calvo Municipality (2): Other than the town of Guadalupe y Calvo, the municipality had 1,416 localities, the largest of which (with 2010 populations in parentheses) were: Baborigame (3,294), classified as urban, and Atascaderos (1,559), Las Yerbitas (Aserradero) (1,200), and Turuachi (1,131), classified as rural.",
+          "Guadalupe, Nuevo Leon (2): It is the second-largest city and municipality in the state.",
+          "Guadalupe Municipality, Chihuahua (1): Guadalupe is one of the 67 municipalities of Chihuahua, in northern Mexico."
+        ]
+      }
+    ],
+    "negatives": [
+      {
+        "negative_id": 540,
+        "distance": 9.470232601488936,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Airports",
+        "sentence_context": [
+          "Pobeda (airline) (1): Pobeda Airlines LCC, commonly known as Pobeda (Russian: , lit.",
+          "International airport (1): Amenities at ground transportation centers typically include restrooms and seating, and may also provide ticket counters, food and beverage sales and retail goods such as magazines.",
+          "List of Alaska Airlines destinations (1): As of 2017, its combined network offers 1,200 flights to 115+ destinations in the United States, Canada, Mexico, and Costa Rica, under the Alaska Airlines and Horizon Air brands.",
+          "List of Turkish Airlines destinations (1): The list includes the city, country, the codes of the International Air Transport Association (IATA airport code) and the International Civil Aviation Organization (ICAO airport code), and the airport's name, with the airline's hub, focus airports, cargo services, future and terminated destinations marked.",
+          "International airport (2): At some U.S. international airports, such as O'Hare International Airport in Chicago, some seating and waiting areas are located away from the terminal building, with passengers being shuttled to terminals."
+        ]
+      },
+      {
+        "negative_id": 2392,
+        "distance": 8.029199367374662,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Biochemistry",
+        "sentence_context": [
+          "Genetic linkage (1): As an example of linkage, consider the classic experiment by William Bateson and Reginald Punnett.",
+          "Genetic linkage (2): In 1905, the British geneticists William Bateson, Edith Rebecca Saunders and Reginald Punnett cross-bred pea plants in experiments similar to Mendel's.",
+          "Reginald Punnett (1): He, Bateson and Saunders co-discovered genetic linkage through experiments with chickens and sweet peas.",
+          "Genetic linkage (3): This is a consequence of independent assortment.",
+          "Genetic linkage (4): According to Mendelian genetics, the expected phenotypes would occur in a 9:3:3:1 ratio of PL:Pl:pL:pl. To their surprise, they observed an increased frequency of PL and pl and a decreased frequency of Pl and pL:"
+        ]
+      },
+      {
+        "negative_id": 94,
+        "distance": 4.137306872594515,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Census Data",
+        "sentence_context": [
+          "Mundi Chhurimaran (1): Mundi Chhurimaran is a village in the Firozpur district of Punjab, India.",
+          "Mundi Chhurimaran (2): According to the 2011 census of India, Mundi Chhurimaran has 419 households.",
+          "Mundi, Kapurthala (1): According to the report published by Census India in 2011, Mundi has total number of 261 houses and population of 1,377 of which include 707 males and 670 females.",
+          "Demographics of Nepal (1): As of the 2011 census, 81.3% of the Nepalese population was Hindu, 9.0% Buddhist, 4.4% Muslim, 3.0% Kirant/Yumaist, 1.42% Christian, and 0.9% followed other or no religion.",
+          "Eastham, Merseyside (1): The total population had risen to 13,882 of which 6,730 were males and 7,152 females."
+        ]
+      },
+      {
+        "negative_id": 1239,
+        "distance": 2.8560459649340046,
+        "broad_topic": "Music Charts",
+        "medium_topic": "European Politics",
+        "sentence_context": [
+          "Swedish grammar (1): The ett preceding hundra (100) and tusen (1000) is optional, but in compounds it is usually required.",
+          "Swedish language (1): Swedish (Swedish: [svnska (listen)) is a North Germanic language spoken natively by 10 million people, predominantly in Sweden (as the sole official language) and in parts of Finland, where it has equal legal standing with Finnish.",
+          "Swedish language (2): Swedish is an Indo-European language belonging to the North Germanic branch of the Germanic languages.",
+          "Swedish grammar (2): Swedish is descended from Old Norse.",
+          "Swedish grammar (3): It is generally a subjectverbobject (SVO) language with V2 word order."
+        ]
+      },
+      {
+        "negative_id": 1843,
+        "distance": 8.772562670436647,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Ireland Geography",
+        "sentence_context": [
+          "Townland (1): A townland (Irish: baile fearainn; Ulster-Scots: toonlann) is a small geographical division of land used in Ireland and in the Western Isles in Scotland.",
+          "Bofealan (1): Bofealan (from Irish: Both Fialain, meaning 'Phelan's booth or hut') is a townland in the civil parish of Templeport, County Cavan, Ireland.",
+          "Townland (2): In Ireland a townland is generally the smallest administrative division of land, though a few large townlands are further divided into hundreds.",
+          "Townland (3): The term describes the smallest unit of land division in Ireland, based on various forms of Gaelic land division, many of which had their own names.",
+          "Tattycor (1): In 1841 the population of the townland was 204 people (37 houses) and in 1851 it was 137 people (31 houses)."
+        ]
+      },
+      {
+        "negative_id": 2011,
+        "distance": 26.75130592163218,
+        "broad_topic": "College Football (2)",
+        "medium_topic": "College Athletics",
+        "sentence_context": [
+          "1976 Western Michigan Broncos football team (1): The 1976 Western Michigan Broncos football team represented Western Michigan University in the Mid-American Conference (MAC) during the 1976 NCAA Division I football season.",
+          "1976 Western Michigan Broncos football team (2): The team played its home games at Waldo Stadium in Kalamazoo, Michigan.",
+          "Western Michigan Broncos football (1): The Western Michigan Broncos football program represents Western Michigan University in the Football Bowl Subdivision of Division I and the Mid-American Conference (MAC).",
+          "Western Michigan Broncos (1): The Western Michigan Broncos are a National Collegiate Athletic Association (NCAA) Division I program representing Western Michigan University (WMU) in college athletics.",
+          "Western Michigan Broncos (2): The men's ice hockey team competes in the National Collegiate Hockey Conference."
+        ]
+      },
+      {
+        "negative_id": 1725,
+        "distance": 25.590529288871263,
+        "broad_topic": "College Sports",
+        "medium_topic": "College Football",
+        "sentence_context": [
+          "1958 Clemson Tigers football team (1): The 1958 Clemson Tigers football team was an American football team that represented Clemson College in the Atlantic Coast Conference (ACC) during the 1958 NCAA University Division football season.",
+          "1958 Clemson Tigers football team (2): In its 19th season under head coach Frank Howard, the team compiled an 83 record (51 against conference opponents), won the ACC championship, was ranked No.",
+          "Clemson Tigers (1): The Clemson Tigers are the athletic teams that represent Clemson University, located in Clemson, South Carolina.",
+          "Clemson Tigers football (1): The Clemson Tigers football program, known traditionally as the \"Clemson University Fighting Tigers,\" represent Clemson University in the sport of American football.",
+          "1958 Clemson Tigers football team (3): 1 ranked team when it played LSU in the 1959 Sugar Bowl."
+        ]
+      },
+      {
+        "negative_id": 1487,
+        "distance": 21.255460545207555,
+        "broad_topic": "Entertainment Industry",
+        "medium_topic": "Actresses",
+        "sentence_context": [
+          "Bettye LaVette (1): Bettye LaVette (born Betty Jo Haskins, January 29, 1946) is an American soul singer-songwriter who made her first record at sixteen, but achieved only intermittent fame until 2005, with her album I've Got My Own Hell to Raise.",
+          "A Woman Like Me (album) (1): A Woman Like Me is a studio album by American singer Bettye LaVette, released on January 21, 2003, by Blues Express.",
+          "Bettye LaVette (2): In 2017, LaVette appeared in the award-winning documentary film The American Epic Sessions.",
+          "Bettye LaVette (3): Her eclectic musical style combines elements of soul, blues, rock and roll, funk, gospel, and country music.",
+          "Bettye LaVette (4): Both albums sparked a renewed interest in LaVette and in 2003, A Woman Like Me (produced by Dennis Walker) was released."
+        ]
+      },
+      {
+        "negative_id": 1365,
+        "distance": 31.16146261976061,
+        "broad_topic": "Sports (4)",
+        "medium_topic": "Cycling",
+        "sentence_context": [
+          "2011 Rallye Sanremo (1): The 2011 Rallye Sanremo (53º Rallye Sanremo), was the 9th round of the 2011 Intercontinental Rally Challenge (IRC) season.",
+          "Thierry Neuville (1): Thierry Jean Neuville (born 16 June 1988) is a Belgian rally driver who is competing in the World Rally Championship for Hyundai Motorsport.",
+          "Rallye Sanremo (1): Rallye Sanremo is a rally competition held in Sanremo, Italy.",
+          "Thierry Neuville (2): The car was repaired and Thierry Neuville and co-driver Nicolas Gilsoul finished the rally in first position.",
+          "Thierry Neuville (3): He finished ahead of Ogier, who was third, but the two extra points Ogier scored on the Power stage meant the Frenchman was crowned world champion for a fifth consecutive time."
+        ]
+      },
+      {
+        "negative_id": 3067,
+        "distance": 15.888760447150524,
+        "broad_topic": "Sports (5)",
+        "medium_topic": "African Colleges",
+        "sentence_context": [
+          "Mampong Technical College of Education (1): Mampong Technical College of Education is a teacher education college in Mampong (Ashanti) (Mampong Municipal District, Ashanti Region, Ghana).",
+          "Mampong Technical College of Education (2): Mampong Technical Teachers' College of Education (MAMTECH) was established in 1967 as a teacher Educational institution on the premises of the Trade Training Centre which was established by the British Colonial Government in 1922.",
+          "Mampong Technical College of Education (3): The first principal of the college was Mr. W.J.",
+          "Mampong Technical College of Education (4): It is one of the about 40 public colleges of education in Ghana.",
+          "Mampong Technical College of Education (5): It was established in 1967 as an institution to train teachers at the same location as the Trade Training Centre, which was set up by the British Colonial Government in 1922."
+        ]
+      }
+    ]
+  },
+  {
+    "threshold": 12.622030145287843,
+    "anchor": {
+      "id": 2211,
+      "broad_topic": "Music Charts",
+      "medium_topic": "Geography",
+      "table_content": [
+        [
+          "year",
+          "population"
+        ],
+        [
+          "1690",
+          "186"
+        ],
+        [
+          "1807",
+          "224"
+        ],
+        [
+          "1850",
+          "184"
+        ],
+        [
+          "1900",
+          "104"
+        ],
+        [
+          "1950",
+          "124"
+        ],
+        [
+          "2000",
+          "115"
+        ],
+        [
+          "2010",
+          "126"
+        ]
+      ],
+      "caption": "",
+      "table_title": "Sufers"
+    },
+    "primary_positive": {
+      "id": 2211,
+      "distance": 0.0,
+      "broad_topic": "Music Charts",
+      "medium_topic": "Geography",
+      "sentence_context": [
+        "Sufers (1): Sufers has a population (as of 31 December 2019) of 145.",
+        "Sufers (2): Sufers (Romansh: Sur) is a municipality in the Viamala Region in the Swiss canton of Graubunden.",
+        "Sufers (3): Over the last 10 years the population has decreased at a rate of -6.6%.",
+        "Sufers (4): It is a Haufendorf (an irregular, unplanned and quite closely packed village, built around a central square).",
+        "Sufers (5): The historical population is given in the following table:"
+      ]
+    },
+    "additional_positives": [
+      {
+        "id": 923,
+        "distance": 0.04241827175962731,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Rongellen (1): Rongellen is a municipality in the canton of Graubunden in Switzerland, located in the Viamala Region.",
+          "Rongellen (2): Rongellen has a population (as of 31 December 2019) of 53.",
+          "Rongellen (3): The historical population is given in the following table:",
+          "Rongellen (4): 2 people or 3.8% are 10 to 14, and 11 people or 20.8% are 15 to 19.",
+          "Rongellen (5): 7 people or 13.2% are 30 to 39, 5 people or 9.4% are 40 to 49, and 8 people or 15.1% are 50 to 59."
+        ]
+      },
+      {
+        "id": 1860,
+        "distance": 0.09404669396894177,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Sils im Domleschg (1): Sils im Domleschg (Romansh: Seglias) is a municipality in the Viamala Region in the Swiss canton of Graubunden.",
+          "Domleschg (1): Domleschg is a municipality in the Viamala Region in the Swiss canton of Graubunden.",
+          "Sils im Domleschg (2): Sils im Domleschg has a population (as of December 2019) of 960.",
+          "Sils im Domleschg (3): Sils im Domleschg is an industrial-tertiary municipality, a municipality where agriculture and manufacturing play a minor role in the economy.",
+          "Sils im Domleschg (4): It is a linear village between the Albula and Hinterrhein rivers."
+        ]
+      },
+      {
+        "id": 1749,
+        "distance": 0.1853538643252037,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Sufers (1): Sufers has a population (as of 31 December 2019) of 145.",
+          "Sufers (2): Sufers (Romansh: Sur) is a municipality in the Viamala Region in the Swiss canton of Graubunden.",
+          "Sufers (3): The historical population is given in the following table:",
+          "Sufers (4): Over the last 10 years the population has decreased at a rate of -6.6%.",
+          "Sufers (5): As of 2000, the gender distribution of the population was 52.0% male and 48.0% female."
+        ]
+      },
+      {
+        "id": 1866,
+        "distance": 0.26172006218094246,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Tomils (1): Tumegl/Tomils is a village in the municipality of Tomils in the district of Hinterrhein in the Swiss canton of Graubunden.",
+          "Tomils (2): As of 2000, the gender distribution of the population was 51.5% male and 48.5% female.",
+          "Trans, Switzerland (1): Trans is a village in the municipality of Tomils in the district of Hinterrhein in the Swiss canton of Graubunden.",
+          "Tomils (3): Over the last 10 years the population has grown at a rate of 7.7%.",
+          "Tomils (4): The age distribution, as of 2000, in Tumegl/Tomils is; 48 people or 15.0% of the population are between 0 and 9 years old."
+        ]
+      },
+      {
+        "id": 1044,
+        "distance": 0.26980442514258873,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Thusis (1): Thusis (Italian: Tosana, Romansh: Tusan) is a municipality in the Viamala Region in the Swiss canton of Graubunden.",
+          "Thusis (2): Thusis has a population (as of 31 December 2019) of 9,409.",
+          "Thusis (3): Over the last 10 years the population has grown at a rate of 0.7%.",
+          "Thusis (4): The age distribution, as of 2000, in Thusis is; 304 people or 11.2% of the population are between 0 and 9 years old.",
+          "Thusis (5): The historical population is given in the following table:"
+        ]
+      },
+      {
+        "id": 1505,
+        "distance": 0.2895093027926254,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Tujetsch (1): It is the westernmost municipality of the canton, connected to Urseren (canton of Uri) by the Oberalp Pass.",
+          "Oberalp Pass (1): 2044 m.) is a high mountain pass in the Swiss Alps connecting the cantons of Graubunden and Uri between Disentis and Andermatt.",
+          "Tujetsch (2): Tujetsch is a municipality in the Surselva Region in the canton of Graubunden in Switzerland.",
+          "Urseren (1): The Urseren (also Ursern) is the valley of the upper Reuss in Uri, Switzerland, running southwest to northeast, from Realp to Hospental and Andermatt.",
+          "Tujetsch (3): Tujetsch has a population (as of 31 December 2019) of 1,207."
+        ]
+      },
+      {
+        "id": 1663,
+        "distance": 0.34959819271335885,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Scheid (1): Scheid has a population (as of 2007) of 148, of which 2.7% are foreign nationals.",
+          "Scheid (2): The historical population is given in the following table:",
+          "Scheid (3): The age distribution, as of 2000, in Scheid is; 99 people or 13.3% of the population are between 0 and 9 years old.",
+          "Scheid (4): Scheid is a village in the municipality of Tomils in the district of Hinterrhein in the Swiss canton of Graubunden.",
+          "Linda Scheid (1): Linda J. Scheid (June 16, 1942 June 15, 2011) was a Minnesota politician and a member of the Minnesota Senate who represented District 46, which includes portions of the northwestern suburbs of Hennepin County in the Twin Cities metro area."
+        ]
+      },
+      {
+        "id": 1782,
+        "distance": 0.3610288187496556,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Verdabbio (1): Verdabbio had a population (as of 2015) of 163.",
+          "Verdabbio (2): Verdabbio is a former municipality in the district of Moesa in the Swiss canton of Graubunden.",
+          "Verdabbio (3): Over the last 10 years the population has decreased at a rate of -1.9%.",
+          "Verdabbio (4): The age distribution, as of 2000, in Verdabbio is; 18 children or 11.0% of the population are between 0 and 9 years old.",
+          "Verdabbio (5): Most of the population (as of 2000) speaks Italian (85.4%), with German being second most common (14.0%)."
+        ]
+      },
+      {
+        "id": 2432,
+        "distance": 0.3614682062359871,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Sevgein (1): Sevgein is a former municipality in the district of Surselva in the Swiss canton of Graubunden.",
+          "Sevgein (2): The former municipality is located in the Ilanz sub-district of the Surselva district.",
+          "Sevgein (3): Sevgein had a population (as of 2011) of 198.",
+          "Hugelshofen (1): The municipality had 442 inhabitants in 1850, which decreased to 360 in 1900, 359 in 1950 and 325 in 1990.",
+          "Sevgein (4): The historical population is given in the following table:"
+        ]
+      }
+    ],
+    "negatives": [
+      {
+        "negative_id": 3034,
+        "distance": 8.218725535957695,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Biochemistry",
+        "sentence_context": [
+          "Reduced gradient bubble model (1): It is characterised by the following assumptions: blood flow (perfusion) provides a limit for tissue gas penetration by diffusion; an exponential distribution of sizes of bubble seeds is always present, with many more small seeds than large ones; bubbles are permeable to gas transfer across surface boundaries under all pressures; the haldanean tissue compartments range in half time from 1 to 720 minutes, depending on gas mixture.",
+          "Buhlmann decompression algorithm (1): The naming convention used to identify the algorithms is a code starting ZH-L, from Zurich (ZH), limits (L) followed by the number of tissue compartments, and other unique identifiers.",
+          "Min-conflicts algorithm (1): Because a CSP can be interpreted as a local search problem when all the variables have an assigned value (called a complete state), the min conflicts algorithm can be seen as a repair heuristic that chooses the state with the minimum number of conflicts.",
+          "Min-conflicts algorithm (2): Steven Minton and Andy Philips analyzed the neural network algorithm and separated it into two phases: (1) an initial assignment using a greedy algorithm and (2) a conflict minimization phases (later to be called \"min-conflicts\").",
+          "Pyle stop (1): The leading compartment is generally not the fastest compartment except in very short dives, for which this model does not require an intermediate stop."
+        ]
+      },
+      {
+        "negative_id": 1131,
+        "distance": 8.157398224509913,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Census Data",
+        "sentence_context": [
+          "Bandhghar (1): According to the 2011 census of India, Bandhghar has 255 households.",
+          "Bandhghar (2): Bandhghar is a village in the Palghar district of Maharashtra, India.",
+          "Achatnahalli (1): As of the 2011 Indian Census, the village included a total population of 520 people consisting of 266 females and 254 males.",
+          "Chakwara (1): In Chakwara, there are 484 households with total population of 3,824 (with 52.28% males and 47.72% females), based on 2011 census.",
+          "Demographics of Nepal (1): As of the 2011 census, 81.3% of the Nepalese population was Hindu, 9.0% Buddhist, 4.4% Muslim, 3.0% Kirant/Yumaist, 1.42% Christian, and 0.9% followed other or no religion."
+        ]
+      },
+      {
+        "negative_id": 2410,
+        "distance": 11.878165366345765,
+        "broad_topic": "Music Charts",
+        "medium_topic": "European Politics",
+        "sentence_context": [
+          "Rogaland (1): Rogaland [ruln (listen) is a county in Western Norway, bordering the North Sea to the west, and counties Vestland to the north, Vestfold og Telemark to the east, and Agder to the east and southeast.",
+          "Western Norway (1): It consists of the counties Rogaland, Vestland and Møre og Romsdal.",
+          "Rogaland (2): A county (fylke) is the chief local administrative area in Norway.",
+          "Western Norway (2): Western Norway (Bokmal: Vestlandet, Vest-Norge; Nynorsk: Vest-Noreg) is the region along the Atlantic coast of southern Norway.",
+          "Sandnes (1): Sandnes ([sns (listen)) is municipality in Rogaland county, Norway."
+        ]
+      },
+      {
+        "negative_id": 2890,
+        "distance": 11.597233282373521,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geopolitics",
+        "sentence_context": [
+          "AgraLucknow Expressway (1): It would cut travel time between Lucknow and Agra from 6 hours to 3:30 hours.",
+          "AgraLucknow Expressway (2): The Agra - Lucknow Expressway reduced the distance between the cities of Agra and Lucknow in the Indian state of Uttar Pradesh.",
+          "AgraLucknow Expressway (3): The cost of project was expected to be 15,000 crore (equivalent to 170 billion or US$2.4 billion in 2019) but was completed in 13,200 crore (equivalent to 150 billion or US$2.1 billion in 2019) and in record time of 22 months.",
+          "AhmedabadVadodara Expressway (1): The 93.1 km (57.8 mi) long expressway reduces the travel time between the two cities from two and a half hours to an hour.",
+          "DelhiMumbai Expressway (1): Vadodara-Mumbai Expressway was declared as National Expressway 4 on 10 January 2020."
+        ]
+      },
+      {
+        "negative_id": 1390,
+        "distance": 12.439430822191271,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Ireland Geography",
+        "sentence_context": [
+          "Coolnashinny (1): Coolnashinny (Irish: Cul na Sionnach; The Corner of the Foxes) is a townland in the civil parish of Kildallan in the barony of Tullyhunco, County Cavan, Ireland.",
+          "1851 United Kingdom census (1): Where 1841 had only recorded if an individual was born in a county, the 1851 census states the county and parish or town of birth as well.",
+          "Coolnashinny (2): In the 1911 census, the number of families had fallen to five.",
+          "1851 United Kingdom census (2): The Government also conducted a census in England and Wales of churches and chapels, endowments, sittings, attendance at religious services on Sunday 30 March 1851 and average numbers during the preceding twelve months.",
+          "Coolnashinny (3): Depositions in 1641 spell it Crohan, Croghan and Croaghan, and the 1652 Commonwealth Survey spells it Coolneshinagh."
+        ]
+      },
+      {
+        "negative_id": 701,
+        "distance": 29.21954437663548,
+        "broad_topic": "College Football (2)",
+        "medium_topic": "College Athletics",
+        "sentence_context": [
+          "1940 Western State Broncos football team (1): The 1940 Western State Broncos football team represented Western State Normal School (later renamed Western Michigan University) as an independent during the 1940 college football season.",
+          "1940 Western State Broncos football team (2): The team played its home games at Waldo Stadium in Kalamazoo, Michigan.",
+          "Western Michigan Broncos football (1): Western Michigan has competed in football since 1906, when they played three games in their inaugural season.",
+          "Western Michigan Broncos football (2): During that stretch, Western Michigan had only seven losing seasons, and only once had back-to-back losing records.",
+          "Western Michigan Broncos football (3): The win was the Broncos' sixth in the last eight contests against the Chippewas."
+        ]
+      },
+      {
+        "negative_id": 652,
+        "distance": 26.91716144299337,
+        "broad_topic": "College Sports",
+        "medium_topic": "College Football",
+        "sentence_context": [
+          "1903 Colgate football team (1): The 1903 Colgate football team was an American football team that represented Colgate University as an independent during the 1903 college football season.",
+          "1903 Oregon Webfoots football team (1): They finished the season with a record of four wins, two losses and one tie (421).",
+          "1903 Army Cadets football team (1): The 1903 Army Cadets football team represented the United States Military Academy in the 1903 college football season.",
+          "1903 Colgate football team (2): Carl Smith was the team captain.",
+          "1903 Colgate football team (3): In its first and only season under head coach Bob Hatch, the team compiled a 421 record."
+        ]
+      },
+      {
+        "negative_id": 1585,
+        "distance": 24.58425456586705,
+        "broad_topic": "Entertainment Industry",
+        "medium_topic": "Actresses",
+        "sentence_context": [
+          "Small Faces (film) (1): Small Faces is a 1996 Scottish drama film directed by Gillies MacKinnon about gangs, specifically the Tongs, in 1960s Glasgow.",
+          "Kirsty Mitchell (1): Kirsty Loretta Mitchell (born 28 June 1974) is a Scottish actress, known for her roles as Jodie Banks in River City and Sarah Chatwin in The Royal Today.",
+          "Tongland (gang area) (1): Tongland appears in Gillies MacKinnon's 1995 movie Small Faces, set in the 1960s, although the setting for the gang's territory is actually the tower blocks of Sighthill.",
+          "Kirsty Hay (1): Kirsty Hay (born 9 February 1972 in Glasgow, Scotland as Kirsty Addison) is a Scottish curler, a two-time European silver medallist (1992, 1995) and a three-time Scottish women's champion (1995, 1996, 1998).",
+          "Tongland (gang area) (2): Another Glasgow gang slogan was \"Spur ya Bass\" (this was the name of one of the two rival gangs from the Barrowfield area)."
+        ]
+      },
+      {
+        "negative_id": 2450,
+        "distance": 36.070291792797555,
+        "broad_topic": "Sports (4)",
+        "medium_topic": "Cycling",
+        "sentence_context": [
+          "Carlo Ubbiali (1): Carlo Ubbiali (22 September 1929 2 June 2020) was an Italian nine-time World Champion motorcycle road racer.",
+          "Carlo Ubbiali (2): In the 1950s, he was a dominant force in the smaller classes of Grand Prix motorcycle racing, winning six 125cc and three 250cc world titles.",
+          "Carlo Ubbiali (3): In 1949, the first year of Grand Prix motorcycle racing, he finished in fourth place in the 125cc class riding an MV Agusta.",
+          "MV Agusta (1): MV Agusta (Italian pronunciation: [mme vu a.gu.sta, full name: MV AGUSTA Motor S.p.A, original name: Meccanica Verghera Agusta or MV) is a motorcycle manufacturer founded by Count Domenico Agusta on 19 January 1945 as one of the branches of the Agusta aircraft company near Milan in Cascina Costa, Italy.",
+          "1955 Grand Prix motorcycle racing season (1): Road Racing World Championship Grand Prix season."
+        ]
+      },
+      {
+        "negative_id": 3067,
+        "distance": 19.77978928069705,
+        "broad_topic": "Sports (5)",
+        "medium_topic": "African Colleges",
+        "sentence_context": [
+          "Mampong Technical College of Education (1): Mampong Technical College of Education is a teacher education college in Mampong (Ashanti) (Mampong Municipal District, Ashanti Region, Ghana).",
+          "Mampong Technical College of Education (2): Mampong Technical Teachers' College of Education (MAMTECH) was established in 1967 as a teacher Educational institution on the premises of the Trade Training Centre which was established by the British Colonial Government in 1922.",
+          "Mampong Technical College of Education (3): The first principal of the college was Mr. W.J.",
+          "Mampong Technical College of Education (4): It is one of the about 40 public colleges of education in Ghana.",
+          "Mampong Technical College of Education (5): It was established in 1967 as an institution to train teachers at the same location as the Trade Training Centre, which was set up by the British Colonial Government in 1922."
+        ]
+      }
+    ]
+  }
+]

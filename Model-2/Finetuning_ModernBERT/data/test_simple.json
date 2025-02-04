@@ -1,0 +1,1614 @@
+[
+  {
+    "threshold": 11.914476047064367,
+    "anchor": {
+      "id": 1728,
+      "broad_topic": "Music Charts",
+      "medium_topic": "Geography",
+      "table_content": [
+        [
+          "Name ofmunicipality",
+          "Population(2001)",
+          "Population(2011)",
+          "Population(2018)"
+        ],
+        [
+          "As Neves",
+          "4,478",
+          "4,280",
+          "3,892"
+        ],
+        [
+          "Mondariz",
+          "5,185",
+          "4,847",
+          "4,496"
+        ],
+        [
+          "Mondariz-Balneario",
+          "693",
+          "678",
+          "618"
+        ],
+        [
+          "Ponteareas",
+          "19,011",
+          "23,295",
+          "22,854"
+        ],
+        [
+          "Salvaterra de Mino",
+          "8,073",
+          "9,542",
+          "9,691"
+        ],
+        [
+          "Totals",
+          "37,440",
+          "42,642",
+          "41,551"
+        ]
+      ],
+      "caption": "",
+      "table_title": "O Condado"
+    },
+    "primary_positive": {
+      "id": 1728,
+      "distance": 0.0,
+      "broad_topic": "Music Charts",
+      "medium_topic": "Geography",
+      "sentence_context": [
+        "O Condado (1): O Condado is a comarca in the Galician Province of Pontevedra, centred on the town of Ponteareas (Puenteareas in Castilian Spanish).",
+        "Mondariz (1): Mondariz is a town and municipality in the province of Pontevedra, autonomous community of Galicia, Spain.",
+        "Mondariz (2): It has a population of 4,440 inhabitants.",
+        "El Condado (Laviana) (1): El Condado (asturian and officially El Condao) is one of nine parishes (administrative divisions) in Laviana, a municipality within the province and autonomous community of Asturias, in northern Spain.",
+        "O Condado (2): It covers an area of 341 km, and the overall population of this comarca was 42,642 at the 2011 Census; the latest official estimate at the start of 2018 was 41,551."
+      ]
+    },
+    "additional_positives": [
+      {
+        "id": 3082,
+        "distance": 0.25786473502838925,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Ortegal (1): It covers an area of 394.3 sq.km, and the overall population of this region was 13,916 at the 2011 census; the latest official estimate (as at the start of 2018) was 12,238.",
+          "Ortegal (2): Ortegal is a comarca in the north of the Galician Province of A Coruna, Spain.",
+          "Ortegal (3): The comarca comprises the following four municipalities:",
+          "Carino (1): Carino is a municipality in the province of A Coruna, in the autonomous community of Galicia, northwestern Spain.",
+          "Carino, Paniqui (1): Carino is an accessible barangay and it is situated along the Mac Arthur Highway."
+        ]
+      },
+      {
+        "id": 683,
+        "distance": 0.5524630643974706,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Aldama Municipality, Chihuahua (1): Aldama is one of the 67 municipalities of Chihuahua, in northern Mexico.",
+          "Aldama Municipality, Chiapas (1): Aldama Municipality is one of the 122 municipalities of Chiapas, in southern Mexico.",
+          "Aldama Municipality, Chihuahua (2): The municipality had 487 localities, the largest of which (with 2010 populations in parentheses) was: Juan Aldama (18,642), classified as urban, and classified as rural.",
+          "Aldama Municipality, Chihuahua (3): As of 2010, the municipality had a total population of 22,302, up from 19,879 as of 2005.",
+          "Aldama Municipality, Chiapas (2): Other than the town of Aldama, the municipality had 20 localities, none of which had a population over 1,000."
+        ]
+      },
+      {
+        "id": 2210,
+        "distance": 0.5934343069458999,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Ireland Geography",
+        "sentence_context": [
+          "Sant Vicent del Raspeig (1): San Vicente del Raspeig (Spanish name, pronounced [sam biente ðel raspet), or Sant Vicent del Raspeig (Valencian name, pronounced [sam visn del raspet), is a municipality located in the comarca of Alacanti, in the province of Alicante, Spain, inside the conurbation of Alicante city (6 km away and perfectly communicated).",
+          "Sant Vicent del Raspeig (2): San Vicente del Raspeig is twinned with:",
+          "San Vicente del Valle (1): In the decade since 2001, the population ranged between 34 (2001) and 52 (2004), with 45 inhabitants documented in the 2007 census, but recently the municipality had only 31 inhabitants in 2014.",
+          "San Vicente del Valle (2): The earliest documentation for the hamlet of San Vicente del Valle is in the year 945 in records of the monastery of San Millan de la Cogolla as viam that vadit ad Vicentium.",
+          "San Vicente del Valle (3): San Vicente del Valle is a municipality and hamlet located in the province of Burgos, Castile and Leon, Spain."
+        ]
+      },
+      {
+        "id": 1991,
+        "distance": 0.6338415032716685,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Meoqui Municipality (1): Meoqui is one of the 67 municipalities of Chihuahua, in northern Mexico.",
+          "Lazaro Cardenas, Michoacan (1): Lazaro Cardenas is located in the southern part of the Mexican state of Michoacan.",
+          "Lazaro Cardenas, Michoacan (2): Lazaro Cardenas (Spanish: [lasao kardenas (listen)) is a port city in Michoacan bordered to the west by Guerrero.",
+          "Meoqui Municipality (2): The municipality had 882 localities, the largest of which (with 2010 populations in parentheses) were: Pedro Meoqui (22,574), Lazaro Cardenas (8,704), classified as urban, and Estacion Consuelo (1,981), Colonia Felipe Angeles (1,254), and Guadalupe Victoria (1,045), classified as rural.",
+          "Lazaro Cardenas, Michoacan (3): The municipality of Lazaro Cardenas, which has an area of 1,160.24 km (447.97 sq mi), had a total population of 162,997 in 2005, and includes the metropolitan area of city, which includes the communities of Las Guacamayas, La Orilla, and La Mira."
+        ]
+      },
+      {
+        "id": 681,
+        "distance": 0.6807424206695283,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Altar, Sonora (1): Altar (O'odham: Wawuk) is small city and municipal seat of Altar Municipality in the Mexican state of Sonora.",
+          "Altar Municipality (1): Altar is a municipality in Sonora in north-western Mexico.",
+          "Altar Municipality (2): The largest localities (cities, towns, and villages) are:",
+          "Altar Municipality (3): Surrounding municipalities are Saric, Tubutama, Atil, Trincheras, Pitiquito, Caborca and Oquitoa.",
+          "Altar Municipality (4): state]] of Arizona."
+        ]
+      },
+      {
+        "id": 1198,
+        "distance": 0.71515820960011,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Places-2",
+        "sentence_context": [
+          "Vilafranca (1): Vilafranca is a municipality in the comarca of Alt Maestrat, Castellon, Valencia, Spain.",
+          "Alt Maestrat (1): Alt Maestrat (Valencian pronunciation: [alt maestat; Spanish: Alto Maestrazgo) is a comarca in the province of Castellon, Valencian Community, Spain.",
+          "Albocasser (1): Albocasser (Valencian pronunciation: [albokase; Aragonese: Albocazar) is a municipality in Castellon, Valencia, Spain.",
+          "Alt Maestrat (2): The comarca of Alt Maestrat is composed of nine municipalities, listed below with their populations at the 2001 and 2011 Censuses, and according to the most recent official estimates (for 1 January 2019):",
+          "Vilafranca (2): The highest points are basically formed by limestone erosion that has beveled sometimes deeply."
+        ]
+      },
+      {
+        "id": 2400,
+        "distance": 0.7534852051913465,
+        "broad_topic": "Music Charts",
+        "medium_topic": "European Politics",
+        "sentence_context": [
+          "Spain (1): Spain (Spanish: Espana, [espaa (listen)), officially the Kingdom of Spain (Spanish: Reino de Espana), is a country in Southwestern Europe with some pockets of territory across the Strait of Gibraltar and the Atlantic Ocean.",
+          "Geography of Spain (1): Spain is a country located in southwestern Europe occupying most (about 82 percent) of the Iberian Peninsula.",
+          "Spain (2): With an area of 505,990 km (195,360 sq mi), Spain is the largest country in Southern Europe, the second-largest country in Western Europe and the European Union, and the fourth-largest country by area on the European continent.",
+          "Strait of Gibraltar (1): The Strait of Gibraltar (Arabic: , romanized: Madiq Jabal Tariq; Spanish: Estrecho de Gibraltar, Archaic: Pillars of Hercules), also known as the Straits of Gibraltar, is a narrow strait that connects the Atlantic Ocean to the Mediterranean Sea and separates the Iberian Peninsula in Europe from Morocco in Africa.",
+          "Spain (3): Spain is a transcontinental country, having territory in both Europe and Africa."
+        ]
+      },
+      {
+        "id": 398,
+        "distance": 0.8186609408119534,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Guadalupe y Calvo Municipality (1): Guadalupe y Calvo is one of the 67 municipalities of Chihuahua, in northern Mexico.",
+          "Guadalupe, Nuevo Leon (1): Guadalupe is a city and surrounding municipality located in the state of Nuevo Leon, in northern Mexico.",
+          "Guadalupe y Calvo Municipality (2): Other than the town of Guadalupe y Calvo, the municipality had 1,416 localities, the largest of which (with 2010 populations in parentheses) were: Baborigame (3,294), classified as urban, and Atascaderos (1,559), Las Yerbitas (Aserradero) (1,200), and Turuachi (1,131), classified as rural.",
+          "Guadalupe, Nuevo Leon (2): It is the second-largest city and municipality in the state.",
+          "Guadalupe Municipality, Chihuahua (1): Guadalupe is one of the 67 municipalities of Chihuahua, in northern Mexico."
+        ]
+      },
+      {
+        "id": 1082,
+        "distance": 0.8785914962487075,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Places-2",
+        "sentence_context": [
+          "Ibi, Spain (1): Ibi (Valencian and Spanish: [ii) is a town located in the comarca of Alcoia, in the province of Alicante, Spain.",
+          "Province of Alicante (1): Alicante (Spanish: [alikante; Valencian: Alacant [alakant) is a province of eastern Spain, in the southern part of the Valencian Community.",
+          "Alicante (1): Alicante (/ælkænti/, also UK: /-te/, Valencian: Alacant [alakant) is a city on the Valencian Community, Spain.",
+          "Alcoia (1): Alcoia (Valencian pronunciation: [alkoja; Spanish: Hoya de Alcoy) is a comarca in the province of Alicante, Valencian Community, Spain.",
+          "Alicante (2): Alicante is located in the southeast of the Iberian Peninsula, on the shores of the Mediterranean Sea."
+        ]
+      }
+    ],
+    "negatives": [
+      {
+        "negative_id": 737,
+        "distance": 8.528306794429692,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Airports",
+        "sentence_context": [
+          "Douniah Airlines (1): Douniah Airlines is an airline based at BamakoSenou International Airport in Mali.",
+          "Douniah Airlines (2): As of April 28, 2014, the airline served seven airports in seven West-African countries.",
+          "Douniah Airlines (3): As of May 2014 the airline had seven destinations:",
+          "Douniah Airlines (4): As of May 2014 the Douniah Airlines fleet consists of the following aircraft:",
+          "List of Turkish Airlines destinations (1): The list includes the city, country, the codes of the International Air Transport Association (IATA airport code) and the International Civil Aviation Organization (ICAO airport code), and the airport's name, with the airline's hub, focus airports, cargo services, future and terminated destinations marked."
+        ]
+      },
+      {
+        "negative_id": 3094,
+        "distance": 7.793147986584549,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Biochemistry",
+        "sentence_context": [
+          "Brhaspati (1): The 1st millennium CE Hindu scholars had estimated the time it took for sidereal revolutions of each planet including Brhaspati, from their astronomical studies, with slightly different results:",
+          "Sidereal time (1): Briefly, sidereal time is a \"time scale that is based on Earth's rate of rotation measured relative to the fixed stars\".",
+          "Sidereal time (2): Sidereal time /sadril/ is a timekeeping system that astronomers use to locate celestial objects.",
+          "Sidereal year (1): A sidereal year (UK: /sadril/, US: /sadril, s-/; from Latin \"asterism, star\") is the time taken by the Earth to orbit the Sun once with respect to the fixed stars.",
+          "Sidereal time (3): ERA, measured in radians, is related to UT1 by the expression"
+        ]
+      },
+      {
+        "negative_id": 1112,
+        "distance": 5.820301628698509,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Census Data",
+        "sentence_context": [
+          "Wara Suleman (1): Wara Suleman is a village in the Firozpur district of Punjab, India.",
+          "Scheduled Castes and Scheduled Tribes (1): The Scheduled Caste (SCs) and Scheduled Tribes (STs) are officially designated groups of people in India.",
+          "Scheduled Castes and Scheduled Tribes (2): The terms are recognised in the Constitution of India and the groups are designated in one or other of the categories.",
+          "Scheduled Castes and Scheduled Tribes (3): The Constitution (Scheduled Castes) Order, 1950 lists 1,108 castes across 28 states in its First Schedule, and the Constitution (Scheduled Tribes) Order, 1950 lists 744 tribes across 22 states in its First Schedule.",
+          "Scheduled Castes and Scheduled Tribes (4): The Scheduled Castes and Scheduled Tribes comprise about 16.6% and 8.6%, respectively, of India's population (according to the 2011 census)."
+        ]
+      },
+      {
+        "negative_id": 1897,
+        "distance": 6.848914103028899,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geopolitics",
+        "sentence_context": [
+          "Reliance Institute of Life Sciences (1): Reliance Institute of Life Sciences (RILS), established by Dhirubhai Ambani Foundation, is an institution of higher education in various fields of life sciences and related technologies.",
+          "Reliance Institute of Life Sciences (2): Established by the Dhirubhai Ambani Foundation, it is said to be India's pioneer institute in offering graduate, post-graduate, doctoral, research and continuing education programs in several emerging areas of science and technology.",
+          "Reliance Institute of Life Sciences (3): The is an educational institution offering higher learning in various domains of life sciences and related technologies.",
+          "Reliance Industries (1): Reliance Industries Limited (RIL) is an Indian multinational conglomerate company headquartered in Mumbai, Maharashtra, India.",
+          "Reliance Institute of Life Sciences (4): Vice-chairman K. V. Subramaniam, Director Dr. Arnab Kapat and executive members Prof. Arvind Kudchadker, Dilip Kumar Ghosh and Vinay Ranade make up the rest of the power-packed team."
+        ]
+      },
+      {
+        "negative_id": 1233,
+        "distance": 9.206978379158178,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Ireland Geography",
+        "sentence_context": [
+          "Urhannagh (1): Urhannagh (from Irish: Uaranach, meaning 'Abounding in wells or cold springs') is a townland in the civil parish of Templeport, County Cavan, Ireland.",
+          "Urhannagh (2): The townland covers 68 statute acres.",
+          "Urhannagh (3): Urhannagh is bounded on the north by Clontycarnaghan townland, on the west by Munlough North townland, on the east by Bofealan townland and on the south by Cavanaquill and Killynaff townlands.",
+          "Cavanakeeran (1): In 1891, the town of Pomeroy which stands in Cavanakeeran townland, was estimated to have an area of 21 acres.",
+          "Urhannagh (4): The 1790 Cavan Carvaghs list spells the name as Urhannagh."
+        ]
+      },
+      {
+        "negative_id": 2406,
+        "distance": 26.580774926751108,
+        "broad_topic": "College Football (2)",
+        "medium_topic": "College Athletics",
+        "sentence_context": [
+          "1993 Western Michigan Broncos football team (1): The 1993 Western Michigan Broncos football team represented Western Michigan University in the Mid-American Conference (MAC) during the 1993 NCAA Division I-A football season.",
+          "Western Michigan Broncos football (1): The Western Michigan Broncos football program represents Western Michigan University in the Football Bowl Subdivision of Division I and the Mid-American Conference (MAC).",
+          "List of Western Michigan Broncos head football coaches (1): The Western Michigan Broncos football team represents Western Michigan University (WMU) in the National Collegiate Athletic Association (NCAA) Football Bowl Subdivision.",
+          "Western Michigan Broncos (1): The Western Michigan Broncos are a National Collegiate Athletic Association (NCAA) Division I program representing Western Michigan University (WMU) in college athletics.",
+          "1993 Western Michigan Broncos football team (2): In their seventh season under head coach Al Molde, the Broncos compiled a 731 record (611 against MAC opponents), finished in second place in the MAC, and outscored their opponents, 237 to 187."
+        ]
+      },
+      {
+        "negative_id": 798,
+        "distance": 23.915895916838174,
+        "broad_topic": "College Sports",
+        "medium_topic": "College Football",
+        "sentence_context": [
+          "1907 Tennessee Volunteers football team (1): The 1907 Tennessee Volunteers football team represented the University of Tennessee in the 1907 Southern Intercollegiate Athletic Association football season.",
+          "1907 Tennessee Volunteers football team (2): Led by new head coach George Levene, the Volunteers had their first seven-win season in team history.",
+          "Tennessee Volunteers football (1): The Tennessee Volunteers football program (variously called \"Tennessee\", \"Vols\" and \"UT\") represents the University of Tennessee (UT).",
+          "Tennessee Volunteers (1): Tennessee's football team won the first ever BCS National Championship Game and also represents the 9th winningest program in the NCAA.",
+          "Tennessee Volunteers football (2): Georgia Tech and Tennessee have played 45 times since 1902; Tennessee has a winning record of 25172."
+        ]
+      },
+      {
+        "negative_id": 1738,
+        "distance": 24.833247692074902,
+        "broad_topic": "Entertainment Industry",
+        "medium_topic": "Actresses",
+        "sentence_context": [
+          "Bella Heathcote (1): Heathcote appeared in the independent drama Relic, alongside Emily Mortimer and Robyn Nevin.",
+          "Acolytes (film) (1): Acolytes is a 2008 Australian horror thriller film directed by Jon Hewitt.",
+          "Bella Heathcote (2): Isabella Heathcote (born 27 May 1987) is an Australian actress.",
+          "Bella Heathcote (3): She began her acting career in 2008.",
+          "Bella Heathcote (4): She began her career in 2008."
+        ]
+      },
+      {
+        "negative_id": 2995,
+        "distance": 34.94913796890481,
+        "broad_topic": "Sports (4)",
+        "medium_topic": "Cycling",
+        "sentence_context": [
+          "Kimi Raikkonen (1): Kimi-Matias Raikkonen (Finnish pronunciation: [kimi mtis ræikønen; born 17 October 1979), nicknamed \"The Iceman\", is a Finnish racing driver currently driving in Formula One for Alfa Romeo Racing, racing under the Finnish flag.",
+          "DS 3 (1): The DS 3 is a supermini car, produced by the French manufacturer Citroen from 2009 to 2019 and officially launched in January 2010.",
+          "Kimi Raikkonen (2): He skidded again to be lapped, but re-claimed the lost places and with a retirement from Hamilton, finished the race in 10th and claimed his third place in the standings, with a 1-point contribution to the tally.",
+          "Kimi Raikkonen (3): An untimely safety car meant losing further positions after the restart and after a pitstop to re-fire the engine meant he dropped out of the points he retired when the problem did not fix itself as he had lost the chance to get back past any cars.",
+          "Kimi Raikkonen (4): Raikkonen started the final restart from 11th and was able to climb up to finish eighth ahead of the two Ferraris, but was dropped to ninth due to a five-second time penalty added to his time for crossing the pit-entry line, still claiming his first points finish of the season."
+        ]
+      },
+      {
+        "negative_id": 2508,
+        "distance": 12.492586465865415,
+        "broad_topic": "Sports (5)",
+        "medium_topic": "Company News",
+        "sentence_context": [
+          "PlusCity (1): There are 4,200 parking spaces.",
+          "Stockland Tooronga (1): This facility opened on the 17th of June 2017.",
+          "Stockland Tooronga (2): and provide some parking for the adjacent Coles head office.",
+          "Stockland Tooronga (3): In March 2019, Stockland stated its intention to sell Tooronga Village shopping centre and in July 2019, announced it had purchased the centre, for a figure reported to be in excess of $62 million.",
+          "Stockland Glasshouse (1): Glasshouse is a 25 floor office complex with retail on the floors below."
+        ]
+      }
+    ]
+  },
+  {
+    "threshold": 11.099566453301023,
+    "anchor": {
+      "id": 662,
+      "broad_topic": "Music Charts",
+      "medium_topic": "Geography",
+      "table_content": [
+        [
+          "Chinese gloss",
+          "English gloss",
+          "Lewu",
+          "Page"
+        ],
+        [
+          "",
+          "eat rice",
+          "zuo zuo lie",
+          "144"
+        ],
+        [
+          "",
+          "pig heart and lungs",
+          "ci ber",
+          "144"
+        ],
+        [
+          "",
+          "come (from) here",
+          "wu lai lai",
+          "144"
+        ],
+        [
+          "",
+          "What thing?",
+          "mai yuo",
+          "144"
+        ],
+        [
+          "",
+          "broad bean (Vicia faba)",
+          "nuo suo",
+          "144"
+        ],
+        [
+          "",
+          "pea (Pisum sativum)",
+          "nuo sai",
+          "144"
+        ],
+        [
+          ",",
+          "come back, come back, you come back",
+          "gu lai gu lai gu lai",
+          "144"
+        ],
+        [
+          "",
+          "liquor",
+          "zhi zhi",
+          "144"
+        ],
+        [
+          "",
+          "rice wine",
+          "a zhi",
+          "144"
+        ],
+        [
+          "",
+          "chopsticks",
+          "a zhu",
+          "144"
+        ],
+        [
+          "",
+          "knife",
+          "bie tuo",
+          "145"
+        ],
+        [
+          "",
+          "axe",
+          "shi cuo",
+          "145"
+        ],
+        [
+          "",
+          "bowl",
+          "lin hua",
+          "145"
+        ],
+        [
+          "",
+          "spoon",
+          "yi geu",
+          "145"
+        ],
+        [
+          "",
+          "to hit",
+          "ch wo",
+          "145"
+        ],
+        [
+          "",
+          "There is no more.",
+          "ma ia lai",
+          "145"
+        ]
+      ],
+      "caption": "",
+      "table_title": "Lewu language"
+    },
+    "primary_positive": {
+      "id": 662,
+      "distance": 0.0,
+      "broad_topic": "Music Charts",
+      "medium_topic": "Geography",
+      "sentence_context": [
+        "Lewu language (1): Lewu is an unclassified extinct Loloish language of Jingdong Yi Autonomous County, Yunnan, China.",
+        "Lewu language (2): Lewu may have been related to the Lawu language of Xinping County, Yunnan, but classification remains uncertain due to the paucity of data.",
+        "Lewu language (3): The language is already extinct, and was recorded in 1985 from 85-year-old Zhu Zhaojin of Puya Village , who could remember only some words.",
+        "Lewu language (4): Yao language speakers, known as the Lewu Yao , are found in Puya Village , Chaqing Township (Jingdong County Ethnic Gazetteer 2012:144).",
+        "Lao cuisine (1): Feu (Lao: ) or Mee (Lao: )."
+      ]
+    },
+    "additional_positives": [
+      {
+        "id": 1767,
+        "distance": 0.20039348559101597,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Southern Sorsogon language (1): Verbs in Southern Sorsogon are inflected for focus and aspect.",
+          "Southern Sorsogon language (2): Southern Sorsogon (also Waray Sorsogon, Gubat, Ginubatnon) is an Austronesian language spoken in the southern part of Sorsogon, Philippines, in the municipalities of Gubat, Barcelona, Bulusan, Santa Magdalena, Matnog, Bulan, and Irosin.",
+          "Cebuano grammar (1): Cebuano is partially inflected: pronouns are inflected by number, and verbs are inflected for aspect, focus, and mood.",
+          "Ilocano verb (1): Again, the actor is marked with the core forms or ergative, with pronouns (i.e., -ko), and the instrument, with core forms, and absolutive with pronouns, for example, Pagdalusan ni tatang ti drapo Father uses the rag to clean with.",
+          "Southern Sorsogon language (3): Southern Sorsogon has three pronoun sets."
+        ]
+      },
+      {
+        "id": 182,
+        "distance": 0.2906315841612459,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Songhay languages (1): The Songhay or Songhai languages ([soaj or [sooj) are a group of closely related languages/dialects centred on the middle stretches of the Niger River in the West African countries of Mali, Niger, Benin, Burkina Faso and Nigeria.",
+          "Songhay languages (2): Songhay is mostly a tonal, SOV group of languages, an exception being the divergent Koyra Chiini of Timbuktu, which is non-tonal and uses SVO order.",
+          "Songhay languages (3): Here are some Proto-Songhay reconstructions:",
+          "Southern Songhay languages (1): Southern Songhay is the more populous branch of the Songhay languages, centered on the Niger River, including Timbuktu and the old capital of Gao.",
+          "Songhay languages (4): Some Proto-Eastern Songhay reconstructions are:"
+        ]
+      },
+      {
+        "id": 1667,
+        "distance": 0.44607364079469086,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Biochemistry",
+        "sentence_context": [
+          "Voiceless labialvelar plosive (1): It is a [k] and [p] pronounced simultaneously.",
+          "Mah Meri language (1): Mah Meri, also known as Besisi, Cellate, Hma' Btsisi', Ma' Betisek, and \"Orang Sabat\" (pejorative term), is an Austroasiatic language spoken in the Malay Peninsula.",
+          "Mah Meri language (2): Mah Meri is the only remaining Aslian language spoken in a coastal area (on the coasts of Negeri Sembilan and Selangor) and its speaker population is 3,675 as recorded at the Orang Asli Museum in Gombak.",
+          "Voiceless labialvelar plosive (2): The symbol in the International Phonetic Alphabet that represents this sound is kp.",
+          "Voiceless velar plosive (1): The [k] sound is a very common sound cross-linguistically."
+        ]
+      },
+      {
+        "id": 3113,
+        "distance": 0.4637075239471451,
+        "broad_topic": "Music Charts",
+        "medium_topic": "European Politics",
+        "sentence_context": [
+          "Saek language (1): Saek (Sek; Thai: ) is a Tai language spoken in at least ten villages in Khammouane Province, Laos, and at least four villages in Nakhon Phanom Province in northeastern Thailand, just across the Mekong River.",
+          "Saek language (2): The Saek tones are (Hudak & Gedney 2010):",
+          "Saek language (3): It is spoken by the Saek people.",
+          "Saek language (4): Saek is spoken in the following locations (Hudak & Gedney 2010:251-252).",
+          "Voiced glottal fricative (1): The voiced glottal fricative, sometimes called breathy-voiced glottal transition, is a type of sound used in some spoken languages which patterns like a fricative or approximant consonant phonologically, but often lacks the usual phonetic characteristics of a consonant."
+        ]
+      },
+      {
+        "id": 2512,
+        "distance": 0.46529862936932187,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Biochemistry",
+        "sentence_context": [
+          "Mah Meri people (1): The Mah Meri language, also called Besisi, is an Austroasiatic language.",
+          "Mah Meri language (1): Mah Meri, also known as Besisi, Cellate, Hma' Btsisi', Ma' Betisek, and \"Orang Sabat\" (pejorative term), is an Austroasiatic language spoken in the Malay Peninsula.",
+          "Mah Meri language (2): Mah Meri is the only remaining Aslian language spoken in a coastal area (on the coasts of Negeri Sembilan and Selangor) and its speaker population is 3,675 as recorded at the Orang Asli Museum in Gombak.",
+          "Voiceless uvular plosive (1): The International Phonetic Alphabet does not have a separate symbol for that sound, though it can be transcribed as q or q (both symbols denote an advanced q) or k (retracted k).",
+          "Voiceless velar plosive (1): The symbol in the International Phonetic Alphabet that represents this sound is k, and the equivalent X-SAMPA symbol is k."
+        ]
+      },
+      {
+        "id": 1327,
+        "distance": 0.5022653336654753,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geopolitics",
+        "sentence_context": [
+          "Southern Peninsular Malaysian Hokkien (1): Southern Malaysian Hokkien (simplified Chinese: ; traditional Chinese: ; pinyin: Nan Ma Fujianhua; Peh-oe-ji: Lam-Ma Hok-kian-oe) is a local variant of the Min Nan Chinese variety spoken in Central and Southern Peninsular Malaysia (Klang, Melaka, Muar, Tangkak, Segamat, Batu Pahat, Pontian, Johor Bahru), Singapore, Riau and Riau Islands",
+          "Southern Peninsular Malaysian Hokkien (2): There are eight phonemic vowels:",
+          "Phonological history of English close back vowels (1): Most dialects of modern English have two close back vowels: the near-close near-back rounded vowel // found in words like foot, and the close back rounded vowel /u/ (realized as central [] in many dialects) found in words like goose.",
+          "Terengganu Malay (1): Terengganu language (Malay: Bahasa Melayu Terengganu, Terengganu Malay: Base Tranung/Ganu) is a Malayan language spoken in the Malaysian state of Terengganu all the way southward to coastal Pahang and northeast Johor.",
+          "Phonological history of English close back vowels (2): Some other minimal pairs apart from unorthodoxyan orthodoxy include unequal /nikwl/ vs. an equal /nikwl/ as well as a large untidy room / lrd ntadi rum/ vs. a large and tidy room / lrd ntadi rum/."
+        ]
+      },
+      {
+        "id": 627,
+        "distance": 0.5288249278807913,
+        "broad_topic": "Music Charts",
+        "medium_topic": "European Politics",
+        "sentence_context": [
+          "Ingrian language (1): Ingrian has at least 24 diphthongs:",
+          "Ingrian language (2): Ingrian (izoran keel [ioran kel), also called Izhorian, is a nearly extinct Finnic language spoken by the (mainly Orthodox) Izhorians of Ingria.",
+          "Ingrian language (3): The Ingrian language has 8 vowels:",
+          "Ingrian language (4): Thus, if the stress of a word lies on an <a>, <o> or <u>, the possible affix vowels would be <a>, <o> or <u>, while if the stress of a word lies on an <a>, <o> or <y>, the possible affix vowels to this word would then be <a>, <o> or <y>:",
+          "Ingrian language (5): The Ingrian language has 22 consonant sounds:"
+        ]
+      },
+      {
+        "id": 199,
+        "distance": 0.5343852670423123,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Tangut language (1): Tangut (Tangut: ; Chinese: ; pinyin: Xi Xia Yu; lit.",
+          "Tangut language (2): 'Western Xia language') is an ancient northeastern Tibeto-Burman language once spoken in the Western Xia, also known as the Tangut Empire.",
+          "Tangut language (3): The consonants are divided into the following categories:",
+          "Tangut language (4): It is classified by some linguists as a Qiangic language, which includes the Northern and Southern Qiang languages and the Rgyalrong languages, among others.",
+          "Tangut language (5): Tangut was one of the official languages of the Western Xia (known in Tibetan as Mi nyag and in Chinese as Miyao), which was founded by the Tangut people and obtained its independence from the Song dynasty at the beginning of the 11th century."
+        ]
+      },
+      {
+        "id": 1225,
+        "distance": 0.5799013514309939,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Biochemistry",
+        "sentence_context": [
+          "Voiceless labialized palatal approximant (1): The voiceless labialized palatal approximant is a type of consonantal sound, used in a few spoken languages.",
+          "Chukchi language (1): Chukchi /tkti/, also known as Chukot, is a ChukotkoKamchatkan language spoken by the Chukchi people in the easternmost extremity of Siberia, mainly in Chukotka Autonomous Okrug.",
+          "Voiced palatal fricative (1): The voiced palatal fricative is a type of consonantal sound used in some spoken languages.",
+          "Voiceless labialized palatal approximant (2): It is found as a phoneme in Iaai and perhaps other languages.",
+          "Voiced palatal lateral approximant (1): The voiced palatal lateral approximant is a type of consonantal sound used in some spoken languages."
+        ]
+      }
+    ],
+    "negatives": [
+      {
+        "negative_id": 1556,
+        "distance": 1.1395988400615804,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Biochemistry",
+        "sentence_context": [
+          "Voiced palatal approximant (1): The equivalent X-SAMPA symbol is j, and in the Americanist phonetic notation it is y.",
+          "Voiced palatal approximant (2): It can be considered the semivocalic equivalent of the close central unrounded vowel []The International Phonetic Alphabet does not have a separate symbol for that sound, but it can be transcribed as j, j (both symbols denote a retracted j), or (both symbols denote an advanced ).",
+          "Voiced palatal fricative (1): The International Phonetic Alphabet does not have a separate symbol for that sound, but it can be transcribed as , (both symbols denote a retracted ), or (both symbols denote an advanced ).",
+          "Central consonant (1): Others are the central fricatives [ ð s z c x ], the central approximants [ j w ], the trills [r ], and the central flaps [ ].",
+          "Voiced palatal approximant (3): For the reasons mentioned above and in the article velar approximant, none of those symbols are appropriate for languages such as Spanish, whose post-palatal approximant consonant (not a semivowel) appears as an allophone of // before front vowels and is best transcribed , (both symbols denote a lowered and retracted ), or (both symbols denote a lowered and advanced )."
+        ]
+      },
+      {
+        "negative_id": 1084,
+        "distance": 6.062479580399844,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Census Data",
+        "sentence_context": [
+          "Chak, Kapurthala (1): According to the report published by Census India in 2011, Chak has a total number of 62 houses and population of 309 of which include 167 males and 142 females.",
+          "Chak Khanna (1): Chak Khanna is a village in the Firozpur district of Punjab, India.",
+          "Chak Khanna (2): According to the 2011 census of India, Chak Khanna has 33 households.",
+          "Demographics of Tamil Nadu (1): According to the 2011 Census of India, the total population of the state of Tamil Nadu stood at 72,147,039, with 36,137,975 males, 36,009,055 females, a sex ratio of 996 females per 1000 males, literacy rate of 80.09%, 10.51% of the population below seven years and a population density of 555.",
+          "Demographics of Tamil Nadu (2): As per the 2011 Census of India, Scheduled Castes and Scheduled Tribes accounted for 20.01 percent and 1.10 percent of Tamil Nadu's 72 million population."
+        ]
+      },
+      {
+        "negative_id": 1647,
+        "distance": 8.88723852075908,
+        "broad_topic": "Music Charts",
+        "medium_topic": "European Politics",
+        "sentence_context": [
+          "List of countries by 4G LTE penetration (1): This is a list of countries by 4G LTE penetration.",
+          "South Korea (1): South Korea (Korean: /, RR: Hanguk; literally /, RR: Namhan, or /, MR: Namchoson in North Korean usage), officially the Republic of Korea (ROK; Korean: /, RR: Daehan Minguk), is a country in East Asia, constituting the southern part of the Korean Peninsula, and sharing a land border with North Korea.",
+          "List of countries by 4G LTE penetration (2): The following is a list of countries/territories by 4G LTE coverage as measured by OpenSignal.com in October, November and December of 2017.",
+          "List of countries by 4G LTE penetration (3): The following is a list of countries by 4G LTE coverage as measured by Juniper Networks in 2013 and published by Bloomberg.",
+          "List of countries by 4G LTE penetration (4): The following is a list of countries/territories by 4G LTE coverage as measured by OpenSignal.com in 2017 Q1."
+        ]
+      },
+      {
+        "negative_id": 2893,
+        "distance": 7.43690858067535,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Ireland Geography",
+        "sentence_context": [
+          "Cavanaquill (1): Cavanaquill (from Irish: Cabhan an Choill, meaning 'Hollow of the Hazel') is a townland in the civil parish of Templeport, County Cavan, Ireland.",
+          "Cavanaquill (2): The Cavanaquill Valuation Office Field books are available for December 1839.",
+          "Cavanaquill (3): The 1790 Cavan Carvaghs list spells the townland name as Cavan Quill.",
+          "Cavanaquill (4): The 1652 Commonwealth Survey lists the proprietor as being Lieutenant John Blackforde who also appears as proprietor for several other Templeport townlands in the same survey.",
+          "Demographics of Nepal (1): As of the 2011 census, 81.3% of the Nepalese population was Hindu, 9.0% Buddhist, 4.4% Muslim, 3.0% Kirant/Yumaist, 1.42% Christian, and 0.9% followed other or no religion."
+        ]
+      },
+      {
+        "negative_id": 1737,
+        "distance": 9.319297596858142,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Montenegrin",
+        "sentence_context": [
+          "Bare Kraljske (1): Bare Kraljske (Montenegrin: ) is a village in the municipality of Kolasin, Montenegro.",
+          "Serbs of Montenegro (1): Serbs of Montenegro (Serbian: / Srbi u Crnoj Gori) or Montenegrin Serbs (c C / crnogorski Srbi), compose the second largest ethnic group in Montenegro (28.7% of country's population), after the Montenegrins.",
+          "Serbs of Montenegro (2): Serbs are a native population of Old Montenegro, Old Herzegovina, Brda, Raska, Bay of Kotor and Zeta.",
+          "Serbs of Montenegro (3): Additional 64% of the population is made up of Serbs-Montenegrins (- / Srbi-Crnogorci) and Montenegrins-Serbs (-C / Crnogorci-Srbi).",
+          "Serbs of Montenegro (4): According to the 2011 census, Serbs are the second largest ethnic group and constitute 28.7% of the population of Montenegro."
+        ]
+      },
+      {
+        "negative_id": 173,
+        "distance": 28.744351237522938,
+        "broad_topic": "College Football (2)",
+        "medium_topic": "College Athletics",
+        "sentence_context": [
+          "2010 Western Athletic Conference football season (1): The 2010 Western Athletic Conference (WAC) football season was an NCAA football season played from September 2, 2010 January 9, 2011.",
+          "2010 Western Athletic Conference football season (2): This was Boise State's final season as a WAC member.",
+          "2010 Boise State Broncos football team (1): This was the Broncos' final season as a member of the Western Athletic Conference, as the school announced on June 11, 2010, that it would leave the WAC for the Mountain West Conference effective July 1, 2011.",
+          "2010 Western Athletic Conference football season (3): The Western Athletic Conference in 2010 consisted of 9 members: Boise State, Fresno State, HawaiE»i, Idaho, Louisiana Tech, Nevada, New Mexico State, San Jose State, and Utah State.",
+          "2010 Western Athletic Conference football season (4): Times reflect start time in respective time zone of each team (Central-Louisiana Tech, Mountain-New Mexico State, Boise State, Utah State, Pacific-Idaho, Fresno State, San Jose State, Nevada, Hawaiian-HawaiE»i)."
+        ]
+      },
+      {
+        "negative_id": 2630,
+        "distance": 27.214969949965468,
+        "broad_topic": "College Sports",
+        "medium_topic": "College Football",
+        "sentence_context": [
+          "1932 Duquesne Dukes football team (1): The 1932 Duquesne Dukes football team was an American football team that represented Duquesne University as an independent during the 1932 college football season.",
+          "Duquesne Dukes football (1): The Duquesne Dukes football program is the intercollegiate American football team for Duquesne University located in the U.S. state of Pennsylvania.",
+          "Duquesne Dukes football (2): From 1933 to 1942, Duquesne was among the elite college football teams in the United States, garnering the sixth-highest winning percentage (71-22-2, .762) in the nation behind Alabama, Tennessee, Duke, Fordham and Notre Dame.",
+          "Duquesne Dukes (1): Duquesne has played football as a club team from 1891 to 1894, 1896 to 1903, 1913 to 1914, and 1920 to 1928, in the NCAA Division I Football Bowl Subdivision (FBS) from 1929 to 1942 and 1947 to 1950, again as a club team from 1969 to 1978, in NCAA Division III from 1979 to 1992, and in the NCAA Division I Football Championship Subdivision (FCS) from 1993present.",
+          "Duquesne Dukes (2): The Duquesne Dukes are the athletic teams of Duquesne University of Pittsburgh, Pennsylvania."
+        ]
+      },
+      {
+        "negative_id": 1214,
+        "distance": 19.997893512642843,
+        "broad_topic": "Entertainment Industry",
+        "medium_topic": "Actresses",
+        "sentence_context": [
+          "Alexandra Burke (1): Burke first appeared on reality television in 2001, when she took part in the second series of Star for a Night.",
+          "Alexandra Burke (2): Alexandra Imelda Cecelia Ewen Burke (born 25 August 1988) is a British singer, songwriter and actress.",
+          "Alex Burke (1): Alex Burke (born 11 November 1977 in Glasgow) is a Scottish former professional footballer who played as a midfielder.",
+          "Alexandra Burke (3): Alexandra Burke was born in Islington, London on 25 August 1988, daughter of David Burke (born 1954) and Melissa Bell (5 March 1964 28 August 2017).",
+          "Alexandra Burke (4): When she was aged twelve, Burke entered the television talent show, Star for a Night and was the youngest person in the competition."
+        ]
+      },
+      {
+        "negative_id": 3132,
+        "distance": 29.171603617575105,
+        "broad_topic": "Sports (4)",
+        "medium_topic": "Cycling",
+        "sentence_context": [
+          "Xandro Meurisse (1): Xandro Meurisse (born 31 January 1992) is a Belgian cyclist, who currently rides for UCI ProTeam IntermarcheWantyGobert Materiaux.",
+          "Xandro Meurisse (2): For the 2021 season, Meurisse will join the AlpecinFenix team, on a two-year contract.",
+          "Paul Meurisse (1): Paul Meurisse (French pronunciation: [pl møis; 21 December 1912 in Dunkirk 19 January 1979 in Neuilly-sur-Seine) was a French actor who appeared in over 60 films and many stage productions.",
+          "Paul Meurisse (2): In a thoroughly unsympathetic part, Meurisse was compelling.",
+          "Paul Meurisse (3): Meurisse played a wide range of roles, from gangsters (Macadam, Impasse des Deux-Anges) and policemen (Inspecteur Sergil, Le Dessous des cartes), to comedy (the Monocle films) and historical (La Castiglione, L'Affaire des poisons)."
+        ]
+      },
+      {
+        "negative_id": 1322,
+        "distance": 17.668729398074547,
+        "broad_topic": "Sports (5)",
+        "medium_topic": "African Colleges",
+        "sentence_context": [
+          "Abetifi Presbyterian College of Education (1): Abetifi Presbyterian College of Education is a teacher education college in Abetifi-Kwahu (Kwahu East, Eastern, Ghana).",
+          "Abetifi Presbyterian College of Education (2): It is one of about 40 public colleges of education in Ghana.",
+          "Abetifi Presbyterian College of Education (3): Abetifi College of education is one of the oldest teacher training college of education celebrating it 55th Anniversary in 2007.",
+          "Abetifi Presbyterian College of Education (4): H. T. Dako serving as the appointed Principal.",
+          "Presbyterian Women's College of Education (1): The first African principal was Gladys Adum Kwapong whose tenure of office was from 1963 to 1980."
+        ]
+      }
+    ]
+  },
+  {
+    "threshold": 12.675558848440202,
+    "anchor": {
+      "id": 1044,
+      "broad_topic": "Music Charts",
+      "medium_topic": "Geography",
+      "table_content": [
+        [
+          "year",
+          "population"
+        ],
+        [
+          "1629",
+          "542"
+        ],
+        [
+          "1850",
+          "769"
+        ],
+        [
+          "1900",
+          "1,281"
+        ],
+        [
+          "1950",
+          "1,616"
+        ],
+        [
+          "2000",
+          "2,717"
+        ]
+      ],
+      "caption": "",
+      "table_title": "Thusis"
+    },
+    "primary_positive": {
+      "id": 1044,
+      "distance": 0.0,
+      "broad_topic": "Music Charts",
+      "medium_topic": "Geography",
+      "sentence_context": [
+        "Thusis (1): Thusis (Italian: Tosana, Romansh: Tusan) is a municipality in the Viamala Region in the Swiss canton of Graubunden.",
+        "Thusis (2): Thusis has a population (as of 31 December 2019) of 9,409.",
+        "Thusis (3): Over the last 10 years the population has grown at a rate of 0.7%.",
+        "Thusis (4): The age distribution, as of 2000, in Thusis is; 304 people or 11.2% of the population are between 0 and 9 years old.",
+        "Thusis (5): The historical population is given in the following table:"
+      ]
+    },
+    "additional_positives": [
+      {
+        "id": 1749,
+        "distance": 0.16343331048425944,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Sufers (1): Sufers has a population (as of 31 December 2019) of 145.",
+          "Sufers (2): Sufers (Romansh: Sur) is a municipality in the Viamala Region in the Swiss canton of Graubunden.",
+          "Sufers (3): The historical population is given in the following table:",
+          "Sufers (4): Over the last 10 years the population has decreased at a rate of -6.6%.",
+          "Sufers (5): As of 2000, the gender distribution of the population was 52.0% male and 48.0% female."
+        ]
+      },
+      {
+        "id": 1860,
+        "distance": 0.19675838908891455,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Sils im Domleschg (1): Sils im Domleschg (Romansh: Seglias) is a municipality in the Viamala Region in the Swiss canton of Graubunden.",
+          "Domleschg (1): Domleschg is a municipality in the Viamala Region in the Swiss canton of Graubunden.",
+          "Sils im Domleschg (2): Sils im Domleschg has a population (as of December 2019) of 960.",
+          "Sils im Domleschg (3): Sils im Domleschg is an industrial-tertiary municipality, a municipality where agriculture and manufacturing play a minor role in the economy.",
+          "Sils im Domleschg (4): It is a linear village between the Albula and Hinterrhein rivers."
+        ]
+      },
+      {
+        "id": 2211,
+        "distance": 0.26980442514258873,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Sufers (1): Sufers has a population (as of 31 December 2019) of 145.",
+          "Sufers (2): Sufers (Romansh: Sur) is a municipality in the Viamala Region in the Swiss canton of Graubunden.",
+          "Sufers (3): Over the last 10 years the population has decreased at a rate of -6.6%.",
+          "Sufers (4): It is a Haufendorf (an irregular, unplanned and quite closely packed village, built around a central square).",
+          "Sufers (5): The historical population is given in the following table:"
+        ]
+      },
+      {
+        "id": 1663,
+        "distance": 0.29443522514690046,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Scheid (1): Scheid has a population (as of 2007) of 148, of which 2.7% are foreign nationals.",
+          "Scheid (2): The historical population is given in the following table:",
+          "Scheid (3): The age distribution, as of 2000, in Scheid is; 99 people or 13.3% of the population are between 0 and 9 years old.",
+          "Scheid (4): Scheid is a village in the municipality of Tomils in the district of Hinterrhein in the Swiss canton of Graubunden.",
+          "Linda Scheid (1): Linda J. Scheid (June 16, 1942 June 15, 2011) was a Minnesota politician and a member of the Minnesota Senate who represented District 46, which includes portions of the northwestern suburbs of Hennepin County in the Twin Cities metro area."
+        ]
+      },
+      {
+        "id": 923,
+        "distance": 0.31211839102822897,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Rongellen (1): Rongellen is a municipality in the canton of Graubunden in Switzerland, located in the Viamala Region.",
+          "Rongellen (2): Rongellen has a population (as of 31 December 2019) of 53.",
+          "Rongellen (3): The historical population is given in the following table:",
+          "Rongellen (4): 2 people or 3.8% are 10 to 14, and 11 people or 20.8% are 15 to 19.",
+          "Rongellen (5): 7 people or 13.2% are 30 to 39, 5 people or 9.4% are 40 to 49, and 8 people or 15.1% are 50 to 59."
+        ]
+      },
+      {
+        "id": 2432,
+        "distance": 0.36639046863693625,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Sevgein (1): Sevgein is a former municipality in the district of Surselva in the Swiss canton of Graubunden.",
+          "Sevgein (2): The former municipality is located in the Ilanz sub-district of the Surselva district.",
+          "Sevgein (3): Sevgein had a population (as of 2011) of 198.",
+          "Hugelshofen (1): The municipality had 442 inhabitants in 1850, which decreased to 360 in 1900, 359 in 1950 and 325 in 1990.",
+          "Sevgein (4): The historical population is given in the following table:"
+        ]
+      },
+      {
+        "id": 1782,
+        "distance": 0.46538066718540827,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Verdabbio (1): Verdabbio had a population (as of 2015) of 163.",
+          "Verdabbio (2): Verdabbio is a former municipality in the district of Moesa in the Swiss canton of Graubunden.",
+          "Verdabbio (3): Over the last 10 years the population has decreased at a rate of -1.9%.",
+          "Verdabbio (4): The age distribution, as of 2000, in Verdabbio is; 18 children or 11.0% of the population are between 0 and 9 years old.",
+          "Verdabbio (5): Most of the population (as of 2000) speaks Italian (85.4%), with German being second most common (14.0%)."
+        ]
+      },
+      {
+        "id": 1866,
+        "distance": 0.5278905555070363,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Tomils (1): Tumegl/Tomils is a village in the municipality of Tomils in the district of Hinterrhein in the Swiss canton of Graubunden.",
+          "Tomils (2): As of 2000, the gender distribution of the population was 51.5% male and 48.5% female.",
+          "Trans, Switzerland (1): Trans is a village in the municipality of Tomils in the district of Hinterrhein in the Swiss canton of Graubunden.",
+          "Tomils (3): Over the last 10 years the population has grown at a rate of 7.7%.",
+          "Tomils (4): The age distribution, as of 2000, in Tumegl/Tomils is; 48 people or 15.0% of the population are between 0 and 9 years old."
+        ]
+      },
+      {
+        "id": 1505,
+        "distance": 0.5531017216031275,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Tujetsch (1): It is the westernmost municipality of the canton, connected to Urseren (canton of Uri) by the Oberalp Pass.",
+          "Oberalp Pass (1): 2044 m.) is a high mountain pass in the Swiss Alps connecting the cantons of Graubunden and Uri between Disentis and Andermatt.",
+          "Tujetsch (2): Tujetsch is a municipality in the Surselva Region in the canton of Graubunden in Switzerland.",
+          "Urseren (1): The Urseren (also Ursern) is the valley of the upper Reuss in Uri, Switzerland, running southwest to northeast, from Realp to Hospental and Andermatt.",
+          "Tujetsch (3): Tujetsch has a population (as of 31 December 2019) of 1,207."
+        ]
+      }
+    ],
+    "negatives": [
+      {
+        "negative_id": 1870,
+        "distance": 8.944389470143074,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Biochemistry",
+        "sentence_context": [
+          "Critical exponent (1): The critical exponents can be derived from the specific free energy f(J,T) as a function of the source and temperature.",
+          "Critical exponent (2): In this case the critical exponents are different and the upper critical dimension is 5.",
+          "Critical exponent (3): These do not appear in dimensions arbitrarily close to but not exactly four, which can be used as a way around this problem.",
+          "Critical exponent (4): Critical exponents are denoted by Greek letters.",
+          "Critical exponent (5): The critical dimension above which mean field exponents are valid varies with the systems and can even be infinite."
+        ]
+      },
+      {
+        "negative_id": 1826,
+        "distance": 9.55506601552251,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Census Data",
+        "sentence_context": [
+          "Mumbai (1): Mumbai (English: /mmba/, Marathi: [mumbi; formerly known as Bombay /bmbe/, the official name until 1995) is the capital city of the Indian state of Maharashtra.",
+          "Nimbapur (1): Nimbapur is a village in the Palghar district of Maharashtra, India.",
+          "Nimbapur (2): According to the 2011 census of India, Nimbapur has 370 households.",
+          "Nimbapur (3): It is located in the Dahanu taluka.",
+          "Mumbai (2): In the Indian Super League, Mumbai City FC represents the city; while in the I-League (matches in the city are played at the Cooperage Ground), the city is represented by two teams: Mumbai FC and Air-India."
+        ]
+      },
+      {
+        "negative_id": 627,
+        "distance": 4.810505008578895,
+        "broad_topic": "Music Charts",
+        "medium_topic": "European Politics",
+        "sentence_context": [
+          "Ingrian language (1): Ingrian has at least 24 diphthongs:",
+          "Ingrian language (2): Ingrian (izoran keel [ioran kel), also called Izhorian, is a nearly extinct Finnic language spoken by the (mainly Orthodox) Izhorians of Ingria.",
+          "Ingrian language (3): The Ingrian language has 8 vowels:",
+          "Ingrian language (4): Thus, if the stress of a word lies on an <a>, <o> or <u>, the possible affix vowels would be <a>, <o> or <u>, while if the stress of a word lies on an <a>, <o> or <y>, the possible affix vowels to this word would then be <a>, <o> or <y>:",
+          "Ingrian language (5): The Ingrian language has 22 consonant sounds:"
+        ]
+      },
+      {
+        "negative_id": 2266,
+        "distance": 5.566671064660391,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Montenegrin",
+        "sentence_context": [
+          "Serbs of Montenegro (1): Serbs of Montenegro (Serbian: / Srbi u Crnoj Gori) or Montenegrin Serbs (c C / crnogorski Srbi), compose the second largest ethnic group in Montenegro (28.7% of country's population), after the Montenegrins.",
+          "Serbs of Montenegro (2): According to the 2011 census, Serbs are the second largest ethnic group and constitute 28.7% of the population of Montenegro.",
+          "Serbs (1): The Serbs (Serbian: , Srbi, pronounced [srbi) are a nation and South Slavic ethnic group native to Southeastern Europe.",
+          "Montenegrins (1): '\"Black Mountain People\"') are a South Slavic ethnic group native to Montenegro.",
+          "Montenegrins (2): Montenegrins (Montenegrin: Crnogorci / , pronounced [tsrnoortsi or [tsrnoortsi, lit."
+        ]
+      },
+      {
+        "negative_id": 578,
+        "distance": 6.2886930933593295,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Places-2",
+        "sentence_context": [
+          "Homolje (1): Homolje (Serbian Cyrillic: , pronounced [xm) is a small geographical region in east Serbia south of the Danube river.",
+          "Homolje (2): It is sparsely populated, and renowned for its unspoiled nature.",
+          "Zagubica (1): Zagubica (Serbian Cyrillic: , pronounced [aubitsa) is a village and municipality located in the Branicevo District of the eastern Serbia.",
+          "Laznica (1): Laznica or Laznita (Serbian Cyrillic: ) is a large highland village in Serbia.",
+          "Homolje (3): It is centered on the town of Zagubica, with smaller parts belonging to municipalities of Kucevo, Majdanpek and Petrovac."
+        ]
+      },
+      {
+        "negative_id": 2255,
+        "distance": 30.21467057262932,
+        "broad_topic": "College Football (2)",
+        "medium_topic": "College Athletics",
+        "sentence_context": [
+          "1979 Western Michigan Broncos football team (1): In their fifth season under head coach Elliot Uzelac, the Broncos compiled a 65 record (54 against MAC opponents), finished in third place in the MAC, and outscored their opponents, 186 to 120.",
+          "1979 Western Michigan Broncos football team (2): The 1979 Western Michigan Broncos football team represented Western Michigan University in the Mid-American Conference (MAC) during the 1979 NCAA Division I-A football season.",
+          "Elliot Uzelac (1): Before St. Joseph, Uzelac coached at Bowling Green University, the University of Michigan, Indiana University, Ohio State University, the University of Colorado, the University of Kentucky, the University of Minnesota, the University of Maryland, and the NFL's Cleveland Browns.",
+          "Elliot Uzelac (2): Elliot Uzelac (born July 24, 1941) is an American football coach.",
+          "Elliot Uzelac (3): He served as the head football coach at Western Michigan University from 1975 to 1981 and the United States Naval Academy from 1987 to 1989, compiling a career college football coaching record of 4664."
+        ]
+      },
+      {
+        "negative_id": 888,
+        "distance": 27.126577518166428,
+        "broad_topic": "College Sports",
+        "medium_topic": "College Football",
+        "sentence_context": [
+          "1895 Tennessee Volunteers football team (1): The 1895 Tennessee Volunteers football team unofficially represented the University of Tennessee in the 1895 season.",
+          "1895 Tennessee Volunteers football team (2): W.B.",
+          "1895 Tennessee Volunteers football team (3): 1895 was the second and final student-coached team.",
+          "1895 Tennessee Volunteers football team (4): In October 1894, the Athletic Association had resolved to drop varsity football and look forward to baseball in the spring of 1895.",
+          "Tennessee Volunteers football (1): The Bulldogs and Vols first met in 1899, a UT victory in Knoxville."
+        ]
+      },
+      {
+        "negative_id": 1248,
+        "distance": 22.75009208128164,
+        "broad_topic": "Entertainment Industry",
+        "medium_topic": "Actresses",
+        "sentence_context": [
+          "Joan Allen (1): Joan Allen (born August 20, 1956) is an American actress.",
+          "A Good Marriage (film) (1): It stars Joan Allen, Anthony LaPaglia, Kristen Connolly and Stephen Lang.",
+          "A Good Marriage (film) (2): After 25 happy years of marriage, Darcy (Joan Allen) discovers her husband's sinister secret and must take drastic measures to keep it from being exposed in order to protect her grown children.",
+          "Joan Allen (2): Allen, the youngest of four children, was born in Rochelle, Illinois, the daughter of Dorothea Marie (nee Wirth), a homemaker, and James Jefferson Allen, a gas station owner.",
+          "A Good Marriage (film) (3): A Good Marriage is a 2014 American psychological thriller film based on the novella of the same name by Stephen King, from the 2010 collection Full Dark, No Stars."
+        ]
+      },
+      {
+        "negative_id": 2995,
+        "distance": 37.35324177676478,
+        "broad_topic": "Sports (4)",
+        "medium_topic": "Cycling",
+        "sentence_context": [
+          "Kimi Raikkonen (1): Kimi-Matias Raikkonen (Finnish pronunciation: [kimi mtis ræikønen; born 17 October 1979), nicknamed \"The Iceman\", is a Finnish racing driver currently driving in Formula One for Alfa Romeo Racing, racing under the Finnish flag.",
+          "DS 3 (1): The DS 3 is a supermini car, produced by the French manufacturer Citroen from 2009 to 2019 and officially launched in January 2010.",
+          "Kimi Raikkonen (2): He skidded again to be lapped, but re-claimed the lost places and with a retirement from Hamilton, finished the race in 10th and claimed his third place in the standings, with a 1-point contribution to the tally.",
+          "Kimi Raikkonen (3): An untimely safety car meant losing further positions after the restart and after a pitstop to re-fire the engine meant he dropped out of the points he retired when the problem did not fix itself as he had lost the chance to get back past any cars.",
+          "Kimi Raikkonen (4): Raikkonen started the final restart from 11th and was able to climb up to finish eighth ahead of the two Ferraris, but was dropped to ninth due to a five-second time penalty added to his time for crossing the pit-entry line, still claiming his first points finish of the season."
+        ]
+      },
+      {
+        "negative_id": 1322,
+        "distance": 20.07868105875036,
+        "broad_topic": "Sports (5)",
+        "medium_topic": "African Colleges",
+        "sentence_context": [
+          "Abetifi Presbyterian College of Education (1): Abetifi Presbyterian College of Education is a teacher education college in Abetifi-Kwahu (Kwahu East, Eastern, Ghana).",
+          "Abetifi Presbyterian College of Education (2): It is one of about 40 public colleges of education in Ghana.",
+          "Abetifi Presbyterian College of Education (3): Abetifi College of education is one of the oldest teacher training college of education celebrating it 55th Anniversary in 2007.",
+          "Abetifi Presbyterian College of Education (4): H. T. Dako serving as the appointed Principal.",
+          "Presbyterian Women's College of Education (1): The first African principal was Gladys Adum Kwapong whose tenure of office was from 1963 to 1980."
+        ]
+      }
+    ]
+  },
+  {
+    "threshold": 12.538678053446672,
+    "anchor": {
+      "id": 1231,
+      "broad_topic": "Music Charts",
+      "medium_topic": "Geography",
+      "table_content": [
+        [
+          "year",
+          "population"
+        ],
+        [
+          "1803",
+          "202"
+        ],
+        [
+          "1850",
+          "226"
+        ],
+        [
+          "1900",
+          "233"
+        ],
+        [
+          "1950",
+          "266"
+        ],
+        [
+          "2000",
+          "321"
+        ]
+      ],
+      "caption": "",
+      "table_title": "Tomils"
+    },
+    "primary_positive": {
+      "id": 1231,
+      "distance": 0.0,
+      "broad_topic": "Music Charts",
+      "medium_topic": "Geography",
+      "sentence_context": [
+        "Tomils (1): Tumegl/Tomils is a village in the municipality of Tomils in the district of Hinterrhein in the Swiss canton of Graubunden.",
+        "Trans, Switzerland (1): Trans is a village in the municipality of Tomils in the district of Hinterrhein in the Swiss canton of Graubunden.",
+        "Hinterrhein District (1): Hinterrhein District is a former administrative district in the canton of Graubunden, Switzerland.",
+        "Hinterrhein District (2): It decreased further in 2015 when Almens, Paspels, Pratval, Rodels and Tomils merged to form the new municipality of Domleschg.",
+        "Veulden (1): Feldis/Veulden is a village in the municipality of Tomils in the district of Hinterrhein in the Swiss canton of Graubunden."
+      ]
+    },
+    "additional_positives": [
+      {
+        "id": 1866,
+        "distance": 0.14511330673662784,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Tomils (1): Tumegl/Tomils is a village in the municipality of Tomils in the district of Hinterrhein in the Swiss canton of Graubunden.",
+          "Tomils (2): As of 2000, the gender distribution of the population was 51.5% male and 48.5% female.",
+          "Trans, Switzerland (1): Trans is a village in the municipality of Tomils in the district of Hinterrhein in the Swiss canton of Graubunden.",
+          "Tomils (3): Over the last 10 years the population has grown at a rate of 7.7%.",
+          "Tomils (4): The age distribution, as of 2000, in Tumegl/Tomils is; 48 people or 15.0% of the population are between 0 and 9 years old."
+        ]
+      },
+      {
+        "id": 1505,
+        "distance": 0.15893849402229931,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Tujetsch (1): It is the westernmost municipality of the canton, connected to Urseren (canton of Uri) by the Oberalp Pass.",
+          "Oberalp Pass (1): 2044 m.) is a high mountain pass in the Swiss Alps connecting the cantons of Graubunden and Uri between Disentis and Andermatt.",
+          "Tujetsch (2): Tujetsch is a municipality in the Surselva Region in the canton of Graubunden in Switzerland.",
+          "Urseren (1): The Urseren (also Ursern) is the valley of the upper Reuss in Uri, Switzerland, running southwest to northeast, from Realp to Hospental and Andermatt.",
+          "Tujetsch (3): Tujetsch has a population (as of 31 December 2019) of 1,207."
+        ]
+      },
+      {
+        "id": 923,
+        "distance": 0.35255060430446133,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Rongellen (1): Rongellen is a municipality in the canton of Graubunden in Switzerland, located in the Viamala Region.",
+          "Rongellen (2): Rongellen has a population (as of 31 December 2019) of 53.",
+          "Rongellen (3): The historical population is given in the following table:",
+          "Rongellen (4): 2 people or 3.8% are 10 to 14, and 11 people or 20.8% are 15 to 19.",
+          "Rongellen (5): 7 people or 13.2% are 30 to 39, 5 people or 9.4% are 40 to 49, and 8 people or 15.1% are 50 to 59."
+        ]
+      },
+      {
+        "id": 1407,
+        "distance": 0.37932850478090374,
+        "broad_topic": "Music Charts",
+        "medium_topic": "European Politics",
+        "sentence_context": [
+          "Cantons of Switzerland (1): The 26 cantons of Switzerland (German: Kanton, French: canton, Italian: cantone, Romansh: chantun) are the member states of the Swiss Confederation.",
+          "Euro health consumer index (1): Euro Health Consumer Index (EHCI) is a comparison of European health care systems based on waiting times, results, and generosity.",
+          "Cantons of Switzerland (2): The official number of cantons was increased to 26 in the federal constitution of 1999, which designated former half-cantons as cantons.",
+          "Cantons of Switzerland (3): The cantons are listed in their order of precedence given in the federal constitution.",
+          "Euro health consumer index (2): EHCI was produced 20052009 and 20122016 by Health Consumer Powerhouse."
+        ]
+      },
+      {
+        "id": 2817,
+        "distance": 0.3875910316749153,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Flums (1): As of 2000, most of the population speaks German (86.9%), with Albanian being second most common (8.1%) and Italian being third (1.5%).",
+          "Flums (2): In 2000 there were 493 persons (or 10.1% of the population) who were living alone in a private dwelling.",
+          "Flums (3): Out of the total population in Flums, as of 2000, the highest education level completed by 1,372 people (28.1% of the population) was Primary, while 1,465 (30.0%) have completed Secondary, 298 (6.1%) have attended a Tertiary school, and 274 (5.6%) are not in school.",
+          "Flums (4): In 2007, about 23.0% of the population was made up of foreign nationals.",
+          "Flums (5): Flums is a municipality in the Wahlkreis (constituency) of Sarganserland in the canton of St. Gallen in Switzerland."
+        ]
+      },
+      {
+        "id": 2211,
+        "distance": 0.3949589116769996,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Sufers (1): Sufers has a population (as of 31 December 2019) of 145.",
+          "Sufers (2): Sufers (Romansh: Sur) is a municipality in the Viamala Region in the Swiss canton of Graubunden.",
+          "Sufers (3): Over the last 10 years the population has decreased at a rate of -6.6%.",
+          "Sufers (4): It is a Haufendorf (an irregular, unplanned and quite closely packed village, built around a central square).",
+          "Sufers (5): The historical population is given in the following table:"
+        ]
+      },
+      {
+        "id": 1860,
+        "distance": 0.47476543645520236,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Sils im Domleschg (1): Sils im Domleschg (Romansh: Seglias) is a municipality in the Viamala Region in the Swiss canton of Graubunden.",
+          "Domleschg (1): Domleschg is a municipality in the Viamala Region in the Swiss canton of Graubunden.",
+          "Sils im Domleschg (2): Sils im Domleschg has a population (as of December 2019) of 960.",
+          "Sils im Domleschg (3): Sils im Domleschg is an industrial-tertiary municipality, a municipality where agriculture and manufacturing play a minor role in the economy.",
+          "Sils im Domleschg (4): It is a linear village between the Albula and Hinterrhein rivers."
+        ]
+      },
+      {
+        "id": 1782,
+        "distance": 0.5010522201922843,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Verdabbio (1): Verdabbio had a population (as of 2015) of 163.",
+          "Verdabbio (2): Verdabbio is a former municipality in the district of Moesa in the Swiss canton of Graubunden.",
+          "Verdabbio (3): Over the last 10 years the population has decreased at a rate of -1.9%.",
+          "Verdabbio (4): The age distribution, as of 2000, in Verdabbio is; 18 children or 11.0% of the population are between 0 and 9 years old.",
+          "Verdabbio (5): Most of the population (as of 2000) speaks Italian (85.4%), with German being second most common (14.0%)."
+        ]
+      },
+      {
+        "id": 1749,
+        "distance": 0.5505848336765292,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Sufers (1): Sufers has a population (as of 31 December 2019) of 145.",
+          "Sufers (2): Sufers (Romansh: Sur) is a municipality in the Viamala Region in the Swiss canton of Graubunden.",
+          "Sufers (3): The historical population is given in the following table:",
+          "Sufers (4): Over the last 10 years the population has decreased at a rate of -6.6%.",
+          "Sufers (5): As of 2000, the gender distribution of the population was 52.0% male and 48.0% female."
+        ]
+      }
+    ],
+    "negatives": [
+      {
+        "negative_id": 3031,
+        "distance": 8.11555165071693,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Biochemistry",
+        "sentence_context": [
+          "Liver transplantation (1): Liver transplantation or hepatic transplantation is the replacement of a diseased liver with the healthy liver from another person (allograft).",
+          "List of organ transplant donors and recipients (1): Median survival rates can be quite misleading, especially for the relatively small sample that is available for these organs.",
+          "List of organ transplant donors and recipients (2): Survival rates improve almost yearly, due to improved techniques and medications.",
+          "List of organ transplant donors and recipients (3): Survival statistics depend greatly on the age of donor, age of recipient, skill of the transplant center, compliance of the recipient, whether the organ came from a living or deceased donor and overall health of the recipient.",
+          "Giriraj Singh Bora (1): In 2020, Bora performed a liver transplant on a one-year old baby"
+        ]
+      },
+      {
+        "negative_id": 1048,
+        "distance": 7.710218743195041,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Census Data",
+        "sentence_context": [
+          "Madahar Kalu (1): Madahar Kalu is a village in the Firozpur district of Punjab, India.",
+          "Firozpur (1): The Scheduled Caste population was 27,395.",
+          "Kolkur Sadashivapet (1): Schedule Caste (SC) constitutes 27.81% while Schedule Tribe (ST) were 1.84% of total population in Kolkur village.",
+          "Firozpur (2): As of 2011 Indian Census, Firozpur had a total population of 110,313, of which 58,451 were males and 51,862 were females.",
+          "Firozpur (3): According to the 2001 Indian census Firozpur had a population of 95,451, which increased from 78,738 in 1991."
+        ]
+      },
+      {
+        "negative_id": 706,
+        "distance": 3.7622570047739754,
+        "broad_topic": "Music Charts",
+        "medium_topic": "European Politics",
+        "sentence_context": [
+          "Swedish language (1): Swedish (Swedish: [svnska (listen)) is a North Germanic language spoken natively by 10 million people, predominantly in Sweden (as the sole official language) and in parts of Finland, where it has equal legal standing with Finnish.",
+          "Swedish language (2): Swedish is an Indo-European language belonging to the North Germanic branch of the Germanic languages.",
+          "Swedish grammar (1): Swedish is descended from Old Norse.",
+          "Swedish language (3): Swedish is a descendant of Old Norse, the common language of the Germanic peoples living in Scandinavia during the Viking Era.",
+          "Faroese language (1): Faroese (/froiz/ or /færoiz/; Faroese: føroyskt mal, pronounced [føst mal) is a North Germanic language spoken as a first language by about 72,000 Faroe Islanders, around 49,000 of whom reside on the Faroe Islands and 23,000 in other areas, mainly Denmark."
+        ]
+      },
+      {
+        "negative_id": 2606,
+        "distance": 7.9038228155611465,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geopolitics",
+        "sentence_context": [
+          "Jangaon district (1): Jangaon district is a district in the Indian state of Telangana.",
+          "Jangaon district (2): The district has two revenue divisions of Jangaon and Ghanpur (Station) are sub-divided into 12 mandals.",
+          "Jangaon district (3): The below table categorises 12 mandals into their respective revenue divisions in the district:",
+          "Bachannapet (1): Bachannapet is a village and a mandal in Jangaon district in the Indian state of Telangana.",
+          "Jangaon district (4): Jangaon District was formed on 11 October 2016, Jangaon is made as the district headquarters along with 31 newly formed district in Telangana."
+        ]
+      },
+      {
+        "negative_id": 1527,
+        "distance": 6.1032295020279665,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Montenegrin",
+        "sentence_context": [
+          "Serbs in Dubrovnik (1): The Serbs of Dubrovnik are the Serbian minority which makes up 2.73% of the population of Dubrovnik according to the 2011 census.",
+          "Bosniaks of Serbia (1): Bosniaks (Serbian: , romanized: Bosnjaci) are the fourth largest ethnic group in Serbia after Serbs, Hungarians and Roma, numbering 145,278 or 2.02% of the population according to the 2011 census.",
+          "Ratisevina (1): According to the 2011 census, its population was 130.",
+          "Ratisevina (2): Ratisevina (Montenegrin: ) is a village in the municipality of Herceg Novi, Montenegro.",
+          "2011 census (1): 2011 censuses were conducted in the following countries:"
+        ]
+      },
+      {
+        "negative_id": 2011,
+        "distance": 30.250151650249418,
+        "broad_topic": "College Football (2)",
+        "medium_topic": "College Athletics",
+        "sentence_context": [
+          "1976 Western Michigan Broncos football team (1): The 1976 Western Michigan Broncos football team represented Western Michigan University in the Mid-American Conference (MAC) during the 1976 NCAA Division I football season.",
+          "1976 Western Michigan Broncos football team (2): The team played its home games at Waldo Stadium in Kalamazoo, Michigan.",
+          "Western Michigan Broncos football (1): The Western Michigan Broncos football program represents Western Michigan University in the Football Bowl Subdivision of Division I and the Mid-American Conference (MAC).",
+          "Western Michigan Broncos (1): The Western Michigan Broncos are a National Collegiate Athletic Association (NCAA) Division I program representing Western Michigan University (WMU) in college athletics.",
+          "Western Michigan Broncos (2): The men's ice hockey team competes in the National Collegiate Hockey Conference."
+        ]
+      },
+      {
+        "negative_id": 2065,
+        "distance": 29.461017260869347,
+        "broad_topic": "College Sports",
+        "medium_topic": "College Football",
+        "sentence_context": [
+          "1969 Clemson Tigers football team (1): The 1969 Clemson Tigers football team was an American football team that represented Clemson University in the Atlantic Coast Conference (ACC) during the 1969 NCAA University Division football season.",
+          "Clemson Tigers (1): The Clemson Tigers are the athletic teams that represent Clemson University, located in Clemson, South Carolina.",
+          "Clemson Tigers (2): They compete as a member of the National Collegiate Athletic Association (NCAA) Division I level (Football Bowl Subdivision (FBS) sub-level for football), primarily competing in the Atlantic Coast Conference (ACC) for all sports since the 195354 season.",
+          "Clemson University (1): Clemson University (/klmp.sn, klm.zn/) is a public, land-grant research university in Clemson, South Carolina.",
+          "Clemson University (2): They compete as a member of the National Collegiate Athletic Association (NCAA) Division I level (Football Bowl Subdivision (FBS) sub-level for football), primarily competing in the Atlantic Coast Conference (ACC) for all sports since the 1953-54 season."
+        ]
+      },
+      {
+        "negative_id": 1188,
+        "distance": 22.55285218391736,
+        "broad_topic": "Entertainment Industry",
+        "medium_topic": "Actresses",
+        "sentence_context": [
+          "Iris Bahr (1): Iris Bahr is an American actress, comedian, director, writer, author, producer and host of the X-RAE podcast.",
+          "Fair Game (2010 film) (1): Fair Game is a 2010 biographical political drama film directed by Doug Liman and starring Naomi Watts and Sean Penn.",
+          "9 Full Moons (1): 9 Full Moons is a 2013 American romantic drama film directed by Tomer Almagor and starring Amy Seimetz, Bret Roberts and Donal Logue.",
+          "Fair Game (2010 film) (2): Fair Game was released on DVD and Blu-ray for Region 1/Region A on March 29, 2011, and for Region 2/Region B on July 11, 2011.",
+          "9 Full Moons (2): 9 Full Moons was originally released June 6, 2013, at the Seattle International Film Festival and made the festival circuit in Los Angeles, Mexico and The Bahamas."
+        ]
+      },
+      {
+        "negative_id": 2193,
+        "distance": 32.173920666370734,
+        "broad_topic": "Sports (4)",
+        "medium_topic": "Cycling",
+        "sentence_context": [
+          "Randy Stumpfhauser (1): is an American professional \"Mid School\" Bicycle Motocross (BMX) racer whose prime competitive years started in 1988.",
+          "Randy Stumpfhauser (2): Randall Richard Stumpfhauser (born January 27, 1977 in Fresno, California U.S.)",
+          "Sanger, California (1): Sanger is a city in Fresno County, California, United States.",
+          "Sanger, California (2): The racial makeup of Sanger was 14,454 (59.6%) White, 219 (0.9%) African American, 311 (1.3%) Native American, 758 (3.1%) Asian, 39 (0.2%) Pacific Islander, 7,645 (31.5%) from other races, and 844 (3.5%) from two or more races.",
+          "Randy Stumpfhauser (3): Twenty BMX:"
+        ]
+      },
+      {
+        "negative_id": 960,
+        "distance": 16.879027009944377,
+        "broad_topic": "Sports (5)",
+        "medium_topic": "African Colleges",
+        "sentence_context": [
+          "Anlo Afiadenyigba (1): There are seven chiefs in the town.",
+          "Anlo Afiadenyigba (2): Anlo Afiadenyigba is a town in the Volta Region of Ghana.",
+          "Anlo Afiadenyigba (3): These are as follows.",
+          "Anlo Afiadenyigba (4): The town has the Anlo Afiadenyigba Secondary School.",
+          "Anlo Afiadenyigba (5): These are as follows"
+        ]
+      }
+    ]
+  },
+  {
+    "threshold": 12.585358080204328,
+    "anchor": {
+      "id": 1663,
+      "broad_topic": "Music Charts",
+      "medium_topic": "Geography",
+      "table_content": [
+        [
+          "year",
+          "population"
+        ],
+        [
+          "1803",
+          "219"
+        ],
+        [
+          "1850",
+          "222"
+        ],
+        [
+          "1900",
+          "156"
+        ],
+        [
+          "1950",
+          "154"
+        ],
+        [
+          "1960",
+          "136"
+        ],
+        [
+          "1970",
+          "104"
+        ],
+        [
+          "1980",
+          "116"
+        ],
+        [
+          "1990",
+          "115"
+        ],
+        [
+          "2000",
+          "139"
+        ]
+      ],
+      "caption": "",
+      "table_title": "Scheid"
+    },
+    "primary_positive": {
+      "id": 1663,
+      "distance": 0.0,
+      "broad_topic": "Music Charts",
+      "medium_topic": "Geography",
+      "sentence_context": [
+        "Scheid (1): Scheid has a population (as of 2007) of 148, of which 2.7% are foreign nationals.",
+        "Scheid (2): The historical population is given in the following table:",
+        "Scheid (3): The age distribution, as of 2000, in Scheid is; 99 people or 13.3% of the population are between 0 and 9 years old.",
+        "Scheid (4): Scheid is a village in the municipality of Tomils in the district of Hinterrhein in the Swiss canton of Graubunden.",
+        "Linda Scheid (1): Linda J. Scheid (June 16, 1942 June 15, 2011) was a Minnesota politician and a member of the Minnesota Senate who represented District 46, which includes portions of the northwestern suburbs of Hennepin County in the Twin Cities metro area."
+      ]
+    },
+    "additional_positives": [
+      {
+        "id": 2432,
+        "distance": 0.08904252056713093,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Sevgein (1): Sevgein is a former municipality in the district of Surselva in the Swiss canton of Graubunden.",
+          "Sevgein (2): The former municipality is located in the Ilanz sub-district of the Surselva district.",
+          "Sevgein (3): Sevgein had a population (as of 2011) of 198.",
+          "Hugelshofen (1): The municipality had 442 inhabitants in 1850, which decreased to 360 in 1900, 359 in 1950 and 325 in 1990.",
+          "Sevgein (4): The historical population is given in the following table:"
+        ]
+      },
+      {
+        "id": 1749,
+        "distance": 0.18349166070162776,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Sufers (1): Sufers has a population (as of 31 December 2019) of 145.",
+          "Sufers (2): Sufers (Romansh: Sur) is a municipality in the Viamala Region in the Swiss canton of Graubunden.",
+          "Sufers (3): The historical population is given in the following table:",
+          "Sufers (4): Over the last 10 years the population has decreased at a rate of -6.6%.",
+          "Sufers (5): As of 2000, the gender distribution of the population was 52.0% male and 48.0% female."
+        ]
+      },
+      {
+        "id": 1782,
+        "distance": 0.23746022976423342,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Verdabbio (1): Verdabbio had a population (as of 2015) of 163.",
+          "Verdabbio (2): Verdabbio is a former municipality in the district of Moesa in the Swiss canton of Graubunden.",
+          "Verdabbio (3): Over the last 10 years the population has decreased at a rate of -1.9%.",
+          "Verdabbio (4): The age distribution, as of 2000, in Verdabbio is; 18 children or 11.0% of the population are between 0 and 9 years old.",
+          "Verdabbio (5): Most of the population (as of 2000) speaks Italian (85.4%), with German being second most common (14.0%)."
+        ]
+      },
+      {
+        "id": 1860,
+        "distance": 0.2653461700456198,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Sils im Domleschg (1): Sils im Domleschg (Romansh: Seglias) is a municipality in the Viamala Region in the Swiss canton of Graubunden.",
+          "Domleschg (1): Domleschg is a municipality in the Viamala Region in the Swiss canton of Graubunden.",
+          "Sils im Domleschg (2): Sils im Domleschg has a population (as of December 2019) of 960.",
+          "Sils im Domleschg (3): Sils im Domleschg is an industrial-tertiary municipality, a municipality where agriculture and manufacturing play a minor role in the economy.",
+          "Sils im Domleschg (4): It is a linear village between the Albula and Hinterrhein rivers."
+        ]
+      },
+      {
+        "id": 1044,
+        "distance": 0.29443522514690046,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Thusis (1): Thusis (Italian: Tosana, Romansh: Tusan) is a municipality in the Viamala Region in the Swiss canton of Graubunden.",
+          "Thusis (2): Thusis has a population (as of 31 December 2019) of 9,409.",
+          "Thusis (3): Over the last 10 years the population has grown at a rate of 0.7%.",
+          "Thusis (4): The age distribution, as of 2000, in Thusis is; 304 people or 11.2% of the population are between 0 and 9 years old.",
+          "Thusis (5): The historical population is given in the following table:"
+        ]
+      },
+      {
+        "id": 1890,
+        "distance": 0.31514361496142484,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Tomils (1): Tumegl/Tomils is a village in the municipality of Tomils in the district of Hinterrhein in the Swiss canton of Graubunden.",
+          "Tomils (2): Tumegl/Tomils has a population (as of 2007) of 365, of which 5.2% are foreign nationals.",
+          "Riverton Township, Clay County, Iowa (1): As of the 2000 census, its population was 321.",
+          "Goree, Texas (1): As of the census of 2000, there were 321 people, 116 households, and 88 families residing in the city.",
+          "Tomils (3): As of 2000, the gender distribution of the population was 51.5% male and 48.5% female."
+        ]
+      },
+      {
+        "id": 2211,
+        "distance": 0.34959819271335885,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Sufers (1): Sufers has a population (as of 31 December 2019) of 145.",
+          "Sufers (2): Sufers (Romansh: Sur) is a municipality in the Viamala Region in the Swiss canton of Graubunden.",
+          "Sufers (3): Over the last 10 years the population has decreased at a rate of -6.6%.",
+          "Sufers (4): It is a Haufendorf (an irregular, unplanned and quite closely packed village, built around a central square).",
+          "Sufers (5): The historical population is given in the following table:"
+        ]
+      },
+      {
+        "id": 923,
+        "distance": 0.3730542760171511,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Rongellen (1): Rongellen is a municipality in the canton of Graubunden in Switzerland, located in the Viamala Region.",
+          "Rongellen (2): Rongellen has a population (as of 31 December 2019) of 53.",
+          "Rongellen (3): The historical population is given in the following table:",
+          "Rongellen (4): 2 people or 3.8% are 10 to 14, and 11 people or 20.8% are 15 to 19.",
+          "Rongellen (5): 7 people or 13.2% are 30 to 39, 5 people or 9.4% are 40 to 49, and 8 people or 15.1% are 50 to 59."
+        ]
+      },
+      {
+        "id": 1866,
+        "distance": 0.5081186031593478,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geography",
+        "sentence_context": [
+          "Tomils (1): Tumegl/Tomils is a village in the municipality of Tomils in the district of Hinterrhein in the Swiss canton of Graubunden.",
+          "Tomils (2): As of 2000, the gender distribution of the population was 51.5% male and 48.5% female.",
+          "Trans, Switzerland (1): Trans is a village in the municipality of Tomils in the district of Hinterrhein in the Swiss canton of Graubunden.",
+          "Tomils (3): Over the last 10 years the population has grown at a rate of 7.7%.",
+          "Tomils (4): The age distribution, as of 2000, in Tumegl/Tomils is; 48 people or 15.0% of the population are between 0 and 9 years old."
+        ]
+      }
+    ],
+    "negatives": [
+      {
+        "negative_id": 393,
+        "distance": 11.458832142377767,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Airports",
+        "sentence_context": [
+          "Fantasy flight (1): Fantasy flights are charity flights operated by a host airline for locally disadvantaged and terminally ill children to fly to a fictitious destination.",
+          "Fantasy flight (2): The following commercial aviation operators are sorted by airlines' names' alphabetical order.",
+          "Fantasy flight (3): Alaska Airlines is the official airline of the non-profit charity Spokane Fantasy Flight which organizes an annual fantasy flight at Spokane International Airport, its 12th being in 2009.",
+          "Fantasy flight (4): Winnipeg International Airport, Skyservice Airlines, and sponsors operated \"north pole express\", annual fantasy flights for children from (a) chosen local public school(s) with a takeoff, flight, pilot's announcement of a Santa sighting, and an onboard visit from Santa.",
+          "Fantasy flight (5): Often, local companies and charitable organizations are sponsors."
+        ]
+      },
+      {
+        "negative_id": 561,
+        "distance": 7.453953328369238,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Biochemistry",
+        "sentence_context": [
+          "Reference intake (1): These RIs are based on the requirements for an average woman with no special dietary requirements and assume an energy intake of 8400 kJ.",
+          "Reference intake (2): Reference Intakes replaced the term Guideline Daily Amount (GDA), although the principles behind both are the same.",
+          "Dietary Reference Values (1): RNI is not the same as RDA (Recommended Daily Allowance) or GDA, although they are often similar.",
+          "Reference intake (3): The major difference is that GDAs existed for men, women and children; there is only one set of RIs for an average adult.",
+          "Reference intake (4): The information is for guidance only and should not be considered individual advice."
+        ]
+      },
+      {
+        "negative_id": 1822,
+        "distance": 6.918649449037506,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Census Data",
+        "sentence_context": [
+          "Barkheda Baramad Gunga (1): Barkheda Baramad Gunga is a village in the Bhopal district of Madhya Pradesh, India.",
+          "Gunga, Bhopal (1): Gunga is a village in the Bhopal district of Madhya Pradesh, India located in the Berasia tehsil.",
+          "Barkheda Baramad (1): Barkheda Baramad is a village in the Bhopal district of Madhya Pradesh, India.",
+          "Barkheda Baramad Gunga (2): According to the 2011 census of India, Barkheda Baramad Gunga has 451 households.",
+          "Barkheda Baramad Gunga (3): It is located in the Berasia tehsil."
+        ]
+      },
+      {
+        "negative_id": 1327,
+        "distance": 5.16605249971384,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Geopolitics",
+        "sentence_context": [
+          "Southern Peninsular Malaysian Hokkien (1): Southern Malaysian Hokkien (simplified Chinese: ; traditional Chinese: ; pinyin: Nan Ma Fujianhua; Peh-oe-ji: Lam-Ma Hok-kian-oe) is a local variant of the Min Nan Chinese variety spoken in Central and Southern Peninsular Malaysia (Klang, Melaka, Muar, Tangkak, Segamat, Batu Pahat, Pontian, Johor Bahru), Singapore, Riau and Riau Islands",
+          "Southern Peninsular Malaysian Hokkien (2): There are eight phonemic vowels:",
+          "Phonological history of English close back vowels (1): Most dialects of modern English have two close back vowels: the near-close near-back rounded vowel // found in words like foot, and the close back rounded vowel /u/ (realized as central [] in many dialects) found in words like goose.",
+          "Terengganu Malay (1): Terengganu language (Malay: Bahasa Melayu Terengganu, Terengganu Malay: Base Tranung/Ganu) is a Malayan language spoken in the Malaysian state of Terengganu all the way southward to coastal Pahang and northeast Johor.",
+          "Phonological history of English close back vowels (2): Some other minimal pairs apart from unorthodoxyan orthodoxy include unequal /nikwl/ vs. an equal /nikwl/ as well as a large untidy room / lrd ntadi rum/ vs. a large and tidy room / lrd ntadi rum/."
+        ]
+      },
+      {
+        "negative_id": 1830,
+        "distance": 8.74154791202062,
+        "broad_topic": "Music Charts",
+        "medium_topic": "Ireland Geography",
+        "sentence_context": [
+          "Cavanaquill (1): Cavanaquill (from Irish: Cabhan an Choill, meaning 'Hollow of the Hazel') is a townland in the civil parish of Templeport, County Cavan, Ireland.",
+          "Cavanaquill (2): The Cavanaquill Valuation Office Field books are available for December 1839.",
+          "Cavanaquill (3): The 1790 Cavan Carvaghs list spells the townland name as Cavan Quill.",
+          "Cavanaquill (4): The 1652 Commonwealth Survey lists the proprietor as being Lieutenant John Blackforde who also appears as proprietor for several other Templeport townlands in the same survey.",
+          "Demographics of Nepal (1): As of the 2011 census, 81.3% of the Nepalese population was Hindu, 9.0% Buddhist, 4.4% Muslim, 3.0% Kirant/Yumaist, 1.42% Christian, and 0.9% followed other or no religion."
+        ]
+      },
+      {
+        "negative_id": 223,
+        "distance": 29.88945145644954,
+        "broad_topic": "College Football (2)",
+        "medium_topic": "College Athletics",
+        "sentence_context": [
+          "1970 Western Michigan Broncos football team (1): In their seventh season under head coach Bill Doolittle, the Broncos compiled a 73 record (23 against MAC opponents), finished in fourth place in the MAC, and outscored their opponents, 277 to 132.",
+          "1970 Western Michigan Broncos football team (2): The 1970 Western Michigan Broncos football team represented Western Michigan University in the Mid-American Conference (MAC) during the 1970 college football season.",
+          "Bill Doolittle (1): Francis William Doolittle (August 10, 1923 April 10, 2014) was an American football player and coach.",
+          "Western Michigan Broncos (1): The Western Michigan Broncos are a National Collegiate Athletic Association (NCAA) Division I program representing Western Michigan University (WMU) in college athletics.",
+          "Bill Doolittle (2): After two years as the backfield coach for Army, he was hired as the head football coach at Western Michigan University in January 1964."
+        ]
+      },
+      {
+        "negative_id": 76,
+        "distance": 28.94398554646891,
+        "broad_topic": "College Sports",
+        "medium_topic": "College Football",
+        "sentence_context": [
+          "2010 Lafayette Leopards football team (1): The 2010 Lafayette Leopards football team represented Lafayette College in the 2010 NCAA Division I FCS football season.",
+          "Lafayette Leopards football (1): The Lafayette Leopards football program represents Lafayette College in college football.",
+          "Lafayette Leopards football (2): The team earned two national championships, had four undefeated seasons, featured several All-Americans, played in major games, and was involved in several bowl scenarios.",
+          "Lafayette Leopards football (3): Lafayette has won seven conference championships.",
+          "Lafayette Leopards football (4): Baseball was also played on the Quad."
+        ]
+      },
+      {
+        "negative_id": 278,
+        "distance": 23.901063140478186,
+        "broad_topic": "Entertainment Industry",
+        "medium_topic": "Actresses",
+        "sentence_context": [
+          "Rose Reynolds (1): In 2017, Reynolds portrayed both Alice and Tilly on the show Once Upon a Time.",
+          "Rose Reynolds (2): Rose Alice Reynolds (born 21 February 1991) is a British actress and singer.",
+          "Rose Reynolds (3): She is most known for her roles as Sarah Durkin in Wasted, Betty Carkeek in Poldark and Alice in Once Upon a Time.",
+          "Rose Reynolds (4): ]].",
+          "Burt Reynolds (1): Hovnanian Homes]]."
+        ]
+      },
+      {
+        "negative_id": 1648,
+        "distance": 36.21554621810496,
+        "broad_topic": "Sports (4)",
+        "medium_topic": "Cycling",
+        "sentence_context": [
+          "Carlo Ubbiali (1): Carlo Ubbiali (22 September 1929 2 June 2020) was an Italian nine-time World Champion motorcycle road racer.",
+          "1955 Grand Prix motorcycle racing season (1): It began on 1 May, with Spanish Grand Prix and ended with Nations Grand Prix in Italy on 4 September.",
+          "MV Agusta (1): MV Agusta (Italian pronunciation: [mme vu a.gu.sta, full name: MV AGUSTA Motor S.p.A, original name: Meccanica Verghera Agusta or MV) is a motorcycle manufacturer founded by Count Domenico Agusta on 19 January 1945 as one of the branches of the Agusta aircraft company near Milan in Cascina Costa, Italy.",
+          "1955 Grand Prix motorcycle racing season (2): Road Racing World Championship Grand Prix season.",
+          "Carlo Ubbiali (2): In 1949, the first year of Grand Prix motorcycle racing, he finished in fourth place in the 125cc class riding an MV Agusta."
+        ]
+      },
+      {
+        "negative_id": 1707,
+        "distance": 19.73912185020641,
+        "broad_topic": "Sports (5)",
+        "medium_topic": "African Colleges",
+        "sentence_context": [
+          "Akrokerri College of Education (1): The Akrokerri College of Education was established in 1962 to cater for some of the surplus number of candidates who could not find places in the then existing two-year teacher training colleges.",
+          "Akrokerri College of Education (2): Akrokerri College of Education is a teacher education college in Akrokerri (Adansi West District, Ashanti Region, Ghana).",
+          "Akrokerri (1): It is the home of the Akrokerri College of Education, formerly known as Akrokerri Training College or Akrokerri Teacher Training College.",
+          "Akrokerri (2): Akrokerri is a town in the Ashanti Region of Ghana.",
+          "Akrokerri College of Education (3): The Akrokerri College of Education is located in the Adansi West District, Ghana and it located in the Ahsanti/Brong Ahafo Zone of the colleges of education in Ghana."
+        ]
+      }
+    ]
+  }
+]

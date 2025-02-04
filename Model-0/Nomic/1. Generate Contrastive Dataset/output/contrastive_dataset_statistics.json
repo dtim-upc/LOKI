@@ -2,8 +2,8 @@
   "overall_stats": {
     "total_triplets": 3157,
     "total_positives": 31570,
-    "total_negatives": 31570,
-    "triplets_with_insufficient_negatives": 0
+    "total_negatives": 31569,
+    "triplets_with_insufficient_negatives": 1
   },
   "topic_distribution": {
     "broad_topics": {
@@ -151,17 +151,17 @@
   },
   "negative_sampling_stats": {
     "hard_negatives": {
-      "same_broad_different_medium": 14617,
-      "different_broad": 1168,
-      "avg_distance": 4.8262000689576805,
-      "min_distance": 0.0753542041992677,
-      "max_distance": 14.334094701787338
+      "same_broad_different_medium": 14648,
+      "different_broad": 1136,
+      "avg_distance": 5.971485607328026,
+      "min_distance": 0.08441931509856059,
+      "max_distance": 14.728255767943667
     },
     "extreme_negatives": {
       "unique_broad_topics": 8,
-      "avg_distance": 25.474546950422244,
-      "min_distance": 8.306321330546917,
-      "max_distance": 45.072790433401316
+      "avg_distance": 24.87123380440878,
+      "min_distance": 8.44190196231933,
+      "max_distance": 45.134637759444736
     }
   },
   "problematic_cases": []

@@ -30,9 +30,16 @@ class ContrastiveDatasetGenerator:
         """Parse table content from string to nested list."""
         try:
             return json.loads(table_str)
-        except:
+        except Exception:
             return table_str
-    
+
+    def parse_sentence_context(self, sentence_context_str: str) -> List[str]:
+        """Parse sentence context from string to list."""
+        try:
+            return json.loads(sentence_context_str)
+        except Exception:
+            return sentence_context_str
+
     def sample_additional_positives(self, topic_paragraphs: pd.DataFrame, table: pd.Series, 
                                   table_id: int, max_samples: int = 9) -> List[Dict[str, Any]]:
         """Sample a limited number of additional positives."""
@@ -55,7 +62,7 @@ class ContrastiveDatasetGenerator:
                 'distance': float(self.get_distance(table, para)),
                 'broad_topic': para['Nomic Topic: broad'],
                 'medium_topic': para['Nomic Topic: medium'],
-                'sentence_context': para['sentence_context']
+                'sentence_context': self.parse_sentence_context(para['sentence_context'])  # Updated here
             })
             
         return additional_positives
@@ -98,7 +105,7 @@ class ContrastiveDatasetGenerator:
                         'distance': float(distance),
                         'broad_topic': sample['Nomic Topic: broad'],
                         'medium_topic': sample['Nomic Topic: medium'],
-                        'sentence_context': sample['sentence_context']
+                        'sentence_context': self.parse_sentence_context(sample['sentence_context'])  # Updated here
                     })
         
         # If we need more, take more samples from closest topic
@@ -118,7 +125,7 @@ class ContrastiveDatasetGenerator:
                             'distance': float(distance),
                             'broad_topic': sample['Nomic Topic: broad'],
                             'medium_topic': sample['Nomic Topic: medium'],
-                            'sentence_context': sample['sentence_context']
+                            'sentence_context': self.parse_sentence_context(sample['sentence_context'])  # Updated here
                         })
         
         # If still insufficient, get from different broad topics
@@ -154,7 +161,7 @@ class ContrastiveDatasetGenerator:
                             'distance': float(distance),
                             'broad_topic': sample['Nomic Topic: broad'],
                             'medium_topic': sample['Nomic Topic: medium'],
-                            'sentence_context': sample['sentence_context']
+                            'sentence_context': self.parse_sentence_context(sample['sentence_context'])  # Updated here
                         })
         
         # Sample Extreme Negatives
@@ -182,7 +189,7 @@ class ContrastiveDatasetGenerator:
                         'distance': float(distance),
                         'broad_topic': sample['Nomic Topic: broad'],
                         'medium_topic': sample['Nomic Topic: medium'],
-                        'sentence_context': sample['sentence_context']
+                        'sentence_context': self.parse_sentence_context(sample['sentence_context'])  # Updated here
                     })
                     used_broad_topics.add(broad)
         
@@ -212,7 +219,7 @@ class ContrastiveDatasetGenerator:
                             'distance': float(sample['distance']),
                             'broad_topic': sample['Nomic Topic: broad'],
                             'medium_topic': sample['Nomic Topic: medium'],
-                            'sentence_context': sample['sentence_context']
+                            'sentence_context': self.parse_sentence_context(sample['sentence_context'])  # Updated here
                         })
         
         return hard_negatives + extreme_negatives
@@ -267,7 +274,7 @@ class ContrastiveDatasetGenerator:
                     'distance': float(self.get_distance(table, matching_paragraph)),
                     'broad_topic': matching_paragraph['Nomic Topic: broad'],
                     'medium_topic': matching_paragraph['Nomic Topic: medium'],
-                    'sentence_context': matching_paragraph['sentence_context']
+                    'sentence_context': self.parse_sentence_context(matching_paragraph['sentence_context'])  # Updated here
                 },
                 'additional_positives': additional_positives,
                 'negatives': negatives

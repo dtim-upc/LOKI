@@ -15,11 +15,11 @@ To reproduce this pipeline, you must acquire the following restricted-access dat
 
 1. **MIMIC-IV (hosp module)**: Contains the core clinical records, specifically the hospital admission, diagnoses, and prescription tables.
    - **Link**: [https://physionet.org/content/mimiciv/3.1/](https://physionet.org/content/mimiciv/3.1/)
-   - **Citation**: Johnson, A., Bulgarelli, L., Pollard, T., Horng, S., Celi, L. A., & Mark, R. (2023). MIMIC-IV (version 3.1). PhysioNet. https://doi.org/10.13026/6vvn-5694.
+   - **Citation**: Johnson, Alistair, et al. "MIMIC-IV" (version 3.1). PhysioNet (2024). RRID:SCR_007345. https://doi.org/10.13026/kpb9-mt58.
 
 2. **MIMIC-IV-Note**: Contains the de-identified free-text clinical notes, specifically the discharge summaries.
    - **Link**: [https://physionet.org/content/mimic-iv-note/2.2/](https://physionet.org/content/mimic-iv-note/2.2/)
-   - **Citation**: Johnson, A., Pollard, T., Horng, S., Celi, L. A., & Mark, R. (2023). MIMIC-IV-Note: Deidentified free-text clinical notes (version 2.2). PhysioNet. https://doi.org/10.13026/1n74-0612.
+   - **Citation**: ohnson, Alistair, et al. "MIMIC-IV-Note: Deidentified free-text clinical notes" (version 2.2). PhysioNet (2023). RRID:SCR_007345. https://doi.org/10.13026/1n74-ne17.
 
 ---
 

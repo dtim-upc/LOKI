@@ -150,14 +150,6 @@ N_PATIENTS_TO_EXPORT = 10000             # Max patients to extract
 
 ---
 
-### Legacy Script: preprocess_mimic.py
-
-#### Script: [preprocess_mimic.py](preprocess_mimic.py)
-
-**Purpose**: Combined preprocessing + splitting script. Not used in the primary pipeline (Stages 1+2 replace its functionality), but retained for reference. Supports `--manifest` to use an existing `split_manifest.json` for deterministic splits.
-
----
-
 ### Stage 3: Generate LLM Annotation Prompts
 
 #### Script: [generate_prompts.py](generate_prompts.py)
@@ -169,7 +161,7 @@ N_PATIENTS_TO_EXPORT = 10000             # Max patients to extract
 - `annotation_prompt.md` — The prompt template
 
 **Output** → `prompts_combined/`:
-- 18 prompt files like `prompt_combined_10000560_28979390.md`
+- One prompt file per test admission (e.g., `prompt_combined_10000560_28979390.md`)
 - Each ~20-30 KB, containing both tables + all clinical note sentences + annotation instructions
 
 **What it does**:
@@ -178,9 +170,6 @@ N_PATIENTS_TO_EXPORT = 10000             # Max patients to extract
 3. Formats clinical note sentences with section metadata
 4. Inserts everything into the prompt template
 5. Saves one prompt per admission
-
-> [!NOTE]
-> Only 18 prompts exist in `prompts_combined/`. This means annotation was done for only 18 of the ~661 test patients (their paired admissions). The remaining ~2,444+ test examples have no annotations.
 
 ---
 
@@ -238,8 +227,8 @@ python merge_annotations_voting.py --include-reasoning
 **Output** → `Annotations/Voting/`:
 | File | Description |
 |------|-------------|
-| `<admission_id>.json` (×18) | Individual merged annotation per admission |
-| `merged_annotations_all.json` | **267 KB** — All 18 admissions combined |
+| `<admission_id>.json` | Individual merged annotation per admission |
+| `merged_annotations_all.json` | All annotated admissions combined |
 | `merge_provenance.json` | **72 KB** — Detailed provenance tracking |
 | `data_quality_report.json` | Quality check results |
 ---
@@ -328,7 +317,7 @@ Displays details of the minimal example (admission `28979390`).
 | `mimic_data/test_row_level_v2.json` | 585 MB | `preprocess_split_mimic.py` | 2 | ✅ Complete |
 | `mimic_data/split_manifest.json` | 128 KB | Project Root / Custom | 1 | ✅ Complete |
 | `mimic_data/annotations/test_annotations.json` | 2.5 MB | `preprocess_split_mimic.py` | 2 | ✅ Partially Annotated (229 admitted, ~2040 pending) |
-| `prompts_combined/*.md` | ~18 files | `generate_prompts.py` | 3 | ✅ Complete (18 only) |
+| `prompts_combined/*.md` | One per admission | `generate_prompts.py` | 3 | ✅ Complete |
 | `Annotations/Individual/annotator-*/` | 229 files each | Manual (LLM responses) | 4 | ✅ Complete |
 | `Annotations/Merged_Per_Annotator/annotator-*.json` | 1 master each | `merge_annotations.py` | 4b | ✅ Complete |
 | `Annotations/Voting/*.json` | 21 files | `merge_annotations_voting.py` | 5 | ✅ Complete |

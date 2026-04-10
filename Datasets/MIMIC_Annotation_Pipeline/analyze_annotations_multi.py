@@ -767,8 +767,8 @@ def get_friendly_annotator_name(annotator_path: str) -> str:
     
     Examples:
         annotator_1 or Annotations/Individual/annotator_1 -> Gemini
-        annotator_2 or Annotations/Individual/annotator_2 -> Claude
-        annotator_3 or Annotations/Individual/annotator_3 -> GPT
+        annotator_2 or Annotations/Individual/annotator_2 -> ChatGPT
+        annotator_3 or Annotations/Individual/annotator_3 -> Qwen
     """
     # Extract the annotator name from the path
     path_parts = annotator_path.replace('\\', '/').split('/')
@@ -777,8 +777,8 @@ def get_friendly_annotator_name(annotator_path: str) -> str:
     # Map to friendly names
     name_mapping = {
         'annotator_1': 'Gemini',
-        'annotator_2': 'Claude',
-        'annotator_3': 'GPT',
+        'annotator_2': 'ChatGPT',
+        'annotator_3': 'Qwen',
     }
     
     return name_mapping.get(annotator_name, annotator_name)

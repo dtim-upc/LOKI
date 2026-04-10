@@ -5,7 +5,7 @@
 
 ## Summary
 
-This codebase implements a **clinical relationship annotation pipeline** for the LOKI project. Starting from raw MIMIC-IV CSV tables (`inputs/`), it extracts and restructures data into per-admission folders, preprocesses into the v2 format, generates annotation prompts for LLMs, collects annotations from 3 LLM annotators (Gemini, Claude, GPT), merges them via majority voting, and produces final ground-truth annotation files.
+This codebase implements a **clinical relationship annotation pipeline** for the LOKI project. Starting from raw MIMIC-IV CSV tables (`inputs/`), it extracts and restructures data into per-admission folders, preprocesses into the v2 format, generates annotation prompts for LLMs, collects annotations from 3 LLM annotators (Gemini, ChatGPT, Qwen), merges them via majority voting, and produces final ground-truth annotation files.
 
 ---
 
@@ -188,7 +188,7 @@ N_PATIENTS_TO_EXPORT = 10000             # Max patients to extract
 
 #### Manual step + [merge_annotations.py](merge_annotations.py)
 
-**Purpose**: The prompts from Stage 4 are sent to 3 LLMs (Gemini, Claude, GPT). Their JSON responses are saved, then optionally merged into a per-annotator master file.
+**Purpose**: The prompts from Stage 4 are sent to 3 LLMs (Gemini, ChatGPT, Qwen). Their JSON responses are saved, then optionally merged into a per-annotator master file.
 
 **Input**:
 - LLM JSON responses (saved manually per admission)

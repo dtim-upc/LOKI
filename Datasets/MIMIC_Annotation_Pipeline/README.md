@@ -316,7 +316,7 @@ Displays details of the minimal example (admission `28979390`).
 | `mimic_split/` | — | `split_mimic_folders.py` | 1 | ✅ Complete |
 | `mimic_data/test_row_level_v2.json` | 585 MB | `preprocess_split_mimic.py` | 2 | ✅ Complete |
 | `mimic_data/split_manifest.json` | 128 KB | Project Root / Custom | 1 | ✅ Complete |
-| `mimic_data/annotations/test_annotations.json` (Blank) | 2.5 MB | `preprocess_split_mimic.py` | 2 | ⚠️ ALL `"pending"` |
+| `mimic_data/annotations/test_annotations.json` (Blank Initially) | 2.5 MB | `preprocess_split_mimic.py` | 2 | ⚠️ ALL `"pending"` (Populated later in Stage 8) |
 | `prompts_combined/*.md` | One per admission | `generate_prompts.py` | 3 | ✅ Complete |
 | `Annotations/Individual/annotator-*/` | 229 files each | Manual (LLM responses) | 4 | ✅ Complete |
 | `Annotations/Merged_Per_Annotator/annotator-*.json` | 1 master each | `merge_annotations.py` | 4b | ✅ Complete |
@@ -333,7 +333,6 @@ The open-source repository distributes the pure, fully-voted ground truth inside
 | Location | Entries | Status | Source |
 |----------|---------|--------|--------|
 | `ground_truth/test_annotations.json` | 2,498 | ✅ Partially Annotated (229 admissions, 2,040 pending) | Supplied Golden Reference |
-| `mimic_data/annotations/test_annotations.json` | 2,498 | ⚠️ ALL `"pending"` | Generated blank organically by `preprocess_split_mimic.py` |
 
 The **raw intermediate voter files** live in:
 - `Annotations/Voting/merged_annotations_all.json` — 229 admissions, voted results

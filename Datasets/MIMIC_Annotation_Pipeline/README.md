@@ -316,12 +316,13 @@ Displays details of the minimal example (admission `28979390`).
 | `mimic_split/` | — | `split_mimic_folders.py` | 1 | ✅ Complete |
 | `mimic_data/test_row_level_v2.json` | 585 MB | `preprocess_split_mimic.py` | 2 | ✅ Complete |
 | `mimic_data/split_manifest.json` | 128 KB | Project Root / Custom | 1 | ✅ Complete |
-| `mimic_data/annotations/test_annotations.json` | 2.5 MB | `preprocess_split_mimic.py` | 2 | ✅ Partially Annotated (229 admitted, ~2040 pending) |
+| `mimic_data/annotations/test_annotations.json` (Blank) | 2.5 MB | `preprocess_split_mimic.py` | 2 | ⚠️ ALL `"pending"` |
 | `prompts_combined/*.md` | One per admission | `generate_prompts.py` | 3 | ✅ Complete |
 | `Annotations/Individual/annotator-*/` | 229 files each | Manual (LLM responses) | 4 | ✅ Complete |
 | `Annotations/Merged_Per_Annotator/annotator-*.json` | 1 master each | `merge_annotations.py` | 4b | ✅ Complete |
 | `Annotations/Voting/*.json` | 21 files | `merge_annotations_voting.py` | 5 | ✅ Complete |
 | `annotation_analysis_multi/*.png` | 15 files | `analyze_annotations_multi.py` | 7 | ✅ Complete |
+| `mimic_data/annotations/test_annotations.json` (Final) | 2.5 MB | `finalize_annotations.py` | 8 | ✅ Partially Annotated (229 admissions, 2,040 pending) |
 
 ---
 
@@ -331,8 +332,8 @@ The open-source repository distributes the pure, fully-voted ground truth inside
 
 | Location | Entries | Status | Source |
 |----------|---------|--------|--------|
-| `ground_truth/test_annotations.json` | ~2,500 | ✅ Partially Annotated (229 admitted, ~2040 pending) | Supplied Golden Reference |
-| `mimic_data/annotations/test_annotations.json` | ~2,500 | ⚠️ ALL `"pending"` | Generated blank organically by `preprocess_split_mimic.py` |
+| `ground_truth/test_annotations.json` | 2,498 | ✅ Partially Annotated (229 admissions, 2,040 pending) | Supplied Golden Reference |
+| `mimic_data/annotations/test_annotations.json` | 2,498 | ⚠️ ALL `"pending"` | Generated blank organically by `preprocess_split_mimic.py` |
 
 The **raw intermediate voter files** live in:
 - `Annotations/Voting/merged_annotations_all.json` — 229 admissions, voted results
@@ -342,13 +343,13 @@ The **raw intermediate voter files** live in:
 
 ## Annotation Coverage Summary
 
-The final `test_annotations.json` is a **partial annotation** containing all ~2,500 test entries, but only 229 admissions (458 table entries) have actual ground-truth data:
+The final `test_annotations.json` is a **partial annotation** containing all 2,498 test entries, but only 229 admissions (458 table entries) have actual ground-truth data:
 
 | Category | Count |
 |----------|-------|
-| Total test entries in template | ~2,462–2,498 |
+| Total test entries in template | 2,498 |
 | Annotated admissions | **229** (→ 458 table entries) |
-| Unannotated entries | ~1,968–2,004 (remain `"pending"`) |
+| Unannotated entries | 2,040 (remain `"pending"`) |
 
 Within the 229 annotated admissions, the voting merge (≥2/3 agreement threshold) is **expected behavior** — the `merge_provenance.json` tracks excluded minority relationships for auditability.
 

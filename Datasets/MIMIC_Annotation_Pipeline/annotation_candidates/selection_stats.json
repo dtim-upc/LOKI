@@ -1,0 +1,1285 @@
+{
+  "balance_config": {
+    "mode": "score_target",
+    "n_per_class_reference": 25,
+    "score_target": 99,
+    "score_target_source": "auto (min at N_PER_CLASS)"
+  },
+  "overview": {
+    "total_patients_selected": 100,
+    "total_admissions": 382,
+    "total_note_files": 382,
+    "source_pool_patients": 659,
+    "source_pool_admissions": 1242
+  },
+  "by_selection_class": {
+    "ADVERSE_EFFECT": {
+      "patients_selected": 25,
+      "score_min": 2,
+      "score_max": 17,
+      "score_mean": 3.96,
+      "score_total": 99,
+      "admissions_min": 1,
+      "admissions_max": 12,
+      "admissions_mean": 5.0,
+      "admissions_total": 125
+    },
+    "CONTRAINDICATED": {
+      "patients_selected": 21,
+      "score_min": 3,
+      "score_max": 11,
+      "score_mean": 4.71,
+      "score_total": 99,
+      "admissions_min": 1,
+      "admissions_max": 12,
+      "admissions_mean": 3.86,
+      "admissions_total": 81
+    },
+    "DISCONTINUED": {
+      "patients_selected": 15,
+      "score_min": 4,
+      "score_max": 12,
+      "score_mean": 6.73,
+      "score_total": 101,
+      "admissions_min": 1,
+      "admissions_max": 15,
+      "admissions_mean": 5.2,
+      "admissions_total": 78
+    },
+    "TREATS": {
+      "patients_selected": 39,
+      "score_min": 0,
+      "score_max": 2,
+      "score_mean": 0.77,
+      "score_total": 30,
+      "admissions_min": 1,
+      "admissions_max": 14,
+      "admissions_mean": 2.51,
+      "admissions_total": 98
+    }
+  },
+  "class_prevalence_in_selected": {
+    "ADVERSE_EFFECT": {
+      "admissions_with_evidence": 87,
+      "admissions_with_evidence_pct": 22.8,
+      "patients_with_evidence": 57
+    },
+    "CONTRAINDICATED": {
+      "admissions_with_evidence": 114,
+      "admissions_with_evidence_pct": 29.8,
+      "patients_with_evidence": 59
+    },
+    "DISCONTINUED": {
+      "admissions_with_evidence": 157,
+      "admissions_with_evidence_pct": 41.1,
+      "patients_with_evidence": 80
+    },
+    "TREATS": {
+      "admissions_with_evidence": 40,
+      "admissions_with_evidence_pct": 10.5,
+      "patients_with_evidence": 38
+    }
+  },
+  "per_patient": [
+    {
+      "subject_id": "10021927",
+      "selection_reason": "ADVERSE_EFFECT",
+      "reason_score": 17,
+      "total_admissions": 12,
+      "scores": {
+        "ADVERSE_EFFECT": 17,
+        "CONTRAINDICATED": 1,
+        "DISCONTINUED": 11,
+        "TREATS": 2
+      }
+    },
+    {
+      "subject_id": "10614400",
+      "selection_reason": "ADVERSE_EFFECT",
+      "reason_score": 11,
+      "total_admissions": 9,
+      "scores": {
+        "ADVERSE_EFFECT": 11,
+        "CONTRAINDICATED": 3,
+        "DISCONTINUED": 6,
+        "TREATS": 2
+      }
+    },
+    {
+      "subject_id": "10624524",
+      "selection_reason": "ADVERSE_EFFECT",
+      "reason_score": 7,
+      "total_admissions": 9,
+      "scores": {
+        "ADVERSE_EFFECT": 7,
+        "CONTRAINDICATED": 3,
+        "DISCONTINUED": 4,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10072153",
+      "selection_reason": "ADVERSE_EFFECT",
+      "reason_score": 5,
+      "total_admissions": 2,
+      "scores": {
+        "ADVERSE_EFFECT": 5,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 2,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10500801",
+      "selection_reason": "ADVERSE_EFFECT",
+      "reason_score": 5,
+      "total_admissions": 11,
+      "scores": {
+        "ADVERSE_EFFECT": 5,
+        "CONTRAINDICATED": 3,
+        "DISCONTINUED": 3,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10000980",
+      "selection_reason": "ADVERSE_EFFECT",
+      "reason_score": 4,
+      "total_admissions": 7,
+      "scores": {
+        "ADVERSE_EFFECT": 4,
+        "CONTRAINDICATED": 4,
+        "DISCONTINUED": 11,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10039348",
+      "selection_reason": "ADVERSE_EFFECT",
+      "reason_score": 4,
+      "total_admissions": 1,
+      "scores": {
+        "ADVERSE_EFFECT": 4,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 3,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10625523",
+      "selection_reason": "ADVERSE_EFFECT",
+      "reason_score": 4,
+      "total_admissions": 4,
+      "scores": {
+        "ADVERSE_EFFECT": 4,
+        "CONTRAINDICATED": 4,
+        "DISCONTINUED": 1,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10641937",
+      "selection_reason": "ADVERSE_EFFECT",
+      "reason_score": 4,
+      "total_admissions": 1,
+      "scores": {
+        "ADVERSE_EFFECT": 4,
+        "CONTRAINDICATED": 4,
+        "DISCONTINUED": 8,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10117273",
+      "selection_reason": "ADVERSE_EFFECT",
+      "reason_score": 3,
+      "total_admissions": 10,
+      "scores": {
+        "ADVERSE_EFFECT": 3,
+        "CONTRAINDICATED": 3,
+        "DISCONTINUED": 15,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10254021",
+      "selection_reason": "ADVERSE_EFFECT",
+      "reason_score": 3,
+      "total_admissions": 3,
+      "scores": {
+        "ADVERSE_EFFECT": 3,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 1,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10319938",
+      "selection_reason": "ADVERSE_EFFECT",
+      "reason_score": 3,
+      "total_admissions": 5,
+      "scores": {
+        "ADVERSE_EFFECT": 3,
+        "CONTRAINDICATED": 3,
+        "DISCONTINUED": 6,
+        "TREATS": 1
+      }
+    },
+    {
+      "subject_id": "10321613",
+      "selection_reason": "ADVERSE_EFFECT",
+      "reason_score": 3,
+      "total_admissions": 11,
+      "scores": {
+        "ADVERSE_EFFECT": 3,
+        "CONTRAINDICATED": 12,
+        "DISCONTINUED": 14,
+        "TREATS": 1
+      }
+    },
+    {
+      "subject_id": "10515366",
+      "selection_reason": "ADVERSE_EFFECT",
+      "reason_score": 3,
+      "total_admissions": 3,
+      "scores": {
+        "ADVERSE_EFFECT": 3,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 4,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10561929",
+      "selection_reason": "ADVERSE_EFFECT",
+      "reason_score": 3,
+      "total_admissions": 6,
+      "scores": {
+        "ADVERSE_EFFECT": 3,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 3,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10036821",
+      "selection_reason": "ADVERSE_EFFECT",
+      "reason_score": 2,
+      "total_admissions": 4,
+      "scores": {
+        "ADVERSE_EFFECT": 2,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 3,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10059406",
+      "selection_reason": "ADVERSE_EFFECT",
+      "reason_score": 2,
+      "total_admissions": 1,
+      "scores": {
+        "ADVERSE_EFFECT": 2,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 2,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10074282",
+      "selection_reason": "ADVERSE_EFFECT",
+      "reason_score": 2,
+      "total_admissions": 2,
+      "scores": {
+        "ADVERSE_EFFECT": 2,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 1,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10199297",
+      "selection_reason": "ADVERSE_EFFECT",
+      "reason_score": 2,
+      "total_admissions": 2,
+      "scores": {
+        "ADVERSE_EFFECT": 2,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 1,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10213275",
+      "selection_reason": "ADVERSE_EFFECT",
+      "reason_score": 2,
+      "total_admissions": 3,
+      "scores": {
+        "ADVERSE_EFFECT": 2,
+        "CONTRAINDICATED": 2,
+        "DISCONTINUED": 8,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10222662",
+      "selection_reason": "ADVERSE_EFFECT",
+      "reason_score": 2,
+      "total_admissions": 1,
+      "scores": {
+        "ADVERSE_EFFECT": 2,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 2,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10243016",
+      "selection_reason": "ADVERSE_EFFECT",
+      "reason_score": 2,
+      "total_admissions": 1,
+      "scores": {
+        "ADVERSE_EFFECT": 2,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 0,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10251081",
+      "selection_reason": "ADVERSE_EFFECT",
+      "reason_score": 2,
+      "total_admissions": 4,
+      "scores": {
+        "ADVERSE_EFFECT": 2,
+        "CONTRAINDICATED": 1,
+        "DISCONTINUED": 0,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10254633",
+      "selection_reason": "ADVERSE_EFFECT",
+      "reason_score": 2,
+      "total_admissions": 1,
+      "scores": {
+        "ADVERSE_EFFECT": 2,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 3,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10263098",
+      "selection_reason": "ADVERSE_EFFECT",
+      "reason_score": 2,
+      "total_admissions": 12,
+      "scores": {
+        "ADVERSE_EFFECT": 2,
+        "CONTRAINDICATED": 3,
+        "DISCONTINUED": 11,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10520715",
+      "selection_reason": "CONTRAINDICATED",
+      "reason_score": 11,
+      "total_admissions": 7,
+      "scores": {
+        "ADVERSE_EFFECT": 2,
+        "CONTRAINDICATED": 11,
+        "DISCONTINUED": 16,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10484071",
+      "selection_reason": "CONTRAINDICATED",
+      "reason_score": 10,
+      "total_admissions": 10,
+      "scores": {
+        "ADVERSE_EFFECT": 1,
+        "CONTRAINDICATED": 10,
+        "DISCONTINUED": 3,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10631298",
+      "selection_reason": "CONTRAINDICATED",
+      "reason_score": 8,
+      "total_admissions": 12,
+      "scores": {
+        "ADVERSE_EFFECT": 1,
+        "CONTRAINDICATED": 8,
+        "DISCONTINUED": 13,
+        "TREATS": 2
+      }
+    },
+    {
+      "subject_id": "10534245",
+      "selection_reason": "CONTRAINDICATED",
+      "reason_score": 6,
+      "total_admissions": 1,
+      "scores": {
+        "ADVERSE_EFFECT": 2,
+        "CONTRAINDICATED": 6,
+        "DISCONTINUED": 0,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10043646",
+      "selection_reason": "CONTRAINDICATED",
+      "reason_score": 5,
+      "total_admissions": 4,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 5,
+        "DISCONTINUED": 1,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10584718",
+      "selection_reason": "CONTRAINDICATED",
+      "reason_score": 5,
+      "total_admissions": 2,
+      "scores": {
+        "ADVERSE_EFFECT": 1,
+        "CONTRAINDICATED": 5,
+        "DISCONTINUED": 3,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10064854",
+      "selection_reason": "CONTRAINDICATED",
+      "reason_score": 4,
+      "total_admissions": 2,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 4,
+        "DISCONTINUED": 3,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10101070",
+      "selection_reason": "CONTRAINDICATED",
+      "reason_score": 4,
+      "total_admissions": 3,
+      "scores": {
+        "ADVERSE_EFFECT": 1,
+        "CONTRAINDICATED": 4,
+        "DISCONTINUED": 5,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10157331",
+      "selection_reason": "CONTRAINDICATED",
+      "reason_score": 4,
+      "total_admissions": 2,
+      "scores": {
+        "ADVERSE_EFFECT": 1,
+        "CONTRAINDICATED": 4,
+        "DISCONTINUED": 2,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10305617",
+      "selection_reason": "CONTRAINDICATED",
+      "reason_score": 4,
+      "total_admissions": 3,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 4,
+        "DISCONTINUED": 1,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10316671",
+      "selection_reason": "CONTRAINDICATED",
+      "reason_score": 4,
+      "total_admissions": 8,
+      "scores": {
+        "ADVERSE_EFFECT": 2,
+        "CONTRAINDICATED": 4,
+        "DISCONTINUED": 1,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10391104",
+      "selection_reason": "CONTRAINDICATED",
+      "reason_score": 4,
+      "total_admissions": 3,
+      "scores": {
+        "ADVERSE_EFFECT": 1,
+        "CONTRAINDICATED": 4,
+        "DISCONTINUED": 8,
+        "TREATS": 1
+      }
+    },
+    {
+      "subject_id": "10437898",
+      "selection_reason": "CONTRAINDICATED",
+      "reason_score": 4,
+      "total_admissions": 3,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 4,
+        "DISCONTINUED": 0,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10596129",
+      "selection_reason": "CONTRAINDICATED",
+      "reason_score": 4,
+      "total_admissions": 4,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 4,
+        "DISCONTINUED": 2,
+        "TREATS": 1
+      }
+    },
+    {
+      "subject_id": "10608217",
+      "selection_reason": "CONTRAINDICATED",
+      "reason_score": 4,
+      "total_admissions": 5,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 4,
+        "DISCONTINUED": 8,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10057731",
+      "selection_reason": "CONTRAINDICATED",
+      "reason_score": 3,
+      "total_admissions": 2,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 3,
+        "DISCONTINUED": 3,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10147499",
+      "selection_reason": "CONTRAINDICATED",
+      "reason_score": 3,
+      "total_admissions": 3,
+      "scores": {
+        "ADVERSE_EFFECT": 1,
+        "CONTRAINDICATED": 3,
+        "DISCONTINUED": 0,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10215793",
+      "selection_reason": "CONTRAINDICATED",
+      "reason_score": 3,
+      "total_admissions": 2,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 3,
+        "DISCONTINUED": 0,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10216097",
+      "selection_reason": "CONTRAINDICATED",
+      "reason_score": 3,
+      "total_admissions": 1,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 3,
+        "DISCONTINUED": 9,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10228186",
+      "selection_reason": "CONTRAINDICATED",
+      "reason_score": 3,
+      "total_admissions": 1,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 3,
+        "DISCONTINUED": 2,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10245082",
+      "selection_reason": "CONTRAINDICATED",
+      "reason_score": 3,
+      "total_admissions": 3,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 3,
+        "DISCONTINUED": 0,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10541652",
+      "selection_reason": "DISCONTINUED",
+      "reason_score": 12,
+      "total_admissions": 15,
+      "scores": {
+        "ADVERSE_EFFECT": 2,
+        "CONTRAINDICATED": 2,
+        "DISCONTINUED": 12,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10034049",
+      "selection_reason": "DISCONTINUED",
+      "reason_score": 10,
+      "total_admissions": 6,
+      "scores": {
+        "ADVERSE_EFFECT": 1,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 10,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10442299",
+      "selection_reason": "DISCONTINUED",
+      "reason_score": 10,
+      "total_admissions": 2,
+      "scores": {
+        "ADVERSE_EFFECT": 1,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 10,
+        "TREATS": 1
+      }
+    },
+    {
+      "subject_id": "10287919",
+      "selection_reason": "DISCONTINUED",
+      "reason_score": 8,
+      "total_admissions": 6,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 1,
+        "DISCONTINUED": 8,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10304606",
+      "selection_reason": "DISCONTINUED",
+      "reason_score": 7,
+      "total_admissions": 5,
+      "scores": {
+        "ADVERSE_EFFECT": 2,
+        "CONTRAINDICATED": 3,
+        "DISCONTINUED": 7,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10305005",
+      "selection_reason": "DISCONTINUED",
+      "reason_score": 7,
+      "total_admissions": 7,
+      "scores": {
+        "ADVERSE_EFFECT": 1,
+        "CONTRAINDICATED": 3,
+        "DISCONTINUED": 7,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10446182",
+      "selection_reason": "DISCONTINUED",
+      "reason_score": 7,
+      "total_admissions": 7,
+      "scores": {
+        "ADVERSE_EFFECT": 2,
+        "CONTRAINDICATED": 2,
+        "DISCONTINUED": 7,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10069423",
+      "selection_reason": "DISCONTINUED",
+      "reason_score": 6,
+      "total_admissions": 2,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 2,
+        "DISCONTINUED": 6,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10095681",
+      "selection_reason": "DISCONTINUED",
+      "reason_score": 6,
+      "total_admissions": 8,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 2,
+        "DISCONTINUED": 6,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10006029",
+      "selection_reason": "DISCONTINUED",
+      "reason_score": 5,
+      "total_admissions": 4,
+      "scores": {
+        "ADVERSE_EFFECT": 1,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 5,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10381011",
+      "selection_reason": "DISCONTINUED",
+      "reason_score": 5,
+      "total_admissions": 1,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 5,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10541475",
+      "selection_reason": "DISCONTINUED",
+      "reason_score": 5,
+      "total_admissions": 5,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 5,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10649541",
+      "selection_reason": "DISCONTINUED",
+      "reason_score": 5,
+      "total_admissions": 2,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 5,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10150056",
+      "selection_reason": "DISCONTINUED",
+      "reason_score": 4,
+      "total_admissions": 7,
+      "scores": {
+        "ADVERSE_EFFECT": 1,
+        "CONTRAINDICATED": 1,
+        "DISCONTINUED": 4,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10155915",
+      "selection_reason": "DISCONTINUED",
+      "reason_score": 4,
+      "total_admissions": 1,
+      "scores": {
+        "ADVERSE_EFFECT": 1,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 4,
+        "TREATS": 1
+      }
+    },
+    {
+      "subject_id": "10371497",
+      "selection_reason": "TREATS",
+      "reason_score": 2,
+      "total_admissions": 4,
+      "scores": {
+        "ADVERSE_EFFECT": 1,
+        "CONTRAINDICATED": 2,
+        "DISCONTINUED": 2,
+        "TREATS": 2
+      }
+    },
+    {
+      "subject_id": "10058856",
+      "selection_reason": "TREATS",
+      "reason_score": 1,
+      "total_admissions": 2,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 1,
+        "DISCONTINUED": 0,
+        "TREATS": 1
+      }
+    },
+    {
+      "subject_id": "10082560",
+      "selection_reason": "TREATS",
+      "reason_score": 1,
+      "total_admissions": 5,
+      "scores": {
+        "ADVERSE_EFFECT": 1,
+        "CONTRAINDICATED": 2,
+        "DISCONTINUED": 3,
+        "TREATS": 1
+      }
+    },
+    {
+      "subject_id": "10109526",
+      "selection_reason": "TREATS",
+      "reason_score": 1,
+      "total_admissions": 6,
+      "scores": {
+        "ADVERSE_EFFECT": 1,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 1,
+        "TREATS": 1
+      }
+    },
+    {
+      "subject_id": "10134328",
+      "selection_reason": "TREATS",
+      "reason_score": 1,
+      "total_admissions": 2,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 0,
+        "TREATS": 1
+      }
+    },
+    {
+      "subject_id": "10135720",
+      "selection_reason": "TREATS",
+      "reason_score": 1,
+      "total_admissions": 3,
+      "scores": {
+        "ADVERSE_EFFECT": 1,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 1,
+        "TREATS": 1
+      }
+    },
+    {
+      "subject_id": "10188935",
+      "selection_reason": "TREATS",
+      "reason_score": 1,
+      "total_admissions": 2,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 2,
+        "DISCONTINUED": 4,
+        "TREATS": 1
+      }
+    },
+    {
+      "subject_id": "10190116",
+      "selection_reason": "TREATS",
+      "reason_score": 1,
+      "total_admissions": 3,
+      "scores": {
+        "ADVERSE_EFFECT": 1,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 1,
+        "TREATS": 1
+      }
+    },
+    {
+      "subject_id": "10215503",
+      "selection_reason": "TREATS",
+      "reason_score": 1,
+      "total_admissions": 3,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 1,
+        "TREATS": 1
+      }
+    },
+    {
+      "subject_id": "10247438",
+      "selection_reason": "TREATS",
+      "reason_score": 1,
+      "total_admissions": 14,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 1,
+        "TREATS": 1
+      }
+    },
+    {
+      "subject_id": "10285708",
+      "selection_reason": "TREATS",
+      "reason_score": 1,
+      "total_admissions": 1,
+      "scores": {
+        "ADVERSE_EFFECT": 1,
+        "CONTRAINDICATED": 1,
+        "DISCONTINUED": 1,
+        "TREATS": 1
+      }
+    },
+    {
+      "subject_id": "10293832",
+      "selection_reason": "TREATS",
+      "reason_score": 1,
+      "total_admissions": 1,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 2,
+        "DISCONTINUED": 1,
+        "TREATS": 1
+      }
+    },
+    {
+      "subject_id": "10301071",
+      "selection_reason": "TREATS",
+      "reason_score": 1,
+      "total_admissions": 4,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 1,
+        "DISCONTINUED": 3,
+        "TREATS": 1
+      }
+    },
+    {
+      "subject_id": "10305345",
+      "selection_reason": "TREATS",
+      "reason_score": 1,
+      "total_admissions": 1,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 0,
+        "TREATS": 1
+      }
+    },
+    {
+      "subject_id": "10347089",
+      "selection_reason": "TREATS",
+      "reason_score": 1,
+      "total_admissions": 1,
+      "scores": {
+        "ADVERSE_EFFECT": 1,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 0,
+        "TREATS": 1
+      }
+    },
+    {
+      "subject_id": "10350488",
+      "selection_reason": "TREATS",
+      "reason_score": 1,
+      "total_admissions": 1,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 1,
+        "DISCONTINUED": 4,
+        "TREATS": 1
+      }
+    },
+    {
+      "subject_id": "10366927",
+      "selection_reason": "TREATS",
+      "reason_score": 1,
+      "total_admissions": 1,
+      "scores": {
+        "ADVERSE_EFFECT": 1,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 0,
+        "TREATS": 1
+      }
+    },
+    {
+      "subject_id": "10409785",
+      "selection_reason": "TREATS",
+      "reason_score": 1,
+      "total_admissions": 2,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 0,
+        "TREATS": 1
+      }
+    },
+    {
+      "subject_id": "10424041",
+      "selection_reason": "TREATS",
+      "reason_score": 1,
+      "total_admissions": 1,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 0,
+        "TREATS": 1
+      }
+    },
+    {
+      "subject_id": "10439513",
+      "selection_reason": "TREATS",
+      "reason_score": 1,
+      "total_admissions": 2,
+      "scores": {
+        "ADVERSE_EFFECT": 1,
+        "CONTRAINDICATED": 3,
+        "DISCONTINUED": 3,
+        "TREATS": 1
+      }
+    },
+    {
+      "subject_id": "10462639",
+      "selection_reason": "TREATS",
+      "reason_score": 1,
+      "total_admissions": 9,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 2,
+        "DISCONTINUED": 1,
+        "TREATS": 1
+      }
+    },
+    {
+      "subject_id": "10467385",
+      "selection_reason": "TREATS",
+      "reason_score": 1,
+      "total_admissions": 3,
+      "scores": {
+        "ADVERSE_EFFECT": 1,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 1,
+        "TREATS": 1
+      }
+    },
+    {
+      "subject_id": "10478014",
+      "selection_reason": "TREATS",
+      "reason_score": 1,
+      "total_admissions": 2,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 3,
+        "DISCONTINUED": 0,
+        "TREATS": 1
+      }
+    },
+    {
+      "subject_id": "10480210",
+      "selection_reason": "TREATS",
+      "reason_score": 1,
+      "total_admissions": 2,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 0,
+        "TREATS": 1
+      }
+    },
+    {
+      "subject_id": "10517746",
+      "selection_reason": "TREATS",
+      "reason_score": 1,
+      "total_admissions": 1,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 0,
+        "TREATS": 1
+      }
+    },
+    {
+      "subject_id": "10557261",
+      "selection_reason": "TREATS",
+      "reason_score": 1,
+      "total_admissions": 3,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 1,
+        "TREATS": 1
+      }
+    },
+    {
+      "subject_id": "10573949",
+      "selection_reason": "TREATS",
+      "reason_score": 1,
+      "total_admissions": 1,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 1,
+        "TREATS": 1
+      }
+    },
+    {
+      "subject_id": "10581380",
+      "selection_reason": "TREATS",
+      "reason_score": 1,
+      "total_admissions": 1,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 0,
+        "TREATS": 1
+      }
+    },
+    {
+      "subject_id": "10646009",
+      "selection_reason": "TREATS",
+      "reason_score": 1,
+      "total_admissions": 2,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 1,
+        "DISCONTINUED": 4,
+        "TREATS": 1
+      }
+    },
+    {
+      "subject_id": "10000764",
+      "selection_reason": "TREATS",
+      "reason_score": 0,
+      "total_admissions": 1,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 2,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10000826",
+      "selection_reason": "TREATS",
+      "reason_score": 0,
+      "total_admissions": 3,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 1,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10001667",
+      "selection_reason": "TREATS",
+      "reason_score": 0,
+      "total_admissions": 1,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 1,
+        "DISCONTINUED": 1,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10001877",
+      "selection_reason": "TREATS",
+      "reason_score": 0,
+      "total_admissions": 2,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 1,
+        "DISCONTINUED": 2,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10002348",
+      "selection_reason": "TREATS",
+      "reason_score": 0,
+      "total_admissions": 1,
+      "scores": {
+        "ADVERSE_EFFECT": 1,
+        "CONTRAINDICATED": 1,
+        "DISCONTINUED": 1,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10002443",
+      "selection_reason": "TREATS",
+      "reason_score": 0,
+      "total_admissions": 1,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 1,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10002760",
+      "selection_reason": "TREATS",
+      "reason_score": 0,
+      "total_admissions": 1,
+      "scores": {
+        "ADVERSE_EFFECT": 1,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 0,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10004235",
+      "selection_reason": "TREATS",
+      "reason_score": 0,
+      "total_admissions": 3,
+      "scores": {
+        "ADVERSE_EFFECT": 1,
+        "CONTRAINDICATED": 2,
+        "DISCONTINUED": 1,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10004422",
+      "selection_reason": "TREATS",
+      "reason_score": 0,
+      "total_admissions": 1,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 1,
+        "DISCONTINUED": 0,
+        "TREATS": 0
+      }
+    },
+    {
+      "subject_id": "10007326",
+      "selection_reason": "TREATS",
+      "reason_score": 0,
+      "total_admissions": 1,
+      "scores": {
+        "ADVERSE_EFFECT": 0,
+        "CONTRAINDICATED": 0,
+        "DISCONTINUED": 1,
+        "TREATS": 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+=== DIAGNOSTIC VALIDATION REPORT ===
+Example: 1
+Model Type: Bidirectional
+Rows: 19, Sentences: 23
+Generated: 2026-05-15 17:23:11.488787
+
+=== ATTENTION NORMALIZATION CHECKS ===
+Forward attention row sums (should be ~1.0):
+  Row 1: 1.000000
+  Row 2: 1.000000
+  Row 3: 1.000000
+  Row 4: 0.999023
+  Row 5: 1.000000
+  Row 6: 1.000000
+  Row 7: 1.000977
+  Row 8: 1.000000
+  Row 9: 1.000977
+  Row 10: 1.000000
+  Row 11: 1.000000
+  Row 12: 0.999023
+  Row 13: 0.999023
+  Row 14: 1.000000
+  Row 15: 1.000000
+  Row 16: 1.000000
+  Row 17: 1.000000
+  Row 18: 1.000000
+  Row 19: 1.000000
+
+Reverse attention column sums (should be ~1.0):
+  Sentence 1: 1.598633
+  Sentence 2: 0.400391
+  Sentence 3: 1.400391
+  Sentence 4: 1.400391
+  Sentence 5: 2.402344
+  Sentence 6: 0.800781
+  Sentence 7: 2.000977
+  Sentence 8: 1.201172
+  Sentence 9: 1.800781
+  Sentence 10: 0.600586
+  Sentence 11: 1.000000
+  Sentence 12: 1.600586
+  Sentence 13: 2.000977
+  Sentence 14: 1.000000
+  Sentence 15: 1.401367
+  Sentence 16: 0.800781
+  Sentence 17: 1.201172
+  Sentence 18: 0.400391
+  Sentence 19: 0.000000
+
+=== SCORE RANGE VALIDATION ===
+Raw similarities: [0.439453, 0.894531]
+Forward attention: [0.000000, 0.204102]
+Reverse attention: [0.000000, 0.200195]
+Final pair scores: [0.212891, 0.359375]

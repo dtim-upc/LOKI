@@ -1,0 +1,190 @@
+{
+  "train": {
+    "num_samples": 4776,
+    "avg_rows_per_anchor": 54.904103852596315,
+    "min_rows": 4,
+    "max_rows": 55,
+    "avg_pos_sentences": 10.450586264656616,
+    "avg_neg_sentences": 5.20749581239531,
+    "unique_tables": 8,
+    "table_distribution": {
+      "drugbank-drugs_links.csv": 648,
+      "drugbank-drug.csv": 648,
+      "drugbank-drug_mixtures.csv": 648,
+      "drugbank-drug_pharmacology.csv": 648,
+      "drugbank-drug_drug_interactions.csv": 648,
+      "drugbank-drug_reactions.csv": 648,
+      "drugbank-targets.csv": 444,
+      "drugbank-targets_polypeptides.csv": 444
+    }
+  },
+  "val": {
+    "num_samples": 992,
+    "avg_rows_per_anchor": 54.87600806451613,
+    "min_rows": 17,
+    "max_rows": 55,
+    "avg_pos_sentences": 10.790322580645162,
+    "avg_neg_sentences": 8.929435483870968,
+    "unique_tables": 8,
+    "table_distribution": {
+      "drugbank-drugs_links.csv": 138,
+      "drugbank-drug.csv": 138,
+      "drugbank-drug_mixtures.csv": 138,
+      "drugbank-drug_pharmacology.csv": 138,
+      "drugbank-drug_drug_interactions.csv": 138,
+      "drugbank-drug_reactions.csv": 138,
+      "drugbank-targets.csv": 82,
+      "drugbank-targets_polypeptides.csv": 82
+    }
+  },
+  "test": {
+    "num_samples": 1032,
+    "avg_rows_per_anchor": 54.89050387596899,
+    "min_rows": 15,
+    "max_rows": 55,
+    "avg_pos_sentences": 10.515503875968992,
+    "avg_neg_sentences": 8.275193798449612,
+    "unique_tables": 8,
+    "table_distribution": {
+      "drugbank-drugs_links.csv": 140,
+      "drugbank-drug.csv": 140,
+      "drugbank-drug_mixtures.csv": 140,
+      "drugbank-drug_pharmacology.csv": 140,
+      "drugbank-drug_drug_interactions.csv": 140,
+      "drugbank-drug_reactions.csv": 140,
+      "drugbank-targets.csv": 96,
+      "drugbank-targets_polypeptides.csv": 96
+    }
+  },
+  "annotation": {
+    "num_annotated": 1032,
+    "samples_with_highlights": 831,
+    "samples_without_highlights": 201,
+    "avg_highlighted_cells": 74.83624031007751,
+    "min_highlighted_cells": 0,
+    "max_highlighted_cells": 613
+  },
+  "source": {
+    "splits": {
+      "train": {
+        "num_targets": 648,
+        "target_table_pairs": 5188,
+        "num_documents": 648,
+        "num_tables": 8,
+        "table_row_counts": {
+          "drugbank-drug.csv": 16549,
+          "drugbank-drug_drug_interactions.csv": 2668185,
+          "drugbank-drug_mixtures.csv": 186945,
+          "drugbank-drug_pharmacology.csv": 27238,
+          "drugbank-drug_reactions.csv": 3315,
+          "drugbank-drugs_links.csv": 4300,
+          "drugbank-targets.csv": 18780,
+          "drugbank-targets_polypeptides.csv": 174085
+        },
+        "total_table_rows": 3099397
+      },
+      "val": {
+        "num_targets": 138,
+        "target_table_pairs": 1108,
+        "num_documents": 138,
+        "num_tables": 8,
+        "table_row_counts": {
+          "drugbank-drug.csv": 16549,
+          "drugbank-drug_drug_interactions.csv": 2668185,
+          "drugbank-drug_mixtures.csv": 186945,
+          "drugbank-drug_pharmacology.csv": 27238,
+          "drugbank-drug_reactions.csv": 3315,
+          "drugbank-drugs_links.csv": 4300,
+          "drugbank-targets.csv": 18780,
+          "drugbank-targets_polypeptides.csv": 174085
+        },
+        "total_table_rows": 3099397
+      },
+      "test": {
+        "num_targets": 140,
+        "target_table_pairs": 1122,
+        "num_documents": 140,
+        "num_tables": 8,
+        "table_row_counts": {
+          "drugbank-drug.csv": 16549,
+          "drugbank-drug_drug_interactions.csv": 2668185,
+          "drugbank-drug_mixtures.csv": 186945,
+          "drugbank-drug_pharmacology.csv": 27238,
+          "drugbank-drug_reactions.csv": 3315,
+          "drugbank-drugs_links.csv": 4300,
+          "drugbank-targets.csv": 18780,
+          "drugbank-targets_polypeptides.csv": 174085
+        },
+        "total_table_rows": 3099397
+      }
+    },
+    "column_gt": {
+      "total_targets_in_gt": 927,
+      "gt_tables": 12,
+      "gt_table_column_pairs": 23,
+      "gt_table_names": [
+        "drugbank-carriers.csv",
+        "drugbank-carriers_polypeptides.csv",
+        "drugbank-drug.csv",
+        "drugbank-drug_drug_interactions.csv",
+        "drugbank-drug_mixtures.csv",
+        "drugbank-drug_pharmacology.csv",
+        "drugbank-drug_reactions.csv",
+        "drugbank-drugs_links.csv",
+        "drugbank-targets.csv",
+        "drugbank-targets_polypeptides.csv",
+        "drugbank-transporters.csv",
+        "drugbank-transporters_polypeptides.csv"
+      ],
+      "columns_per_table": {
+        "drugbank-carriers.csv": [
+          "name"
+        ],
+        "drugbank-carriers_polypeptides.csv": [
+          "general_function",
+          "name",
+          "specific_function"
+        ],
+        "drugbank-drug.csv": [
+          "description",
+          "name"
+        ],
+        "drugbank-drug_drug_interactions.csv": [
+          "description",
+          "name"
+        ],
+        "drugbank-drug_mixtures.csv": [
+          "ingredients"
+        ],
+        "drugbank-drug_pharmacology.csv": [
+          "indication",
+          "mechanism_of_action",
+          "pharmacodynamics"
+        ],
+        "drugbank-drug_reactions.csv": [
+          "left_drugbank_name",
+          "right_drugbank_name"
+        ],
+        "drugbank-drugs_links.csv": [
+          "title"
+        ],
+        "drugbank-targets.csv": [
+          "name"
+        ],
+        "drugbank-targets_polypeptides.csv": [
+          "general_function",
+          "name",
+          "specific_function"
+        ],
+        "drugbank-transporters.csv": [
+          "name"
+        ],
+        "drugbank-transporters_polypeptides.csv": [
+          "general_function",
+          "name",
+          "specific_function"
+        ]
+      }
+    }
+  }
+}

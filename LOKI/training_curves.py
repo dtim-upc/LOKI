@@ -238,13 +238,13 @@ class TrainingCurves:
         self.plots_dir.mkdir(exist_ok=True)
         self.data_dir.mkdir(exist_ok=True)
         
-        print(f"🎯 Training curves tracker initialized:")
-        print(f"   📁 Output directory: {self.output_dir}")
-        print(f"   📊 Tracking batch losses: {track_batch_losses}")
-        print(f"   📈 Tracking validation loss: {track_val_loss}")
-        print(f"   🔍 Tracking row-sentence metrics: {track_row_sent_metrics}")
-        print(f"   💾 Auto-save: {auto_save}")
-        print(f"   🎨 Auto-plot: {auto_plot}")
+        print(f"[INFO] Training curves tracker initialized:")
+        print(f"   [INFO] Output directory: {self.output_dir}")
+        print(f"   [INFO] Tracking batch losses: {track_batch_losses}")
+        print(f"   [INFO] Tracking validation loss: {track_val_loss}")
+        print(f"   [INFO] Tracking row-sentence metrics: {track_row_sent_metrics}")
+        print(f"   [INFO] Auto-save: {auto_save}")
+        print(f"   [INFO] Auto-plot: {auto_plot}")
     
     def reset_tracking(self):
         """Reset all tracking data (useful for new training runs)."""
@@ -387,23 +387,23 @@ class TrainingCurves:
             self.plot_curves()
         
         # Print epoch summary
-        print(f"\n📊 Epoch {epoch} Summary:")
-        print(f"   🔥 Train Loss: {round_half_up(self.train_loss_mean[-1], 2):.2f} ± {round_half_up(self.train_loss_std[-1], 2):.2f}")
-        print(f"   🎯 Val Accuracy: {round_half_up(val_accuracy, 2):.2f}")
-        print(f"   🏆 Best Accuracy: {round_half_up(self.best_accuracy, 2):.2f} (Epoch {self.best_epoch})")
-        print(f"   ⏱️  Epoch Time: {epoch_time:.1f}s")
-        print(f"   📈 Learning Rate: {learning_rate:.2e}")
+        print(f"\n[INFO] Epoch {epoch} Summary:")
+        print(f"   [INFO] Train Loss: {round_half_up(self.train_loss_mean[-1], 2):.2f} +/- {round_half_up(self.train_loss_std[-1], 2):.2f}")
+        print(f"   [INFO] Val Accuracy: {round_half_up(val_accuracy, 2):.2f}")
+        print(f"   [BEST] Best Accuracy: {round_half_up(self.best_accuracy, 2):.2f} (Epoch {self.best_epoch})")
+        print(f"   [TIME]  Epoch Time: {epoch_time:.1f}s")
+        print(f"   [INFO] Learning Rate: {learning_rate:.2e}")
         
         if self.track_val_loss and val_loss is not None:
-            print(f"   📉 Val Loss: {round_half_up(val_loss, 2):.2f}")
+            print(f"   [INFO] Val Loss: {round_half_up(val_loss, 2):.2f}")
         
         if self.track_row_sent_metrics:
             if row_sent_f1 is not None:
-                print(f"   🔍 Row-Sent F1: {round_half_up(row_sent_f1, 2):.2f}")
-                print(f"      🏆 Best Test F1: {round_half_up(self.best_test_f1, 2):.2f} (Epoch {self.best_test_epoch})")
+                print(f"   [INFO] Row-Sent F1: {round_half_up(row_sent_f1, 2):.2f}")
+                print(f"      [BEST] Best Test F1: {round_half_up(self.best_test_f1, 2):.2f} (Epoch {self.best_test_epoch})")
             if row_sent_avg_precision is not None:
-                print(f"   🔍 Row-Sent Avg Precision: {round_half_up(row_sent_avg_precision, 2):.2f}")
-                print(f"      🏆 Best Test Avg Precision: {round_half_up(self.best_test_avg_precision, 2):.2f} (Epoch {self.best_test_precision_epoch})")
+                print(f"   [INFO] Row-Sent Avg Precision: {round_half_up(row_sent_avg_precision, 2):.2f}")
+                print(f"      [BEST] Best Test Avg Precision: {round_half_up(self.best_test_avg_precision, 2):.2f} (Epoch {self.best_test_precision_epoch})")
     
     def add_initial_stage_metrics(self,
                                 stage_0_accuracy: float = 0.0,
@@ -441,10 +441,10 @@ class TrainingCurves:
             'stage_2_row_sent_acc': stage_2_row_sent_acc
         }
         
-        print(f"📊 Initial stage metrics recorded:")
-        print(f"   🔥 Stage 0 (Frozen): {round_half_up(stage_0_accuracy, 2):.2f} acc, {round_half_up(stage_0_row_sent_ap, 2):.2f} row-sent AP, {round_half_up(stage_0_row_sent_acc, 2):.2f} row-sent F1")
-        print(f"   🚀 Stage 1 (Sophisticated Untrained): {round_half_up(stage_1_accuracy, 2):.2f} acc, {round_half_up(stage_1_row_sent_ap, 2):.2f} row-sent AP, {round_half_up(stage_1_row_sent_acc, 2):.2f} row-sent F1")
-        print(f"   🎯 Stage 2 (Initial): {round_half_up(stage_2_accuracy, 2):.2f} acc, {round_half_up(stage_2_row_sent_ap, 2):.2f} row-sent AP, {round_half_up(stage_2_row_sent_acc, 2):.2f} row-sent F1")
+        print(f"[INFO] Initial stage metrics recorded:")
+        print(f"   [INFO] Stage 0 (Frozen): {round_half_up(stage_0_accuracy, 2):.2f} acc, {round_half_up(stage_0_row_sent_ap, 2):.2f} row-sent AP, {round_half_up(stage_0_row_sent_acc, 2):.2f} row-sent F1")
+        print(f"   [INFO] Stage 1 (Sophisticated Untrained): {round_half_up(stage_1_accuracy, 2):.2f} acc, {round_half_up(stage_1_row_sent_ap, 2):.2f} row-sent AP, {round_half_up(stage_1_row_sent_acc, 2):.2f} row-sent F1")
+        print(f"   [INFO] Stage 2 (Initial): {round_half_up(stage_2_accuracy, 2):.2f} acc, {round_half_up(stage_2_row_sent_ap, 2):.2f} row-sent AP, {round_half_up(stage_2_row_sent_acc, 2):.2f} row-sent F1")
     
     def save_data(self, filename: Optional[str] = None):
         """
@@ -521,7 +521,7 @@ class TrainingCurves:
         filepath = self.data_dir / filename
         
         if not filepath.exists():
-            print(f"⚠️ Training curves file not found: {filepath}")
+            print(f"[WARN] Training curves file not found: {filepath}")
             return False
         
         with open(filepath, 'r', encoding='utf-8') as f:
@@ -565,7 +565,7 @@ class TrainingCurves:
         if 'row_sent_avg_precision' in curves:
             self.row_sent_avg_precision = curves['row_sent_avg_precision']
         
-        print(f"📂 Training curves data loaded from {filepath}")
+        print(f"[INFO] Training curves data loaded from {filepath}")
         return True
     
     def plot_curves(self, 
@@ -581,7 +581,7 @@ class TrainingCurves:
             save_individual: Whether to save individual plots as well
         """
         if len(self.epochs) == 0:
-            print("⚠️ No training data to plot")
+            print("[WARN] No training data to plot")
             return
         
         # Create main figure with subplots (add extra row if tracking row-sentence metrics)
@@ -622,7 +622,7 @@ class TrainingCurves:
         ax1.fill_between(training_epochs, 
                         training_loss_mean - training_loss_std,
                         training_loss_mean + training_loss_std,
-                        alpha=0.3, color='blue', label='±1 Std')
+                        alpha=0.3, color='blue', label='+/-1 Std')
         ax1.plot(training_epochs, training_loss_min, 'g--', alpha=0.7, label='Min Loss')
         ax1.plot(training_epochs, training_loss_max, 'r--', alpha=0.7, label='Max Loss')
         
@@ -877,7 +877,7 @@ class TrainingCurves:
         plt.fill_between(epochs_array, 
                         train_loss_mean_array - train_loss_std_array,
                         train_loss_mean_array + train_loss_std_array,
-                        alpha=0.3, color='blue', label='±1 Std')
+                        alpha=0.3, color='blue', label='+/-1 Std')
         plt.plot(epochs_array, self.train_loss_min, 'g--', alpha=0.7, label='Min Loss')
         plt.plot(epochs_array, self.train_loss_max, 'r--', alpha=0.7, label='Max Loss')
         
@@ -919,13 +919,13 @@ class TrainingCurves:
             epoch: Specific epoch to plot. If None, plots all epochs.
         """
         if not self.track_batch_losses or not self.batch_losses:
-            print("⚠️ Batch losses not tracked. Enable track_batch_losses=True")
+            print("[WARN] Batch losses not tracked. Enable track_batch_losses=True")
             return
         
         if epoch is not None:
             # Plot specific epoch
             if epoch < 1 or epoch > len(self.batch_losses):
-                print(f"⚠️ Epoch {epoch} not found. Available: 1-{len(self.batch_losses)}")
+                print(f"[WARN] Epoch {epoch} not found. Available: 1-{len(self.batch_losses)}")
                 return
             
             plt.figure(figsize=(12, 6))
@@ -955,7 +955,7 @@ class TrainingCurves:
             save_plot_multi_format(str(batch_path), dpi=300, bbox_inches='tight')
             plt.close()
             
-            print(f"📈 Batch losses plot for epoch {epoch} saved to {batch_path}")
+            print(f"[INFO] Batch losses plot for epoch {epoch} saved to {batch_path}")
         
         else:
             # Plot all epochs in a heatmap
@@ -987,7 +987,7 @@ class TrainingCurves:
             save_plot_multi_format(str(heatmap_path), dpi=300, bbox_inches='tight')
             plt.close()
             
-            print(f"🌡️ Batch losses heatmap saved to {heatmap_path}")
+            print(f"[INFO] Batch losses heatmap saved to {heatmap_path}")
     
     def get_summary_stats(self) -> Dict[str, Any]:
         """
@@ -1044,41 +1044,41 @@ class TrainingCurves:
         stats = self.get_summary_stats()
         
         if not stats:
-            print("⚠️ No training data available for summary")
+            print("[WARN] No training data available for summary")
             return
         
         print("\n" + "="*70)
-        print(f"🎯 TRAINING SUMMARY - {self.run_name}")
+        print(f"[INFO] TRAINING SUMMARY - {self.run_name}")
         print("="*70)
-        print(f"📊 Total Epochs: {stats['total_epochs']}")
-        print(f"🏆 Best Accuracy: {round_half_up(stats['best_accuracy'], 2):.2f} (Epoch {stats['best_epoch']})")
-        print(f"📈 Final Accuracy: {round_half_up(stats['final_accuracy'], 2):.2f}")
-        print(f"📉 Accuracy Improvement: {round_half_up(stats['accuracy_improvement'], 2):+.2f}")
-        print(f"🔥 Initial Loss: {round_half_up(stats['initial_loss'], 2):.2f}")
-        print(f"🎯 Final Loss: {round_half_up(stats['final_loss'], 2):.2f}")
-        print(f"📉 Loss Reduction: {round_half_up(stats['loss_reduction'], 2):.2f}")
-        print(f"⏱️  Average Epoch Time: {stats['average_epoch_time']:.1f}s")
-        print(f"🕐 Total Training Time: {stats['total_training_time']:.1f}s ({stats['total_training_time']/60:.1f} min)")
+        print(f"[INFO] Total Epochs: {stats['total_epochs']}")
+        print(f"[BEST] Best Accuracy: {round_half_up(stats['best_accuracy'], 2):.2f} (Epoch {stats['best_epoch']})")
+        print(f"[INFO] Final Accuracy: {round_half_up(stats['final_accuracy'], 2):.2f}")
+        print(f"[INFO] Accuracy Improvement: {round_half_up(stats['accuracy_improvement'], 2):+.2f}")
+        print(f"[INFO] Initial Loss: {round_half_up(stats['initial_loss'], 2):.2f}")
+        print(f"[INFO] Final Loss: {round_half_up(stats['final_loss'], 2):.2f}")
+        print(f"[INFO] Loss Reduction: {round_half_up(stats['loss_reduction'], 2):.2f}")
+        print(f"[TIME]  Average Epoch Time: {stats['average_epoch_time']:.1f}s")
+        print(f"[TIME] Total Training Time: {stats['total_training_time']:.1f}s ({stats['total_training_time']/60:.1f} min)")
         
         # Print best test metrics if available
         if stats['best_test_metrics']:
-            print(f"🏆 Best Test Metrics:")
+            print(f"[BEST] Best Test Metrics:")
             test_metrics = stats['best_test_metrics']
-            print(f"   🔍 Best F1: {round_half_up(test_metrics['best_test_f1'], 2):.2f} (Epoch {test_metrics['best_test_epoch']})")
-            print(f"   🔍 Best Average Precision: {round_half_up(test_metrics['best_test_avg_precision'], 2):.2f} (Epoch {test_metrics['best_test_precision_epoch']})")
+            print(f"   [INFO] Best F1: {round_half_up(test_metrics['best_test_f1'], 2):.2f} (Epoch {test_metrics['best_test_epoch']})")
+            print(f"   [INFO] Best Average Precision: {round_half_up(test_metrics['best_test_avg_precision'], 2):.2f} (Epoch {test_metrics['best_test_precision_epoch']})")
         
         # Print initial stage metrics if available
         if stats['initial_stage_metrics']:
-            print(f"📊 Stage Metrics:")
+            print(f"[INFO] Stage Metrics:")
             stage_metrics = stats['initial_stage_metrics']
-            print(f"   🔥 Stage 0 (Frozen): {round_half_up(stage_metrics.get('stage_0_accuracy', 0), 2):.2f} acc, {round_half_up(stage_metrics.get('stage_0_row_sent_ap', 0), 2):.2f} row-sent AP, {round_half_up(stage_metrics.get('stage_0_row_sent_acc', 0), 2):.2f} row-sent F1")
-            print(f"   🚀 Stage 1 (Sophisticated Untrained): {round_half_up(stage_metrics.get('stage_1_accuracy', 0), 2):.2f} acc, {round_half_up(stage_metrics.get('stage_1_row_sent_ap', 0), 2):.2f} row-sent AP, {round_half_up(stage_metrics.get('stage_1_row_sent_acc', 0), 2):.2f} row-sent F1")
+            print(f"   [INFO] Stage 0 (Frozen): {round_half_up(stage_metrics.get('stage_0_accuracy', 0), 2):.2f} acc, {round_half_up(stage_metrics.get('stage_0_row_sent_ap', 0), 2):.2f} row-sent AP, {round_half_up(stage_metrics.get('stage_0_row_sent_acc', 0), 2):.2f} row-sent F1")
+            print(f"   [INFO] Stage 1 (Sophisticated Untrained): {round_half_up(stage_metrics.get('stage_1_accuracy', 0), 2):.2f} acc, {round_half_up(stage_metrics.get('stage_1_row_sent_ap', 0), 2):.2f} row-sent AP, {round_half_up(stage_metrics.get('stage_1_row_sent_acc', 0), 2):.2f} row-sent F1")
             # Stage 2: Show final trained metrics instead of initial zeros
             test_metrics = stats.get('best_test_metrics', {})
             best_acc = stats.get('best_accuracy', 0)
             best_ap = test_metrics.get('best_test_avg_precision', 0)
             best_f1 = test_metrics.get('best_test_f1', 0)
-            print(f"   🎯 Stage 2 (Final Trained): {round_half_up(best_acc, 2):.2f} acc, {round_half_up(best_ap, 2):.2f} row-sent AP, {round_half_up(best_f1, 2):.2f} row-sent F1")
+            print(f"   [INFO] Stage 2 (Final Trained): {round_half_up(best_acc, 2):.2f} acc, {round_half_up(best_ap, 2):.2f} row-sent AP, {round_half_up(best_f1, 2):.2f} row-sent F1")
         
         print("="*70)
 
@@ -1174,7 +1174,7 @@ def plot_multiple_runs(curves_files: List[str],
     save_plot_multi_format(output_path, dpi=300, bbox_inches='tight')
     plt.close()
     
-    print(f"🎨 Multiple runs comparison plot saved to {output_path}")
+    print(f"[INFO] Multiple runs comparison plot saved to {output_path}")
 
 
 
@@ -1229,7 +1229,7 @@ Examples:
     json_path = Path(args.json_file)
     
     if not json_path.exists():
-        print(f"❌ Error: JSON file not found: {json_path}")
+        print(f"[ERROR] Error: JSON file not found: {json_path}")
         print("   Please specify a valid path to your training_curves.json file")
         exit(1)
     
@@ -1240,8 +1240,8 @@ Examples:
         # Default: use the parent of the JSON file's parent (go up from training_data/)
         output_dir = json_path.parent.parent if json_path.parent.name == "training_data" else json_path.parent
     
-    print(f"📂 Loading training curves from: {json_path}")
-    print(f"📁 Output directory: {output_dir}")
+    print(f"[INFO] Loading training curves from: {json_path}")
+    print(f"[INFO] Output directory: {output_dir}")
     
     # Extract run_name from the JSON filename
     run_name = json_path.stem.replace("_training_curves", "")
@@ -1256,7 +1256,7 @@ Examples:
     )
     
     # Load the data directly from the source JSON file (not from output_dir)
-    print(f"📖 Reading JSON data from: {json_path}")
+    print(f"[INFO] Reading JSON data from: {json_path}")
     try:
         with open(json_path, 'r', encoding='utf-8') as f:
             data = json.load(f)
@@ -1299,26 +1299,26 @@ Examples:
         if 'row_sent_avg_precision' in curves:
             tracker.row_sent_avg_precision = curves['row_sent_avg_precision']
         
-        print(f"✅ Loaded training data for run: {tracker.run_name}")
+        print(f"[OK] Loaded training data for run: {tracker.run_name}")
         print(f"   Total epochs: {len(tracker.epochs)}")
         print(f"   Best accuracy: {round_half_up(tracker.best_accuracy, 2):.2f} (Epoch {tracker.best_epoch})")
         
     except Exception as e:
-        print(f"❌ Failed to load training curves data: {e}")
+        print(f"[ERROR] Failed to load training curves data: {e}")
         exit(1)
     
     # Print summary
     tracker.print_summary()
     
     if not args.summary_only:
-        print("\n🎨 Regenerating plots (with PNG + PDF)...")
+        print("\n[INFO] Regenerating plots (with PNG + PDF)...")
         
         # Regenerate main training curves
         tracker.plot_curves()
         
         # Regenerate batch-level plots if enabled and available
         if not args.skip_batch_losses and tracker.batch_losses:
-            print("📈 Generating batch-level analysis...")
+            print("[INFO] Generating batch-level analysis...")
             tracker.plot_batch_losses()  # All epochs heatmap
             
             # Plot first and last epochs
@@ -1327,8 +1327,8 @@ Examples:
                 if len(tracker.epochs) > 1:
                     tracker.plot_batch_losses(epoch=len(tracker.epochs))
         
-        print(f"\n✅ Plots regenerated successfully!")
-        print(f"📁 Plots saved to: {tracker.plots_dir}")
+        print(f"\n[OK] Plots regenerated successfully!")
+        print(f"[INFO] Plots saved to: {tracker.plots_dir}")
         print("   Both PNG and PDF formats generated for each plot.")
     else:
-        print("\n📊 Summary printed (--summary_only mode, no plots regenerated)")
+        print("\n[INFO] Summary printed (--summary_only mode, no plots regenerated)")

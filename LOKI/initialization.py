@@ -90,7 +90,7 @@ class AttentionInitializer:
                 nn.init.uniform_(layer.bias, -params['bias_range'], params['bias_range'])
         
         if params.get('_verbose', False):
-            print(f"✅ Applied Xavier Uniform initialization (Q/K gain: {params['q_gain']}, V gain: {params['v_gain']}, bias range: ±{params['bias_range']})")
+            print(f"[OK] Applied Xavier Uniform initialization (Q/K gain: {params['q_gain']}, V gain: {params['v_gain']}, bias range: +/-{params['bias_range']})")
 
     @staticmethod
     def kaiming_uniform(layers: List[nn.Module], attention_dim: int, method_params: dict = None) -> None:
@@ -137,7 +137,7 @@ class AttentionInitializer:
                 nn.init.normal_(layer.bias, 0, params['bias_std'])
         
         if params.get('_verbose', False):
-            print(f"✅ Applied Kaiming Uniform initialization (Q/K: {params['qk_mode']}/{params['qk_nonlinearity']}, V: {params['v_mode']}/{params['v_nonlinearity']})")
+            print(f"[OK] Applied Kaiming Uniform initialization (Q/K: {params['qk_mode']}/{params['qk_nonlinearity']}, V: {params['v_mode']}/{params['v_nonlinearity']})")
 
     @staticmethod
     def orthogonal(layers: List[nn.Module], attention_dim: int, method_params: dict = None) -> None:
@@ -184,7 +184,7 @@ class AttentionInitializer:
                 nn.init.normal_(layer.bias, 0, params['bias_std'])
         
         if params.get('_verbose', False):
-            print(f"✅ Applied Orthogonal initialization (Q/K gain: {params['q_gain']}, V gain: {params['v_gain']}, bias std: {params['bias_std']})")
+            print(f"[OK] Applied Orthogonal initialization (Q/K gain: {params['q_gain']}, V gain: {params['v_gain']}, bias std: {params['bias_std']})")
 
     @staticmethod
     def attention_specific(layers: List[nn.Module], attention_dim: int, method_params: dict = None) -> None:
@@ -236,7 +236,7 @@ class AttentionInitializer:
                     nn.init.normal_(layer.bias, 0, 0.01)
         
         if params.get('_verbose', False):
-            print(f"✅ Applied Attention-Specific initialization (Q scale: {params['q_scale']}, K scale: {params['k_scale']}, V scale: {params['v_scale']})")
+            print(f"[OK] Applied Attention-Specific initialization (Q scale: {params['q_scale']}, K scale: {params['k_scale']}, V scale: {params['v_scale']})")
 
     @staticmethod
     def t5_style(layers: List[nn.Module], attention_dim: int, method_params: dict = None) -> None:
@@ -292,7 +292,7 @@ class AttentionInitializer:
                 nn.init.zeros_(layer.bias)
         
         if params.get('_verbose', False):
-            print(f"✅ Applied T5-Style initialization (factor: {factor}, d_model: {d_model}, separate V scaling: {params['separate_v_scaling']})")
+            print(f"[OK] Applied T5-Style initialization (factor: {factor}, d_model: {d_model}, separate V scaling: {params['separate_v_scaling']})")
 
     @staticmethod
     def diverse_attention(layers: List[nn.Module], attention_dim: int, method_params: dict = None) -> None:
@@ -354,7 +354,7 @@ class AttentionInitializer:
                     nn.init.normal_(layer.bias, 0, 0.01)
         
         if params.get('_verbose', False):
-            print(f"✅ Applied Diverse Attention initialization (target range: ±{params['target_range']}, V gain: {params['v_gain']}, bias diversity: ±{params['bias_diversity']})")
+            print(f"[OK] Applied Diverse Attention initialization (target range: +/-{params['target_range']}, V gain: {params['v_gain']}, bias diversity: +/-{params['bias_diversity']})")
 
     @staticmethod
     def multiscale(layers: List[nn.Module], attention_dim: int, method_params: dict = None) -> None:
@@ -415,7 +415,7 @@ class AttentionInitializer:
                         nn.init.zeros_(layer.bias)
         
         if params.get('_verbose', False):
-            print(f"✅ Applied Multiscale initialization (Q: {scales['query']}, K: {scales['key']}, V: {scales['value']}, adaptive bias: {params['adaptive_bias']})")
+            print(f"[OK] Applied Multiscale initialization (Q: {scales['query']}, K: {scales['key']}, V: {scales['value']}, adaptive bias: {params['adaptive_bias']})")
 
     # =====================================================
     # DIAGNOSTIC INITIALIZATION METHODS FOR DEBUGGING
@@ -456,7 +456,7 @@ class AttentionInitializer:
                 nn.init.constant_(layer.bias, params['bias_value'])
             
             if params.get('_verbose', False):
-                print(f"    ✓ Applied zeros initialization to {role}")
+                print(f"    [OK] Applied zeros initialization to {role}")
     
     @staticmethod 
     def ones(layers: List[nn.Module], attention_dim: int, method_params: dict = None) -> None:
@@ -491,7 +491,7 @@ class AttentionInitializer:
                 nn.init.constant_(layer.bias, params['bias_value'])
             
             if params.get('_verbose', False):
-                print(f"    ✓ Applied ones initialization to {role} (value={params['weight_value']})")
+                print(f"    [OK] Applied ones initialization to {role} (value={params['weight_value']})")
     
     @staticmethod
     def diagonal(layers: List[nn.Module], attention_dim: int, method_params: dict = None) -> None:
@@ -536,7 +536,7 @@ class AttentionInitializer:
                 nn.init.constant_(layer.bias, params['bias_value'])
             
             if params.get('_verbose', False):
-                print(f"    ✓ Applied diagonal initialization to {role} (diag={params['diagonal_value']}, off-diag={params['off_diagonal_value']})")
+                print(f"    [OK] Applied diagonal initialization to {role} (diag={params['diagonal_value']}, off-diag={params['off_diagonal_value']})")
     
     @staticmethod
     def identity_preserving(layers: List[nn.Module], attention_dim: int, method_params: dict = None) -> None:
@@ -581,7 +581,7 @@ class AttentionInitializer:
                 nn.init.zeros_(layer.bias)
             
             if params.get('_verbose', False):
-                print(f"    ✓ Applied identity-preserving initialization to {role} (scale={params['identity_scale']}, noise={params['noise_scale']})")
+                print(f"    [OK] Applied identity-preserving initialization to {role} (scale={params['identity_scale']}, noise={params['noise_scale']})")
     
     @staticmethod
     def sparse_random(layers: List[nn.Module], attention_dim: int, method_params: dict = None) -> None:
@@ -630,7 +630,7 @@ class AttentionInitializer:
                 nn.init.zeros_(layer.bias)
             
             if params.get('_verbose', False):
-                print(f"    ✓ Applied sparse random initialization to {role} (sparsity={params['sparsity_ratio']:.1%}, std={params['init_std']})")
+                print(f"    [OK] Applied sparse random initialization to {role} (sparsity={params['sparsity_ratio']:.1%}, std={params['init_std']})")
     
     @staticmethod
     def scaled_uniform(layers: List[nn.Module], attention_dim: int, method_params: dict = None) -> None:
@@ -664,7 +664,7 @@ class AttentionInitializer:
                 nn.init.uniform_(layer.bias, -scale/10, scale/10)
             
             if params.get('_verbose', False):
-                print(f"    ✓ Applied scaled uniform initialization to {role} (scale=±{scale})")
+                print(f"    [OK] Applied scaled uniform initialization to {role} (scale=+/-{scale})")
     
     @staticmethod
     def asymmetric_forward_reverse(layers: List[nn.Module], attention_dim: int, method_params: dict = None) -> None:
@@ -703,7 +703,7 @@ class AttentionInitializer:
                 nn.init.zeros_(layer.bias)
             
             if params.get('_verbose', False):
-                print(f"    ✓ Applied {method} initialization to {role} (scale={scale})")
+                print(f"    [OK] Applied {method} initialization to {role} (scale={scale})")
         
         # Apply initialization to unique layers to avoid double-initialization for unidirectional
         if is_bidirectional:
@@ -757,7 +757,7 @@ class AttentionInitializer:
                 nn.init.zeros_(layer.bias)
             
             if params.get('_verbose', False):
-                print(f"    ✓ Applied tiny random initialization to {role} (std={params['scale']})")
+                print(f"    [OK] Applied tiny random initialization to {role} (std={params['scale']})")
 
 
 def initialize_attention_weights(layers: List[nn.Module], 
@@ -823,10 +823,10 @@ def initialize_attention_weights(layers: List[nn.Module],
     
     # Only print if verbose (default off to reduce log spam)
     if method_params and method_params.get('_verbose', False):
-        print(f"\n🎲 Initializing attention weights using '{method}' method...")
+        print(f"\n[INFO] Initializing attention weights using '{method}' method...")
     method_map[method](layers, attention_dim, method_params)
     if method_params and method_params.get('_verbose', False):
-        print(f"🎯 Attention dimension: {attention_dim}")
+        print(f"[INFO] Attention dimension: {attention_dim}")
 
 
 def get_available_methods() -> List[str]:

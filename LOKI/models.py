@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from contextlib import nullcontext
 from typing import List, Dict, Tuple, Any, Optional
 from sentence_transformers import SentenceTransformer
 import math
@@ -1003,9 +1004,9 @@ class TableTextEmbeddingModel(nn.Module):
         self.attention_direction = attention_direction
         if self.verbose:
             if attention_direction == "sentence_to_row":
-                print(f" Attention direction: SENTENCE → ROW (sentences query rows)")
+                print(f" Attention direction: SENTENCE -> ROW (sentences query rows)")
             else:
-                print(f" Attention direction: ROW → SENTENCE (rows query sentences)")
+                print(f" Attention direction: ROW -> SENTENCE (rows query sentences)")
         
         # =====================================================================
         # Handle encoder trainability with PEFT/QLoRA awareness
@@ -1017,7 +1018,7 @@ class TableTextEmbeddingModel(nn.Module):
         if encoder_has_peft:
             # PEFT is managing the encoder - DON'T override its frozen/trainable state
             if self.verbose:
-                print("   📊 PEFT/QLoRA detected on sentence encoder - preserving PEFT freeze state")
+                print("   [INFO] PEFT/QLoRA detected on sentence encoder - preserving PEFT freeze state")
                 enc_trainable = sum(p.numel() for p in self.sentence_encoder.parameters() if p.requires_grad)
                 enc_total = sum(p.numel() for p in self.sentence_encoder.parameters())
                 print(f"      Encoder params: {enc_trainable:,}/{enc_total:,} trainable ({enc_trainable/enc_total*100:.2f}%)")
@@ -1027,8 +1028,17 @@ class TableTextEmbeddingModel(nn.Module):
             if self.verbose:
                 print("Sentence encoder frozen (not trainable)")
         else:
+            skipped_non_float_params = 0
+            for param in self.sentence_encoder.parameters():
+                if torch.is_floating_point(param) or torch.is_complex(param):
+                    param.requires_grad = True
+                else:
+                    param.requires_grad = False
+                    skipped_non_float_params += param.numel()
             if self.verbose:
                 print("Sentence encoder parameters are trainable (full fine-tuning)")
+                if skipped_non_float_params > 0:
+                    print(f"   Skipped {skipped_non_float_params:,} non-floating encoder params during unfreeze")
         
         if self.verbose:
             print(f"Model initialized with top_k={self.top_k}")
@@ -1203,7 +1213,7 @@ class TableTextEmbeddingModel(nn.Module):
             self.dim_projection = nn.Linear(self.native_embedding_dim, self.embedding_dim, bias=False)
             self.dim_projection.to(dtype=torch.bfloat16)
             if self.verbose:
-                print(f"📐 Added dim projection: {self.native_embedding_dim} → {self.embedding_dim}")
+                print(f"[INFO] Added dim projection: {self.native_embedding_dim} -> {self.embedding_dim}")
         else:
             self.dim_projection = None
 
@@ -1230,9 +1240,17 @@ class TableTextEmbeddingModel(nn.Module):
         encoder_has_grad = any(p.requires_grad for p in self.sentence_encoder.parameters())
         if encoder_has_grad:
             features = self.sentence_encoder.tokenize(sentences)
-            device = next(self.sentence_encoder.parameters()).device
+            encoder_param = next(self.sentence_encoder.parameters())
+            device = encoder_param.device
             features = {k: v.to(device) for k, v in features.items()}
-            outputs = self.sentence_encoder(features)
+            use_bf16_autocast = device.type == "cuda" and encoder_param.dtype == torch.bfloat16
+            autocast_context = (
+                torch.autocast(device_type="cuda", dtype=torch.bfloat16)
+                if use_bf16_autocast
+                else nullcontext()
+            )
+            with autocast_context:
+                outputs = self.sentence_encoder(features)
             if isinstance(outputs, dict) and 'sentence_embedding' in outputs:
                 embeddings = outputs['sentence_embedding']
             elif hasattr(outputs, 'sentence_embedding'):
@@ -2545,7 +2563,7 @@ class BidirectionalTableTextModel(nn.Module):
         if encoder_has_peft:
             # PEFT is managing the encoder - DON'T override its frozen/trainable state
             if self.verbose:
-                print("   📊 PEFT/QLoRA detected on sentence encoder - preserving PEFT freeze state")
+                print("   [INFO] PEFT/QLoRA detected on sentence encoder - preserving PEFT freeze state")
                 enc_trainable = sum(p.numel() for p in self.sentence_encoder.parameters() if p.requires_grad)
                 enc_total = sum(p.numel() for p in self.sentence_encoder.parameters())
                 print(f"      Encoder params: {enc_trainable:,}/{enc_total:,} trainable ({enc_trainable/enc_total*100:.2f}%)")
@@ -2557,10 +2575,17 @@ class BidirectionalTableTextModel(nn.Module):
                 print("Sentence encoder frozen (not trainable)")
         else:
             # No PEFT, and user wants encoder trainable - this is full fine-tuning
+            skipped_non_float_params = 0
             for param in self.sentence_encoder.parameters():
-                param.requires_grad = True
+                if torch.is_floating_point(param) or torch.is_complex(param):
+                    param.requires_grad = True
+                else:
+                    param.requires_grad = False
+                    skipped_non_float_params += param.numel()
             if self.verbose:
                 print("Sentence encoder is trainable (full fine-tuning, no PEFT)")
+                if skipped_non_float_params > 0:
+                    print(f"   Skipped {skipped_non_float_params:,} non-floating encoder params during unfreeze")
         
         # Bidirectional cross-attention module with initialization parameters
         self.bidirectional_attention = BidirectionalCrossAttention(
@@ -2644,7 +2669,7 @@ class BidirectionalTableTextModel(nn.Module):
             self.dim_projection = nn.Linear(self.native_embedding_dim, self.embedding_dim, bias=False)
             self.dim_projection.to(dtype=torch.bfloat16)
             if self.verbose:
-                print(f"📐 Added dim projection: {self.native_embedding_dim} → {self.embedding_dim}")
+                print(f"[INFO] Added dim projection: {self.native_embedding_dim} -> {self.embedding_dim}")
         else:
             self.dim_projection = None
 

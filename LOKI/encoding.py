@@ -236,7 +236,7 @@ def build_id_based_embedding_cache(
     if verbose:
         print(f"Using device: {device} for embedding cache")
         if use_amp:
-            print(f"⚡ Mixed precision (AMP) enabled for faster encoding")
+            print(f"[INFO] Mixed precision (AMP) enabled for faster encoding")
 
     target_dtype = torch.bfloat16 if use_amp else torch.float32
 

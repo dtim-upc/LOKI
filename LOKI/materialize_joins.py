@@ -8,15 +8,15 @@ Stage 5 + 6 of the LOKI pipeline: cross-table join path extraction and
 semantic materialization for a single MIMIC hospital admission or a batch
 of admissions.
 
-Stage 5 — Joint encoding of T_A ∪ T_B with document D
-  1. Concatenate diagnosis rows + medication rows → joint R [n_A+n_B, d]
-  2. Encode note sentences → S [189, d]
-  3. Single LOKI bidirectional forward pass → pair score matrix P [n_A+n_B, 189]
+Stage 5 - Joint encoding of T_A U T_B with document D
+  1. Concatenate diagnosis rows + medication rows -> joint R [n_A+n_B, d]
+  2. Encode note sentences -> S [189, d]
+  3. Single LOKI bidirectional forward pass -> pair score matrix P [n_A+n_B, 189]
      and refined sentence embeddings S̃ [189, d]
-  4. Extract atomic links J_A (diag→sent) and J_B (med→sent) above threshold γ
-  5. Transitive join on shared mediating sentences → candidate (diag, sent, med) paths
+  4. Extract atomic links J_A (diag->sent) and J_B (med->sent) above threshold gamma
+  5. Transitive join on shared mediating sentences -> candidate (diag, sent, med) paths
 
-Stage 6 — Semantic materialization
+Stage 6 - Semantic materialization
   6. Cluster mediating S̃_j embeddings (HDBSCAN) to discover relationship types
     7. Label each cluster via GLiNER2 anchored entity + relation inference
   8. Assemble and output the integrated table T_integrated
@@ -25,7 +25,7 @@ Requirements
 ------------
     Activate the THOR conda environment before running these commands.
 
-Single-Admission Quick Start (current best config — defaults match this command)
+Single-Admission Quick Start (current best config - defaults match this command)
 --------------------------------------------------------------------------------
     cd f:\\#LOKI_JOIN\\LOKI
     conda activate THOR
@@ -66,7 +66,7 @@ All-Admission Batch Runs
 ------------------------
     # Default (current best): LMStudio HDBSCAN + contextual_sentence_average + CE rerank +
     # pair-label semantic/path refinement + NEGATIVE suppression.
-    # No explicit flags required — all defaults match the validated best config.
+    # No explicit flags required - all defaults match the validated best config.
     python materialize_joins.py --dataset mimic --run_all_admissions --batch_progress_every 1
 
     # Resume an interrupted LMStudio batch after connectivity is restored.
@@ -95,7 +95,7 @@ Notes
 -----
     - Running with no arguments defaults to full-dataset batch inference on mimic.
     - For single-admission runs, set --admission_id explicitly when you want an admission other than the built-in example.
-    - Four pair_embedding_mode options: signature (encode full evidence text), semantic_signature (encode TF-IDF top-terms), contextual_sentence_average (score-weighted average of refined S̃_j — current default), row_pair_hybrid (concat [r̃_A || s̄_p || r̃_B] mirroring the join path triple).
+    - Four pair_embedding_mode options: signature (encode full evidence text), semantic_signature (encode TF-IDF top-terms), contextual_sentence_average (score-weighted average of refined S̃_j - current default), row_pair_hybrid (concat [r̃_A || s̄_p || r̃_B] mirroring the join path triple).
     - Use gliner2_label_input_mode=sentence_evidence for default GLiNER2 naming evidence and gliner2_label_input_mode=semantic_signature to name clusters from pair semantic signatures.
     - The GLiNER2 naming input mode is independent from pair_embedding_mode; run the full 4x2 grid as an ablation when comparing settings.
     - If --cluster_label_backend keyword is selected, --gliner2_label_input_mode is ignored.
@@ -121,7 +121,7 @@ import numpy as np
 import torch
 
 # UMAP emits a UserWarning every call when both `random_state` is set and the
-# default `n_jobs` would have enabled parallelism — UMAP forces n_jobs=1 for
+# default `n_jobs` would have enabled parallelism - UMAP forces n_jobs=1 for
 # reproducibility and warns about it. We deliberately want reproducible
 # projections, so silence this specific recurring warning to keep batch logs
 # readable. Filter once at import time so subprocess loggers inherit it.
@@ -143,7 +143,7 @@ for _stream_name in ("stdout", "stderr"):
         except Exception:
             pass
 
-# ── project root on sys.path (allows importing models, initialization, etc.) ─
+# -- project root on sys.path (allows importing models, initialization, etc.) -
 sys.path.insert(0, str(Path(__file__).parent))
 
 from sentence_transformers import SentenceTransformer
@@ -156,7 +156,7 @@ from hf_model_resolver import (
     load_hf_model_with_cache_fallback,
 )
 
-# ── configurable paths ────────────────────────────────────────────────────────
+# -- configurable paths --------------------------------------------------------
 WORKSPACE_ROOT = Path(__file__).parent.parent
 DEFAULT_DATASET_NAME = "mimic"
 DATASET_CONFIGS: Dict[str, Dict[str, Path]] = {
@@ -200,7 +200,7 @@ DEFAULT_GLINER2_LABEL_INPUT_MODE = "sentence_evidence"
 
 _GLINER2_MODEL_CACHE: Dict[str, object] = {}
 
-# ── LMStudio (local LLM) cluster labeling constants ─────────────────────
+# -- LMStudio (local LLM) cluster labeling constants ---------------------
 LMSTUDIO_DEFAULT_BASE_URL = "http://127.0.0.1:1234"
 # LMSTUDIO_DEFAULT_BASE_URL = "http://192.168.1.128:1234"
 LMSTUDIO_DEFAULT_MODEL = "qwen3.6-35b-a3b-mtp"
@@ -330,7 +330,7 @@ def _bootstrap_hf_assets_for_run(cli: argparse.Namespace) -> None:
     if not required_models:
         return
 
-    print("\n── Phase 0: Hugging Face Asset Bootstrap ─────────────────────────")
+    print("\n-- Phase 0: Hugging Face Asset Bootstrap -------------------------")
     managed_cache_folder = get_repo_local_hf_cache_folder()
     print(f"  Managed repo-local cache: {managed_cache_folder}")
 
@@ -347,7 +347,7 @@ def _bootstrap_hf_assets_for_run(cli: argparse.Namespace) -> None:
 
 
 # =============================================================================
-# Phase A — Data loading
+# Phase A - Data loading
 # =============================================================================
 
 def load_admission_data() -> Tuple[List[str], List[str], List[str], Dict[int, str]]:
@@ -803,7 +803,7 @@ def _sanitize_ground_truth_indices(
 
 
 # =============================================================================
-# Phase B — Model reconstruction and loading
+# Phase B - Model reconstruction and loading
 # =============================================================================
 
 def load_model_args() -> Dict:
@@ -920,7 +920,7 @@ def load_checkpoint(model: BidirectionalTableTextModel, ckpt_path: Path) -> None
         new_state_dict[new_k] = v
     state_dict = new_state_dict
 
-    # ── Asymmetric gate-mode compatibility shim ─────────────────────────────
+    # -- Asymmetric gate-mode compatibility shim -----------------------------
     # The trained checkpoint may have been built with vector OUTER gates but
     # SCALAR INNER gates (output shape [1, D] instead of [D, D]). The current
     # models.py forwards a single `gated_attention_mode` to both, so build_model
@@ -973,7 +973,7 @@ def load_checkpoint(model: BidirectionalTableTextModel, ckpt_path: Path) -> None
 
     ca_loaded = sum(1 for k in state_dict if "bidirectional_attention" in k)
     enc_loaded = sum(1 for k in state_dict if "sentence_encoder" in k)
-    print(f"  Keys loaded — cross-attention: {ca_loaded}, encoder: {enc_loaded}")
+    print(f"  Keys loaded - cross-attention: {ca_loaded}, encoder: {enc_loaded}")
 
     if missing:
         print(f"  Missing  keys ({len(missing)}): {missing[:4]}"
@@ -986,7 +986,7 @@ def load_checkpoint(model: BidirectionalTableTextModel, ckpt_path: Path) -> None
 
 
 # =============================================================================
-# Phase C — Joint encoding (Stage 5, Algorithm step 1)
+# Phase C - Joint encoding (Stage 5, Algorithm step 1)
 # =============================================================================
 
 def joint_encode(
@@ -996,7 +996,7 @@ def joint_encode(
     sent_texts: List[str],
 ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
     """
-    Concatenate T_A ∪ T_B and run a single LOKI bidirectional forward pass.
+    Concatenate T_A U T_B and run a single LOKI bidirectional forward pass.
 
     Returns
     -------
@@ -1004,7 +1004,7 @@ def joint_encode(
     raw_rows          : FloatTensor [n_diag+n_med, d]   - encoder row embeddings before cross-attention
     raw_sentences     : FloatTensor [n_sent, d]         - encoder sentence embeddings before cross-attention
     refined_rows      : FloatTensor [n_diag+n_med, d]   - contextualized row embeddings after cross-attention
-    refined_sentences : FloatTensor [n_sent, d]   — S̃_j for Stage 6 clustering
+    refined_sentences : FloatTensor [n_sent, d]   - S̃_j for Stage 6 clustering
     forward_attn      : FloatTensor [n_diag+n_med, n_sent]
     """
     joint_rows = diag_rows + med_rows
@@ -1042,7 +1042,7 @@ def joint_encode(
 
 
 # =============================================================================
-# Phase D — Atomic link extraction + transitive join (Stage 5, steps 2–18)
+# Phase D - Atomic link extraction + transitive join (Stage 5, steps 2-18)
 # =============================================================================
 
 def compute_threshold(
@@ -1053,13 +1053,13 @@ def compute_threshold(
     adaptive_force_legacy_max: Optional[float] = None,
 ) -> float:
     P = pair_scores.detach().cpu().numpy()
-    # Calibrate on the top-1 sentence score per row rather than all (row × sent)
+    # Calibrate on the top-1 sentence score per row rather than all (row x sent)
     # scores.  The full-matrix μ+2σ inflates σ because the majority of cells are
-    # irrelevant (diag-row ↔ unrelated sentence) and score near zero.  For hard
+    # irrelevant (diag-row <-> unrelated sentence) and score near zero.  For hard
     # admissions those low scores dominate, driving gamma above what GT pairs
     # can achieve.  Using per-row maximums focuses the distribution on "the
     # strongest achievable link per row", which is what actually matters.
-    top1_per_row = P.max(axis=1)          # [n_rows]  — best sentence per row
+    top1_per_row = P.max(axis=1)          # [n_rows]  - best sentence per row
     mu_all    = float(P.mean())
     sigma_all = float(P.std())
     p75 = float(np.percentile(top1_per_row, 75))
@@ -1098,7 +1098,7 @@ def compute_threshold(
     print(
         f"\n  Adaptive gamma:"
         f"  p50_top1={p50:.3f}  p75_top1={p75:.3f}  legacy(mu+2s)={legacy_gamma:.3f}"
-        f"  → gamma=max(min(p75,legacy),floor)={gamma:.3f}"
+        f"  -> gamma=max(min(p75,legacy),floor)={gamma:.3f}"
         + (
             ""
             if adaptive_cap is None
@@ -1495,10 +1495,10 @@ def extract_cross_table_join_paths(
     """
     P = _to_numpy_array(pair_scores, dtype=np.float32)
     # Link floor: each individual side must score at least this to contribute to
-    # a join path.  Previously γ/√2, which compounded the adaptive-gamma problem:
+    # a join path.  Previously gamma/√2, which compounded the adaptive-gamma problem:
     # when gamma rises for hard admissions, the floor also rises, killing most GT
     # candidates before they can even reach the gamma check.  We now use a gentler
-    # formula — max(gamma * 0.5, 0.15) — so a single strong side (e.g. score 0.55)
+    # formula - max(gamma * 0.5, 0.15) - so a single strong side (e.g. score 0.55)
     # can partially compensate for a weaker side (0.30) and still average to gamma.
     LINK_FLOOR = max(gamma * 0.5, 0.15)
 
@@ -1717,10 +1717,10 @@ def extract_cross_table_join_paths(
             f"  Stage 5 med-row stop-cue rescue: margin={med_row_stopcue_rescue_margin:.4f}, multi-sentence anchored explicit-stop overlap"
         )
 
-    # --- Steps 2–4: Transitive join, filter on path_score >= gamma ---
+    # --- Steps 2-4: Transitive join, filter on path_score >= gamma ---
     # Key: we gate on the AVERAGE score (join confidence), not each side
-    # independently.  A strong med→sent link can compensate for a weaker
-    # diag→sent link as long as the join path is overall confident.
+    # independently.  A strong med->sent link can compensate for a weaker
+    # diag->sent link as long as the join path is overall confident.
     seen_triples: set = set()
     all_paths: List[Dict] = []
     near_threshold_candidates_by_pair: Dict[Tuple[int, int], List[Dict]] = defaultdict(list)
@@ -4518,7 +4518,7 @@ def _build_lmstudio_system_prompt(candidate_labels: List[str]) -> str:
             "Discharge medication lists and co-occurrence in the same note are sufficient grounds for TREATS.\n"
             "4. Use NEGATIVE ONLY when the evidence explicitly documents that the medication is for a "
             "completely different, named condition unrelated to this diagnosis. "
-            "Absence of explicit mention is NOT grounds for NEGATIVE — use TREATS when uncertain.\n"
+            "Absence of explicit mention is NOT grounds for NEGATIVE - use TREATS when uncertain.\n"
             "5. Do not output any label that is not in the valid label list above.\n\n"
         )
     else:
@@ -4661,7 +4661,7 @@ def _plot_agglom_recluster(
         print("  Agglom re-cluster visualization skipped (< 2 paths).")
         return
 
-    # ── Dimensionality reduction ────────────────────────────────────────────
+    # -- Dimensionality reduction --------------------------------------------
     if n <= 30:
         reducer = PCA(n_components=2, random_state=42)
         coords = reducer.fit_transform(phrase_embeddings)
@@ -4679,7 +4679,7 @@ def _plot_agglom_recluster(
             coords = reducer.fit_transform(phrase_embeddings)
             var_label = f"PCA  ({100 * reducer.explained_variance_ratio_.sum():.1f}% var)"
 
-    # ── Color palettes ──────────────────────────────────────────────────────
+    # -- Color palettes ------------------------------------------------------
     n_agglom = max(agglom_ids) + 1
     agglom_cmap = plt.colormaps.get_cmap("tab20" if n_agglom > 10 else "tab10")
     agglom_palette = {gid: agglom_cmap(gid / max(n_agglom - 1, 1)) for gid in range(n_agglom)}
@@ -4700,7 +4700,7 @@ def _plot_agglom_recluster(
             spine.set_edgecolor("#d1d5db")
     ax_left, ax_right = axes
 
-    # ── Left panel: agglom group coloring ──────────────────────────────────
+    # -- Left panel: agglom group coloring ----------------------------------
     for flat_idx, (aid, (_, _, _)) in enumerate(zip(agglom_ids, all_paths_flat)):
         ax_left.scatter(
             coords[flat_idx, 0], coords[flat_idx, 1],
@@ -4742,7 +4742,7 @@ def _plot_agglom_recluster(
         fontsize=11, color="#111827", pad=8,
     )
 
-    # ── Right panel: HDBSCAN cluster coloring ──────────────────────────────
+    # -- Right panel: HDBSCAN cluster coloring ------------------------------
     for flat_idx, (hcid, _, _) in enumerate(all_paths_flat):
         ax_right.scatter(
             coords[flat_idx, 0], coords[flat_idx, 1],
@@ -4795,7 +4795,7 @@ def _plot_llm_vs_hdbscan(
 ) -> None:
     """Two-panel comparison: LLM direct-pair labels (left) vs original HDBSCAN clusters (right).
 
-    Both panels share the same 2D embedding space (BGE-large → PCA/t-SNE; TF-IDF fallback).
+    Both panels share the same 2D embedding space (BGE-large -> PCA/t-SNE; TF-IDF fallback).
     Left:  each path coloured by its (diag, med) pair's LLM-predicted relation type.
     Right: same coordinates coloured by original HDBSCAN cluster membership.
     Comparing the two panels reveals whether the LLM produces semantically coherent groups
@@ -4823,7 +4823,7 @@ def _plot_llm_vs_hdbscan(
         sent_text = str(path.get("sent_text", "")).strip()
         path_texts.append(f"{diag_text} {sent_text} {med_text}".strip())
 
-    # Embed paths — try BGE first, fall back to TF-IDF
+    # Embed paths - try BGE first, fall back to TF-IDF
     embeddings = None
     embed_method = "TF-IDF"
     try:
@@ -4982,7 +4982,7 @@ def _plot_llm_vs_hdbscan(
     plt.close(fig)
     print(f"  Saved LLM vs HDBSCAN comparison: {out_path}")
 
-    # ── VLDB companion plots ────────────────────────────────────────────────
+    # -- VLDB companion plots ------------------------------------------------
     # All reuse the precomputed `embeddings`, `path_texts`, and the LLM/HDBSCAN
     # label assignments to render publication-quality views that complement the
     # main 2D scatter. Each view is independent and skipped silently on error so
@@ -4992,7 +4992,7 @@ def _plot_llm_vs_hdbscan(
             Path(out_path).stem.replace("llm_vs_hdbscan", suffix) + ".png"
         ))
 
-    # 1. 3D — typed clusters across PCA / t-SNE / UMAP
+    # 1. 3D - typed clusters across PCA / t-SNE / UMAP
     try:
         _plot_llm_clusters_3d(
             all_paths=all_paths, pair_final_labels=pair_final_labels,
@@ -5012,7 +5012,7 @@ def _plot_llm_vs_hdbscan(
     except Exception as exc:
         print(f"  LLM LDA-ellipses visualization skipped: {exc}")
 
-    # 3. Sankey: HDBSCAN cluster → LLM type (shows what the LLM step contributes)
+    # 3. Sankey: HDBSCAN cluster -> LLM type (shows what the LLM step contributes)
     try:
         _plot_hdbscan_to_llm_sankey(
             all_paths=all_paths, pair_final_labels=pair_final_labels,
@@ -5022,9 +5022,9 @@ def _plot_llm_vs_hdbscan(
             out_path=_companion_path("hdbscan_to_llm_sankey"),
         )
     except Exception as exc:
-        print(f"  HDBSCAN→LLM Sankey skipped: {exc}")
+        print(f"  HDBSCAN->LLM Sankey skipped: {exc}")
 
-    # 4. HDBSCAN × LLM contingency heatmap (compact quantitative companion to Sankey)
+    # 4. HDBSCAN x LLM contingency heatmap (compact quantitative companion to Sankey)
     try:
         _plot_hdbscan_llm_heatmap(
             all_paths=all_paths, pair_final_labels=pair_final_labels,
@@ -5033,9 +5033,9 @@ def _plot_llm_vs_hdbscan(
             out_path=_companion_path("hdbscan_llm_heatmap"),
         )
     except Exception as exc:
-        print(f"  HDBSCAN×LLM heatmap skipped: {exc}")
+        print(f"  HDBSCANxLLM heatmap skipped: {exc}")
 
-    # 5. Small multiples (1×4 facets, one per type highlighted) on the same 2D coords
+    # 5. Small multiples (1x4 facets, one per type highlighted) on the same 2D coords
     try:
         _plot_llm_clusters_facets(
             all_paths=all_paths, pair_final_labels=pair_final_labels,
@@ -5077,7 +5077,7 @@ def _plot_llm_clusters_3d(
 
     Reuses the path embeddings already computed by ``_plot_llm_vs_hdbscan`` and shows
     ONLY the typed pairs (TREATS / ADVERSE_EFFECT / DISCONTINUED / CONTRAINDICATED) so
-    inter-class separation is easier to read. Designed for the VLDB visualization —
+    inter-class separation is easier to read. Designed for the VLDB visualization -
     moving from 2D to 3D typically separates DISCONTINUED from ADVERSE_EFFECT, which
     overlap heavily in 2D projections because both rely on negation / temporal cues.
 
@@ -5088,7 +5088,7 @@ def _plot_llm_clusters_3d(
         matplotlib.use("Agg")
         import matplotlib.pyplot as plt
         from matplotlib.lines import Line2D
-        from mpl_toolkits.mplot3d import Axes3D  # noqa: F401 — registers 3D projection
+        from mpl_toolkits.mplot3d import Axes3D  # noqa: F401 - registers 3D projection
         from sklearn.decomposition import PCA
         from sklearn.manifold import TSNE
     except ImportError as exc:
@@ -5112,14 +5112,14 @@ def _plot_llm_clusters_3d(
     sub_emb = np.asarray(embeddings)[typed_indices]
     n_typed = sub_emb.shape[0]
 
-    # ── Projection 1: PCA ──
+    # -- Projection 1: PCA --
     try:
         pca_coords = PCA(n_components=3, random_state=42).fit_transform(sub_emb)
     except Exception as exc:
         print(f"  3D PCA failed: {exc}")
         return
 
-    # ── Projection 2: t-SNE ──
+    # -- Projection 2: t-SNE --
     perplexity = min(18, max(4, n_typed // 4), max(n_typed - 1, 4))
     try:
         tsne_coords = TSNE(
@@ -5132,7 +5132,7 @@ def _plot_llm_clusters_3d(
         tsne_coords = pca_coords
         tsne_title = "t-SNE 3D  (fallback: PCA)"
 
-    # ── Projection 3: UMAP (preferred) or FastICA fallback ──
+    # -- Projection 3: UMAP (preferred) or FastICA fallback --
     third_coords = None
     third_title = ""
     try:
@@ -5195,7 +5195,7 @@ def _plot_llm_clusters_3d(
         framealpha=0.95, facecolor="white", edgecolor="#d1d5db",
     )
     fig.suptitle(
-        f"LOKI — LLM Typed Cluster Geometry (3D)  ·  {n_typed} typed paths",
+        f"LOKI - LLM Typed Cluster Geometry (3D)  ·  {n_typed} typed paths",
         fontsize=13, color="#111827", y=0.99,
     )
     plt.tight_layout(rect=(0, 0.04, 1, 0.96))
@@ -5205,7 +5205,7 @@ def _plot_llm_clusters_3d(
 
 
 # =============================================================================
-# VLDB-quality companion plots — supervised projection, contingency, distributions
+# VLDB-quality companion plots - supervised projection, contingency, distributions
 # =============================================================================
 
 def _typed_subset(
@@ -5263,11 +5263,11 @@ def _plot_llm_clusters_lda(
     unique_labels = sorted(set(typed_labels), key=lambda l: _preferred_rel_type_order().index(l)
                            if l in _preferred_rel_type_order() else 99)
 
-    # LDA needs ≥ 2 classes with ≥ 2 samples each
+    # LDA needs >= 2 classes with >= 2 samples each
     per_class_counts = {lbl: int((label_arr == lbl).sum()) for lbl in unique_labels}
     valid_classes = [lbl for lbl, c in per_class_counts.items() if c >= 2]
     if len(valid_classes) < 2:
-        print(f"  LDA-ellipses skipped (need ≥2 classes with ≥2 samples; got {per_class_counts}).")
+        print(f"  LDA-ellipses skipped (need >=2 classes with >=2 samples; got {per_class_counts}).")
         return
 
     used_method = "LDA"
@@ -5337,8 +5337,8 @@ def _plot_llm_clusters_lda(
     ax.set_xlabel("LDA axis 1", color="#111827")
     ax.set_ylabel("LDA axis 2", color="#111827")
     ax.set_title(
-        f"LOKI — Supervised Class Geometry ({used_method})  ·  {embed_method}\n"
-        f"Centroids (×) and 1σ covariance ellipses  ·  {len(typed_indices)} typed paths",
+        f"LOKI - Supervised Class Geometry ({used_method})  ·  {embed_method}\n"
+        f"Centroids (x) and 1σ covariance ellipses  ·  {len(typed_indices)} typed paths",
         fontsize=11.5, color="#111827", pad=8,
     )
     plt.tight_layout()
@@ -5356,7 +5356,7 @@ def _plot_hdbscan_to_llm_sankey(
     hdbscan_palette: Dict[int, Any],
     out_path: str,
 ) -> None:
-    """Sankey / alluvial: HDBSCAN cluster (left) → LLM relation type (right).
+    """Sankey / alluvial: HDBSCAN cluster (left) -> LLM relation type (right).
 
     Bar heights are proportional to path counts. Ribbon thickness is proportional
     to the number of paths flowing from a given HDBSCAN cluster into a given LLM
@@ -5378,7 +5378,7 @@ def _plot_hdbscan_to_llm_sankey(
         print("  Sankey skipped (insufficient paths / mismatched HDBSCAN labels).")
         return
 
-    # Build contingency — paper-ready Sankey shows only typed LLM relations and
+    # Build contingency - paper-ready Sankey shows only typed LLM relations and
     # only the HDBSCAN clusters that actually contributed at least one typed
     # (non-"Other / Unlabeled") path. We deliberately drop the "Other" type
     # bar and any HDBSCAN cluster that routed only to "Other"; those add noise
@@ -5405,12 +5405,12 @@ def _plot_hdbscan_to_llm_sankey(
         return
 
     # Collapse small HDBSCAN clusters into two combined rows so the figure stays
-    # compact for VLDB layout. n=1 → "Singletons"; 2 ≤ n ≤ 3 → "Small clusters
-    # (n≤3)". Each bucket gets a sentinel id and a neutral gray bar plus an
+    # compact for VLDB layout. n=1 -> "Singletons"; 2 <= n <= 3 -> "Small clusters
+    # (n<=3)". Each bucket gets a sentinel id and a neutral gray bar plus an
     # explicit label so reviewers can see exactly what was aggregated.
     SINGLETON_CID = -2
     SMALL_CID = -3
-    SMALL_MAX_N = 3  # collapse any cluster with path count ≤ this (and ≥ 2)
+    SMALL_MAX_N = 3  # collapse any cluster with path count <= this (and >= 2)
     singleton_cids = [cid for cid, tot in left_totals.items() if tot == 1]
     small_cids = [cid for cid, tot in left_totals.items() if 2 <= tot <= SMALL_MAX_N]
     n_singleton_clusters = len(singleton_cids)
@@ -5471,7 +5471,7 @@ def _plot_hdbscan_to_llm_sankey(
             row_label = f"Singletons\n(k={n_singleton_clusters} clusters,\n n={left_totals[cid]} paths)"
         elif cid == SMALL_CID:
             color = "#b5bcc7"
-            row_label = f"Small clusters (n≤{SMALL_MAX_N})\n(k={n_small_clusters} clusters,\n n={left_totals[cid]} paths)"
+            row_label = f"Small clusters (n<={SMALL_MAX_N})\n(k={n_small_clusters} clusters,\n n={left_totals[cid]} paths)"
         else:
             color = hdbscan_palette.get(cid, "#9ca3af")
             row_label = f"HDBSCAN C{cid}\n(n={left_totals[cid]})"
@@ -5547,7 +5547,7 @@ def _plot_hdbscan_to_llm_sankey(
     n_real_clusters = len(real_keys)
     collapsed_parts = []
     if n_small_clusters >= 2:
-        collapsed_parts.append(f"{n_small_clusters} small (n≤{SMALL_MAX_N}) collapsed")
+        collapsed_parts.append(f"{n_small_clusters} small (n<={SMALL_MAX_N}) collapsed")
     if n_singleton_clusters >= 2:
         collapsed_parts.append(f"{n_singleton_clusters} singletons (n=1) collapsed")
     cluster_summary = (
@@ -5555,15 +5555,15 @@ def _plot_hdbscan_to_llm_sankey(
         + (f" + {' + '.join(collapsed_parts)}" if collapsed_parts else "")
     )
     ax.set_title(
-        f"LOKI — HDBSCAN Clusters → LLM Relation Types  ·  {typed_total} typed paths\n"
-        f"Ribbon thickness ∝ path count  ·  {cluster_summary} → {len(rel_order)} LLM types"
+        f"LOKI - HDBSCAN Clusters -> LLM Relation Types  ·  {typed_total} typed paths\n"
+        f"Ribbon thickness ∝ path count  ·  {cluster_summary} -> {len(rel_order)} LLM types"
         + ("\n(Negative cluster id=−1 and \"Other / Unlabeled\" type excluded)"),
         fontsize=12, color="#111827", pad=10,
     )
     plt.tight_layout()
     _save_figure_outputs(fig, out_path, dpi=200, bbox_inches="tight", facecolor="white")
     plt.close(fig)
-    print(f"  Saved HDBSCAN→LLM Sankey: {out_path}")
+    print(f"  Saved HDBSCAN->LLM Sankey: {out_path}")
 
 
 def _plot_hdbscan_llm_heatmap(
@@ -5573,7 +5573,7 @@ def _plot_hdbscan_llm_heatmap(
     rel_colors: Dict[str, str],
     out_path: str,
 ) -> None:
-    """Compact row-normalized contingency heatmap of HDBSCAN cluster × LLM type.
+    """Compact row-normalized contingency heatmap of HDBSCAN cluster x LLM type.
 
     Each row sums to 1.0 (fraction of that HDBSCAN cluster routed to each LLM
     type). Cell annotations show raw counts in parentheses.
@@ -5583,7 +5583,7 @@ def _plot_hdbscan_llm_heatmap(
         matplotlib.use("Agg")
         import matplotlib.pyplot as plt
     except ImportError as exc:
-        print(f"  HDBSCAN×LLM heatmap skipped (missing library): {exc}")
+        print(f"  HDBSCANxLLM heatmap skipped (missing library): {exc}")
         return
 
     n = len(all_paths)
@@ -5636,14 +5636,14 @@ def _plot_hdbscan_llm_heatmap(
     cbar = fig.colorbar(im, ax=ax, shrink=0.85)
     cbar.set_label("Row-normalized share", color="#111827")
     ax.set_title(
-        f"LOKI — HDBSCAN × LLM Contingency  ·  {n} paths\n"
+        f"LOKI - HDBSCAN x LLM Contingency  ·  {n} paths\n"
         "Rows sum to 1.0  ·  raw count in parentheses",
         fontsize=11.5, color="#111827", pad=8,
     )
     plt.tight_layout()
     _save_figure_outputs(fig, out_path, dpi=200, bbox_inches="tight", facecolor="white")
     plt.close(fig)
-    print(f"  Saved HDBSCAN×LLM heatmap: {out_path}")
+    print(f"  Saved HDBSCANxLLM heatmap: {out_path}")
 
 
 def _plot_llm_clusters_facets(
@@ -5709,7 +5709,7 @@ def _plot_llm_clusters_facets(
         ax.set_xlabel("dim 1", color="#111827", fontsize=9)
     axes[0].set_ylabel("dim 2", color="#111827", fontsize=9)
     fig.suptitle(
-        f"LOKI — LLM Relation Types (small multiples)  ·  {var_label}  ·  {len(all_paths)} paths",
+        f"LOKI - LLM Relation Types (small multiples)  ·  {var_label}  ·  {len(all_paths)} paths",
         fontsize=12.5, color="#111827", y=1.02,
     )
     plt.tight_layout()
@@ -5726,10 +5726,10 @@ def _plot_llm_type_top_tokens(
     out_path: str,
     top_k_tokens: int = 10,
 ) -> None:
-    """Per-type top TF-IDF tokens as a 1×K horizontal bar chart.
+    """Per-type top TF-IDF tokens as a 1xK horizontal bar chart.
 
     Shows qualitative lexical evidence of what each LLM-typed cluster is keying
-    on — useful for the paper to back up the supervised LDA separation with
+    on - useful for the paper to back up the supervised LDA separation with
     interpretable terms.
     """
     try:
@@ -5770,7 +5770,7 @@ def _plot_llm_type_top_tokens(
         print(f"  Top-tokens TF-IDF failed: {exc}")
         return
 
-    # Per-class mean (TF-IDF) minus background mean → discriminative tokens
+    # Per-class mean (TF-IDF) minus background mean -> discriminative tokens
     bg_mean = np.asarray(X.mean(axis=0)).ravel()
     fig, axes = plt.subplots(1, len(rel_present), figsize=(4.6 * len(rel_present), 5.0))
     if len(rel_present) == 1:
@@ -5812,7 +5812,7 @@ def _plot_llm_type_top_tokens(
                      fontsize=11, color="#111827", pad=6)
 
     fig.suptitle(
-        "LOKI — Discriminative tokens per LLM relation type  ·  TF-IDF (1–2 grams)",
+        "LOKI - Discriminative tokens per LLM relation type  ·  TF-IDF (1-2 grams)",
         fontsize=12.5, color="#111827", y=1.02,
     )
     plt.tight_layout()
@@ -5830,7 +5830,7 @@ def _plot_llm_type_score_distributions(
     """Two-panel violin/strip plot of LOKI ``path_score`` and CE ``ce_score`` per LLM type.
 
     Visualises whether the underlying join confidences (LOKI) and the
-    cross-encoder reranker scores stratify by LLM-inferred relationship type —
+    cross-encoder reranker scores stratify by LLM-inferred relationship type -
     e.g. TREATS paths typically score higher than ADVERSE_EFFECT paths.
     """
     try:
@@ -5888,7 +5888,7 @@ def _plot_llm_type_score_distributions(
                     transform=ax.transAxes, color="#6b7280")
             return
 
-        # Only types with ≥2 samples get a violin; singletons get a marker only
+        # Only types with >=2 samples get a violin; singletons get a marker only
         violin_positions = [p for p, d in zip(positions, data) if len(d) >= 2]
         violin_data = [d for d in data if len(d) >= 2]
         if violin_data:
@@ -5939,7 +5939,7 @@ def _plot_llm_type_score_distributions(
                      "Cross-encoder ce_score by LLM type", "ce_score ∈ [0, 1]")
 
     fig.suptitle(
-        "LOKI — Confidence stratification by LLM relation type",
+        "LOKI - Confidence stratification by LLM relation type",
         fontsize=12.5, color="#111827", y=1.02,
     )
     plt.tight_layout()
@@ -5962,14 +5962,14 @@ def _label_clusters_agglomerative(
 ) -> Tuple[Dict[int, str], Dict[int, Dict[str, object]]]:
     """Agglomerative re-labeling pipeline.
 
-    Phase 1 — Per path, ask the LLM for a free-form relationship description
+    Phase 1 - Per path, ask the LLM for a free-form relationship description
                (3-8 words; unconstrained).
-    Phase 2 — Embed all descriptions with the MedEmbed encoder (falls back to
+    Phase 2 - Embed all descriptions with the MedEmbed encoder (falls back to
                TF-IDF when no encoder is available) and run AgglomerativeClustering
                so semantically similar paths are grouped regardless of which HDBSCAN
                cluster they were originally assigned to.
-    Phase 3 — One closed-label LLM call per agglomerative group.
-    Phase 4 — Map HDBSCAN clusters back via path_score-weighted majority vote.
+    Phase 3 - One closed-label LLM call per agglomerative group.
+    Phase 4 - Map HDBSCAN clusters back via path_score-weighted majority vote.
     """
     from collections import defaultdict as _dd
     from sklearn.cluster import AgglomerativeClustering as _AggClust  # type: ignore
@@ -5978,7 +5978,7 @@ def _label_clusters_agglomerative(
     taxonomy_sys = _build_lmstudio_system_prompt(candidate_labels)
     tie_break_order = list(candidate_labels)
 
-    # ── Phase 1: free-form label per path ──────────────────────────────────
+    # -- Phase 1: free-form label per path ----------------------------------
     all_paths_flat: List[Tuple[int, int, Dict]] = []  # (cid, pidx_in_cluster, path)
     for cid, cpaths in sorted(clusters.items()):
         for pidx, path in enumerate(cpaths):
@@ -6004,7 +6004,7 @@ def _label_clusters_agglomerative(
         path_freeform.append(phrase)
     print(f"  [agglom] Phase 1 done. Sample: {path_freeform[:4]}")
 
-    # ── Phase 2: Embed descriptions + AgglomerativeClustering ──────────────
+    # -- Phase 2: Embed descriptions + AgglomerativeClustering --------------
     n = len(path_freeform)
     if n == 0:
         return {}, {}
@@ -6053,9 +6053,9 @@ def _label_clusters_agglomerative(
             agglom_ids = [0] * n
 
     n_agglom = max(agglom_ids) + 1
-    print(f"  [agglom] Phase 2: {n} paths → {n_agglom} agglomerative groups")
+    print(f"  [agglom] Phase 2: {n} paths -> {n_agglom} agglomerative groups")
 
-    # ── Phase 3: taxonomy label per agglom group ───────────────────────────
+    # -- Phase 3: taxonomy label per agglom group ---------------------------
     agglom_phrases: Dict[int, List[str]] = _dd(list)
     for flat_idx, aid in enumerate(agglom_ids):
         agglom_phrases[int(aid)].append(path_freeform[flat_idx])
@@ -6084,7 +6084,7 @@ def _label_clusters_agglomerative(
         agglom_taxonomy[agid] = tax_label or tie_break_order[0]  # type: ignore[assignment]
     print(f"  [agglom] Phase 3 taxonomy: {dict(sorted(agglom_taxonomy.items()))}")
 
-    # ── Phase 4: map HDBSCAN clusters via path_score-weighted vote ─────────
+    # -- Phase 4: map HDBSCAN clusters via path_score-weighted vote ---------
     hdbscan_votes: Dict[int, Dict[str, float]] = _dd(lambda: {lbl: 0.0 for lbl in candidate_labels})
     hdbscan_freeform: Dict[int, List[str]] = _dd(list)
     for flat_idx, (cid, _pidx, path) in enumerate(all_paths_flat):
@@ -6125,7 +6125,7 @@ def _label_clusters_agglomerative(
             f"-> {best_label} [agglom_vote]"
         )
 
-    # ── Visualization: agglom re-cluster projection ──────────────────────────
+    # -- Visualization: agglom re-cluster projection --------------------------
     if vis_out_path is not None and phrase_embeddings is not None:
         _plot_agglom_recluster(
             phrase_embeddings, agglom_ids, path_freeform,
@@ -6182,14 +6182,14 @@ def _lmstudio_cache_key(system_prompt: str, user_message: str) -> str:
 
 
 def _parse_lmstudio_label(response_text: str, candidate_labels: List[str]) -> Optional[str]:
-    """Extract <LABEL>…</LABEL> from LLM response and validate against candidate_labels."""
+    """Extract <LABEL>...</LABEL> from LLM response and validate against candidate_labels."""
     match = re.search(r"<LABEL>\s*(.*?)\s*</LABEL>", response_text, re.IGNORECASE)
     if not match:
         return None
     raw = match.group(1).strip().upper().replace(" ", "_")
     if raw in candidate_labels:
         return raw
-    # Partial prefix match (e.g. "TREAT" → "TREATS", "ADVERSE" → "ADVERSE_EFFECT")
+    # Partial prefix match (e.g. "TREAT" -> "TREATS", "ADVERSE" -> "ADVERSE_EFFECT")
     for label in candidate_labels:
         if len(raw) >= 4 and (raw in label or label.startswith(raw[:4])):
             return label
@@ -6517,7 +6517,7 @@ def label_pairs_with_llm_no_hdbscan(
     total = len(all_paths_flat)
     print(f"  [llm_no_hdbscan] Labeling {total} paths across {len(clusters)} HDBSCAN clusters ...")
 
-    # ── One LLM call per (diag, med) pair — all evidence sentences together ──────────
+    # -- One LLM call per (diag, med) pair - all evidence sentences together ----------
     # Group all paths by pair so the LLM receives the full multi-sentence context per pair.
     pair_paths_map: Dict[Tuple[int, int], List[Dict]] = {}
     for _, path in all_paths_flat:
@@ -6661,9 +6661,9 @@ def label_clusters_with_lmstudio(
 ) -> Tuple[Dict[int, str], Dict[int, Dict[str, object]]]:
     """Label clusters using a local LLM via LMStudio's OpenAI-compatible API.
 
-    Agglomerative mode (default): per-path free-form LLM description →
-    MedEmbed encoder + AgglomerativeClustering → one closed-label call per
-    agglom group → path_score-weighted vote maps back to HDBSCAN clusters.
+    Agglomerative mode (default): per-path free-form LLM description ->
+    MedEmbed encoder + AgglomerativeClustering -> one closed-label call per
+    agglom group -> path_score-weighted vote maps back to HDBSCAN clusters.
     Handles noisy HDBSCAN groupings by re-clustering on semantic similarity.
 
     Per-cluster mode (--llm_no_agglomerative): one closed-label LLM call
@@ -6705,7 +6705,7 @@ def label_clusters_with_lmstudio(
         print(f"  Warning: Cannot reach LMStudio ({exc}). Falling back to keyword classifier.")
         return label_clusters_with_keyword(clusters, candidate_labels=resolved_candidate_labels)
 
-    # ── Agglomerative mode (default) ──────────────────────────────────────
+    # -- Agglomerative mode (default) --------------------------------------
     if use_agglomerative:
         return _label_clusters_agglomerative(
             clusters,
@@ -8942,7 +8942,7 @@ def filter_cluster_pair_tails(
 
     # Unique-evidence rescue: if a dropped pair introduces at least one sentence
     # not already covered by any kept pair in the cluster, keep it regardless of
-    # score.  This is type-agnostic — it does not assume which relationship type
+    # score.  This is type-agnostic - it does not assume which relationship type
     # the pair represents; it only preserves sentence-level diversity so the
     # downstream labeler sees all distinct evidence.
     unique_sent_rescued: set = set()
@@ -9070,16 +9070,16 @@ def filter_cluster_pair_tails(
 
 
 # =============================================================================
-# Phase F — Evaluation against Annotated_Test.json ground truth
+# Phase F - Evaluation against Annotated_Test.json ground truth
 # =============================================================================
 
 def build_gt_path_set(gt_relationships: List[Dict]) -> Tuple[set, set]:
     """
     Build ground-truth sets directly from the annotated relationships:
 
-      gt_triples : {(diag_idx, sent_j, drug_idx)} — one triple per evidence sentence
+      gt_triples : {(diag_idx, sent_j, drug_idx)} - one triple per evidence sentence
                    per relationship entry (typed or untyped, all 24 entries contribute)
-      gt_pairs   : {(diag_idx, drug_idx)} — 22 unique pairs (relationship-type agnostic)
+      gt_pairs   : {(diag_idx, drug_idx)} - 22 unique pairs (relationship-type agnostic)
 
     Note: multi_relationship_flags pairs are already subsumed in gt_pairs because both
     relationship entries for the same (diag, drug) pair contribute the same pair key.
@@ -9751,7 +9751,7 @@ def _compute_per_type_untyped_pair_metrics(
 ) -> Dict[str, Dict]:
     """
     Per-class *untyped* pair metrics: for each relationship type, evaluate whether
-    the predicted (diag, med) pairs cover the GT pairs of that type — without
+    the predicted (diag, med) pairs cover the GT pairs of that type - without
     requiring LOKI to have assigned the correct type label.  This is the per-class
     decomposition of the overall untyped oracle pair F1, and represents the
     retrieval-level ceiling available to the labeling step.
@@ -9759,7 +9759,7 @@ def _compute_per_type_untyped_pair_metrics(
     Precision is computed as:
         |pred ∩ GT_k| / |pred ∩ GT_any|
     i.e., "of the predicted pairs that are any GT pair, what fraction are type k?"
-    This conditional denominator ensures that untyped F1 ≥ oracle typed F1 for every
+    This conditional denominator ensures that untyped F1 >= oracle typed F1 for every
     class, since it removes unrelated (FP vs all classes) noise from the denominator.
     Recall is standard: |pred ∩ GT_k| / |GT_k|.
     """
@@ -10128,7 +10128,7 @@ def evaluate(
         "oracle_triple": oracle_metrics["per_type_triple"],
     }
 
-    sep = "─" * 66
+    sep = "-" * 66
     print(f"\n{sep}")
     print("  Evaluation Results")
     print(sep)
@@ -10257,8 +10257,8 @@ def diagnose_gt_coverage(
 
     rows = []
     for (d_idx, m_idx), rel_types in sorted(gt_by_pair.items()):
-        d_scores = P[d_idx]                  # (n_sents,) — diag row scores
-        m_scores = P[n_diag + m_idx]         # (n_sents,) — med row scores
+        d_scores = P[d_idx]                  # (n_sents,) - diag row scores
+        m_scores = P[n_diag + m_idx]         # (n_sents,) - med row scores
         path_scores = (d_scores + m_scores) / 2.0
         best_j   = int(path_scores.argmax())
         best_score = float(path_scores[best_j])
@@ -10270,17 +10270,17 @@ def diagnose_gt_coverage(
             if best_diag >= t and best_med >= t:
                 recovered_at[t] += 1
 
-    print("\n── GT Coverage Diagnostic ────────────────────────────────────────")
+    print("\n-- GT Coverage Diagnostic ----------------------------------------")
     print(f"  {'Diag':>5}  {'Med':>5}  {'BestPath':>9}  {'DiagScore':>9}  {'MedScore':>9}  GT Type")
-    print("  " + "─" * 64)
+    print("  " + "-" * 64)
     for d, m, bp, bd, bm, rt in sorted(rows, key=lambda x: -x[2]):
-        flag = "✓" if bd >= 0.344 and bm >= 0.344 else ("~" if bp >= 0.25 else "✗")
+        flag = "[OK]" if bd >= 0.344 and bm >= 0.344 else ("~" if bp >= 0.25 else "✗")
         print(f"  {d:>5}  {m:>5}  {bp:>9.4f}  {bd:>9.4f}  {bm:>9.4f}  {rt:<20} {flag}")
 
     print()
     print("  Recoverable GT pairs at each threshold (no top_k limit):")
     for t in thresholds:
-        print(f"    γ={t:.2f}  →  {recovered_at[t]:2d} / {len(gt_by_pair)} GT pairs  "
+        print(f"    gamma={t:.2f}  ->  {recovered_at[t]:2d} / {len(gt_by_pair)} GT pairs  "
               f"(recall {recovered_at[t]/len(gt_by_pair):.1%})")
     print()
 
@@ -10368,7 +10368,7 @@ def save_outputs(
         )
 
     if paths:
-        # Build GT lookup: (diag_idx, drug_idx) → list of rel_types
+        # Build GT lookup: (diag_idx, drug_idx) -> list of rel_types
         gt_lookup: Dict[tuple, List[str]] = {}
         if gt_relationships:
             for rel in gt_relationships:
@@ -10579,7 +10579,7 @@ def print_table_preview(paths: List[Dict], n: int = 12) -> None:
         print("  (no paths discovered)")
         return
     print(f"\n{'DiagRow':>7}  {'MedRow':>6}  {'Score':>6}  {'Relationship':<28}  Mediating Sentence")
-    print("─" * 110)
+    print("-" * 110)
     for p in paths[:n]:
         rel = p.get("relationship", "")[:27]
         sent = p["sent_text"][:55]
@@ -11655,7 +11655,7 @@ def visualize_embedding_space(
         edgecolor="#cbd5e1",
     )
     ax.set_title(
-        f"LOKI Join Topic Map — Admission {ADMISSION_ID}\n"
+        f"LOKI Join Topic Map - Admission {ADMISSION_ID}\n"
         f"Diagnosis rows, medication rows, and evidence sentences grouped by retained materialization cluster"
         f"  |  shown={len(selected_cluster_ids)}",
         fontsize=15,
@@ -11721,12 +11721,12 @@ def visualize_clusters_tsne(
         verbose=False,
     )
     if not pair_keys:
-        print("  No row-pair embeddings available — skipping pair-cluster visualization.")
+        print("  No row-pair embeddings available - skipping pair-cluster visualization.")
         return
     pair_embeddings_np = _to_numpy_array(pair_embeddings, dtype=np.float32)
 
     n_pairs = len(pair_keys)
-    print(f"  Running t-SNE on {n_pairs} candidate row-pair embeddings …")
+    print(f"  Running t-SNE on {n_pairs} candidate row-pair embeddings ...")
     if n_pairs == 1:
         coords = np.zeros((1, 2), dtype=np.float32)
     elif n_pairs <= 4:
@@ -11864,7 +11864,7 @@ def visualize_clusters_tsne(
         ax.set_xlabel("projection dim 1", color="#111827")
     ax_left.set_ylabel("projection dim 2", color="#111827")
     fig.suptitle(
-        f"LOKI — Pair-Cluster Embedding View (t-SNE)\nAdmission {ADMISSION_ID}",
+        f"LOKI - Pair-Cluster Embedding View (t-SNE)\nAdmission {ADMISSION_ID}",
         fontsize=13, color="#111827", y=1.02,
     )
 
@@ -12292,7 +12292,7 @@ def visualize_dataset_semantic_projection(
     )
 
     ax.set_title(
-        f"Semantic Projection of Discovered Join Paths — {dataset_name}\n"
+        f"Semantic Projection of Discovered Join Paths - {dataset_name}\n"
         f"Sampled predicted join paths across {len(admissions)} admissions (n={len(sampled_records)})",
         fontsize=16.0,
         color="#111827",
@@ -12349,7 +12349,7 @@ def visualize_all_sentences_tsne(
     print(f"  Full-sentence HDBSCAN ({cluster_backend}): {n_real} clusters, {n_noise} noise points")
 
     # --- t-SNE ---
-    print(f"  Running t-SNE on {n_sents} sentence embeddings …")
+    print(f"  Running t-SNE on {n_sents} sentence embeddings ...")
     perplexity = min(30, max(5, n_sents // 4))
     tsne = TSNE(n_components=2, perplexity=perplexity,
                 random_state=42, init="pca", max_iter=1000)
@@ -12406,7 +12406,7 @@ def visualize_all_sentences_tsne(
                    s=100, c=colors_gt, marker="D", alpha=0.9,
                    linewidths=1.1, edgecolors="#111827", label="GT evidence", zorder=4)
 
-    # 3. Mediating sentences (LOKI selected) — black star outline, cluster color fill
+    # 3. Mediating sentences (LOKI selected) - black star outline, cluster color fill
     med_list = sorted(med_indices)
     if med_list:
         colors_med = [cluster_color[cluster_labels[j]] for j in med_list]
@@ -12427,7 +12427,7 @@ def visualize_all_sentences_tsne(
                        label="Mediating + GT", zorder=6)
 
     ax.set_title(
-        "LOKI — Sentence Embedding Neighborhoods (t-SNE)\n"
+        "LOKI - Sentence Embedding Neighborhoods (t-SNE)\n"
         f"Admission {ADMISSION_ID}  |  {n_sents} sentences  "
         f"|  {n_real} clusters  |  {n_noise} noise",
         color="#111827", fontsize=11.5,
@@ -12767,7 +12767,7 @@ def rerank_pair_sentences_with_cross_encoder(
     section_prefix: bool = True,
     normalize: bool = True,
 ) -> Dict[str, object]:
-    """Option C — Per-pair sentence reranker. For every surviving (diag, med)
+    """Option C - Per-pair sentence reranker. For every surviving (diag, med)
     pair in ``paths``, score each of its mediating sentences with a zero-shot
     cross-encoder and write a ``ce_score`` field onto every path record. The
     downstream signature builders prefer ``ce_score`` when present, so Phase E
@@ -12894,7 +12894,7 @@ def filter_pairs_by_cross_encoder(
     quantile: float = 0.25,
     collect_details: bool = False,
 ) -> Tuple[List[Dict], Dict[str, object]]:
-    """Option D — pair-level filter that uses CE scores written by Phase D.5.
+    """Option D - pair-level filter that uses CE scores written by Phase D.5.
 
     Operates on the per-pair max ``ce_score``. Three modes:
 
@@ -12946,7 +12946,7 @@ def filter_pairs_by_cross_encoder(
     have_ce = [v for v in pair_ce_max.values() if v != float("-inf")]
     if not have_ce:
         base_stats["reason"] = "no_ce_scores"
-        print("  Option D CE pair filter skipped — no ce_score values on candidate paths.")
+        print("  Option D CE pair filter skipped - no ce_score values on candidate paths.")
         return paths, base_stats
 
     drop_pairs: set = set()
@@ -13116,7 +13116,7 @@ def run_materialization_pipeline(
             f"  Loaded {len(section_priors)} section priors from {resolved_section_priors_path}"
         )
 
-    print("\n── Phase C: Joint Encoding ───────────────────────────────────────")
+    print("\n-- Phase C: Joint Encoding ---------------------------------------")
     phase_c_started = time.perf_counter()
     pair_scores, raw_rows, raw_sentences, refined_rows, refined_sentences, _fwd_attn = joint_encode(
         model, diag_rows, med_rows, sent_texts
@@ -13126,7 +13126,7 @@ def run_materialization_pipeline(
     assert pair_scores.shape == expected_shape, \
         f"pair_scores shape mismatch: got {tuple(pair_scores.shape)}, expected {expected_shape}"
 
-    print("\n── Phase D: Join Path Extraction ─────────────────────────────────")
+    print("\n-- Phase D: Join Path Extraction ---------------------------------")
     phase_d_started = time.perf_counter()
     gamma = (
         cli.threshold
@@ -13207,7 +13207,7 @@ def run_materialization_pipeline(
     cross_encoder_rerank_summary: Dict[str, object] = {}
     cross_encoder_started = time.perf_counter()
     if getattr(cli, "use_cross_encoder", False) and paths:
-        print("\n── Phase D.5: Cross-Encoder Per-Pair Sentence Rerank (Option C) ──")
+        print("\n-- Phase D.5: Cross-Encoder Per-Pair Sentence Rerank (Option C) --")
         try:
             cross_encoder_rerank_summary = rerank_pair_sentences_with_cross_encoder(
                 paths=paths,
@@ -13225,7 +13225,7 @@ def run_materialization_pipeline(
                 normalize=not cli.cross_encoder_no_normalize,
             )
         except Exception as exc:  # rerank failure must never break the main pipeline
-            print(f"  Cross-encoder rerank failed: {exc!r}  — continuing with LOKI-only ordering")
+            print(f"  Cross-encoder rerank failed: {exc!r}  - continuing with LOKI-only ordering")
             cross_encoder_rerank_summary = {"error": repr(exc)}
     _mark_stage("phase_d5_cross_encoder_rerank_sec", cross_encoder_started)
 
@@ -13238,7 +13238,7 @@ def run_materialization_pipeline(
         and paths
         and not cross_encoder_rerank_summary.get("error")
     ):
-        print("\n── Phase D.6: Cross-Encoder Pair-Level Filter (Option D) ────────")
+        print("\n-- Phase D.6: Cross-Encoder Pair-Level Filter (Option D) --------")
         paths, ce_pair_filter_stats = filter_pairs_by_cross_encoder(
             paths,
             mode=ce_pair_filter_mode,
@@ -13250,7 +13250,7 @@ def run_materialization_pipeline(
             pair_recovery_diagnostics["after_ce_pair_filter"] = _pair_recovery_stage_snapshot(paths)
     _mark_stage("phase_d6_cross_encoder_pair_filter_sec", ce_pair_filter_started)
 
-    print("\n── Phase E: Semantic Materialization ─────────────────────────────")
+    print("\n-- Phase E: Semantic Materialization -----------------------------")
     phase_e_started = time.perf_counter()
     clustered_paths: Optional[List[Dict]] = None
     cluster_name_map: Dict[int, str] = {}
@@ -13554,7 +13554,7 @@ def run_materialization_pipeline(
             _kept_paths: List[Dict] = []
             for path in paths:
                 _syn_cid = int(path["raw_cluster_id"])
-                if _syn_cid == -1:  # NEGATIVE-labeled pair — drop from materialized output
+                if _syn_cid == -1:  # NEGATIVE-labeled pair - drop from materialized output
                     continue
                 _syn_clusters.setdefault(_syn_cid, []).append(path)
                 _new_labels.append(_syn_cid)
@@ -13699,10 +13699,10 @@ def run_materialization_pipeline(
         stage_timers.setdefault("phase_e_negative_cluster_suppression_sec", 0.0)
         stage_timers.setdefault("phase_e_low_signal_bundle_rescue_sec", 0.0)
         stage_timers.setdefault("phase_e_cluster_silhouette_sec", 0.0)
-        print("  No paths found — nothing to cluster.")
+        print("  No paths found - nothing to cluster.")
     _mark_stage("phase_e_semantic_materialization_sec", phase_e_started)
 
-    print("\n── Phase F: Evaluation ───────────────────────────────────────────")
+    print("\n-- Phase F: Evaluation -------------------------------------------")
     phase_f_started = time.perf_counter()
     eval_paths = _filter_paths_for_target_pairs(paths, evaluation_target_pair_set) or []
     eval_clustered_paths = _filter_paths_for_target_pairs(clustered_paths, evaluation_target_pair_set)
@@ -14620,7 +14620,7 @@ def visualize_dataset_projection_benchmark(
     )
     fig.legend(handles=handles, loc="lower center", ncol=min(4, len(handles)), frameon=False, bbox_to_anchor=(0.5, -0.02))
     fig.suptitle(
-        f"LOKI Pair-Embedding Projection Comparison — {dataset_name}\n"
+        f"LOKI Pair-Embedding Projection Comparison - {dataset_name}\n"
         f"Sampled GT-backed predicted pairs (n={len(sampled)})",
         color="#111827", fontsize=14, y=1.02,
     )
@@ -14752,7 +14752,7 @@ def visualize_dataset_projection_benchmark_3d(
     )
     fig.legend(handles=handles, loc="lower center", ncol=min(4, len(handles)), frameon=False, bbox_to_anchor=(0.5, -0.03))
     fig.suptitle(
-        f"LOKI Pair-Embedding 3D Projection Comparison — {dataset_name}\n"
+        f"LOKI Pair-Embedding 3D Projection Comparison - {dataset_name}\n"
         f"Sampled GT-backed predicted pairs (n={len(sampled)})",
         color="#111827", fontsize=14, y=1.03,
     )
@@ -14953,7 +14953,7 @@ def visualize_batch_metric_overview(
             ax_bar.text(index, value + 0.02, f"{value:.3f}", ha="center", va="bottom", fontsize=value_fs, color="#111827")
 
     fig.suptitle(
-        f"LOKI Batch Evaluation Dashboard — {dataset_name}\n"
+        f"LOKI Batch Evaluation Dashboard - {dataset_name}\n"
         f"Admissions={summary['totals']['n_admissions']}  Pred pairs={summary['totals']['n_pred_pairs']}  GT pairs={summary['totals']['n_gt_pairs']}  TP={summary['totals']['gt_pairs_recovered']}",
         color="#111827",
         fontsize=suptitle_fs,
@@ -15145,7 +15145,7 @@ def visualize_batch_representation_overview(
     title_counts.append(f"Final predicted clusters={summary['totals']['n_final_clusters']}")
 
     fig.suptitle(
-        f"LOKI Relationship Clustering Dashboard — {dataset_name}\n"
+        f"LOKI Relationship Clustering Dashboard - {dataset_name}\n"
         + "  ".join(title_counts),
         color="#111827",
         fontsize=suptitle_fs,
@@ -15235,7 +15235,7 @@ def visualize_batch_pipeline_funnel(
     ax.set_xlabel("Pair count (summed over corpus)", fontsize=11, color="#1f2937")
     ax.set_xlim(0, max(counts) * 1.22 if counts else 1)
     ax.set_title(
-        f"LOKI Pipeline Funnel — {dataset_name}\n"
+        f"LOKI Pipeline Funnel - {dataset_name}\n"
         f"Aggregated across {n_admissions} admissions",
         fontsize=13, color="#111827",
     )
@@ -15254,10 +15254,10 @@ def visualize_batch_gamma_vs_f1(
     batch_metrics_payloads: List[Dict[str, object]],
     out_path: Path,
 ) -> None:
-    """Per-admission γ vs relaxed pair F1 scatter, coloured by GT pair count.
+    """Per-admission gamma vs relaxed pair F1 scatter, coloured by GT pair count.
 
-    Empirically justifies the adaptive-γ choice: shows the operating-region
-    plateau where F1 is robust to γ, and surfaces hard admissions where γ
+    Empirically justifies the adaptive-gamma choice: shows the operating-region
+    plateau where F1 is robust to gamma, and surfaces hard admissions where gamma
     drifts into a regime where F1 collapses.
     """
     if not batch_rows or not batch_metrics_payloads:
@@ -15322,12 +15322,12 @@ def visualize_batch_gamma_vs_f1(
         edgecolors="white", linewidths=0.6,
     )
 
-    # Mean γ and median F1 reference lines
+    # Mean gamma and median F1 reference lines
     mean_gamma = float(np.mean(gammas_arr))
     median_f1 = float(np.median(f1_arr))
     ax.axvline(mean_gamma, linestyle="--", linewidth=1.0, color="#94a3b8")
     ax.axhline(median_f1, linestyle="--", linewidth=1.0, color="#94a3b8")
-    ax.text(mean_gamma, ax.get_ylim()[1] * 0.97, f" mean γ={mean_gamma:.3f}",
+    ax.text(mean_gamma, ax.get_ylim()[1] * 0.97, f" mean gamma={mean_gamma:.3f}",
             fontsize=9, color="#475569", va="top")
     ax.text(ax.get_xlim()[1] * 0.99, median_f1, f"median F1={median_f1:.3f} ",
             fontsize=9, color="#475569", ha="right", va="bottom")
@@ -15335,10 +15335,10 @@ def visualize_batch_gamma_vs_f1(
     cbar = plt.colorbar(sc, ax=ax, pad=0.015)
     cbar.set_label("# GT pairs per admission", fontsize=10, color="#1f2937")
 
-    ax.set_xlabel("Adaptive γ threshold (per admission)", fontsize=11, color="#1f2937")
+    ax.set_xlabel("Adaptive gamma threshold (per admission)", fontsize=11, color="#1f2937")
     ax.set_ylabel("Relaxed pair F1", fontsize=11, color="#1f2937")
     ax.set_title(
-        f"Per-Admission γ vs Relaxed Pair F1 — {dataset_name}\n"
+        f"Per-Admission gamma vs Relaxed Pair F1 - {dataset_name}\n"
         f"{len(gammas)} admissions, point size ∝ candidate-triple count",
         fontsize=13, color="#111827",
     )
@@ -15357,7 +15357,7 @@ def visualize_batch_confusion_matrix(
     out_path: Path,
     normalize: bool = True,
 ) -> None:
-    """Dataset-scale predicted × GT relation-label confusion matrix.
+    """Dataset-scale predicted x GT relation-label confusion matrix.
 
     Rows are GT labels only; unmatched predicted pairs are excluded so the
     figure reflects label confusion over GT-matched pairs rather than corpus-
@@ -15461,9 +15461,9 @@ def visualize_batch_confusion_matrix(
 
     n_admissions = len({rec.get("admission_id") for rec in filtered_records})
     ax.set_title(
-        f"Predicted vs GT Relation Labels — {dataset_name}\n"
+        f"Predicted vs GT Relation Labels - {dataset_name}\n"
         f"{len(filtered_records):,} GT-matched predicted pairs across {n_admissions} admissions"
-        + ("  (row-normalised → recall)" if normalize else ""),
+        + ("  (row-normalised -> recall)" if normalize else ""),
         fontsize=13, color="#111827",
     )
 
@@ -15479,7 +15479,7 @@ def visualize_batch_cluster_confusion_matrix(
     out_path: Path,
     normalize: bool = True,
 ) -> None:
-    """Dataset-scale predicted × oracle cluster-label confusion matrix.
+    """Dataset-scale predicted x oracle cluster-label confusion matrix.
 
     Evaluates only the GT-anchored clusters that receive an oracle relation type,
     matching the cluster-level macro P/R/F1/accuracy support shown elsewhere.
@@ -15581,10 +15581,10 @@ def visualize_batch_cluster_confusion_matrix(
     n_admissions = len({rec.get("admission_id") for rec in filtered_records})
     n_correct = sum(1 for rec in filtered_records if bool(rec.get("correct")))
     ax.set_title(
-        f"Predicted vs Oracle Cluster Labels — {dataset_name}\n"
+        f"Predicted vs Oracle Cluster Labels - {dataset_name}\n"
         f"{len(filtered_records):,} evaluated clusters across {n_admissions} admissions  "
         f"Correctly labeled={n_correct:,}"
-        + ("  (row-normalised → recall)" if normalize else ""),
+        + ("  (row-normalised -> recall)" if normalize else ""),
         fontsize=13, color="#111827",
     )
 
@@ -15798,12 +15798,12 @@ def regenerate_batch_diagrams_from_results_csv(results_csv_path: Path) -> None:
     metrics_dashboard_out = out_dir / f"materialized_batch_metrics_{dataset_name}.png"
     representation_dashboard_out = out_dir / f"materialized_batch_representation_dashboard_{dataset_name}.png"
 
-    print("═" * 66)
-    print("  LOKI — Regenerate Batch Diagrams From Results CSV")
+    print("=" * 66)
+    print("  LOKI - Regenerate Batch Diagrams From Results CSV")
     print(f"  CSV: {resolved_csv}")
     print(f"  Dataset: {dataset_name}")
     print(f"  Admissions: {len(rows)}")
-    print("═" * 66)
+    print("=" * 66)
 
     visualize_batch_metric_overview(dataset_name, rows, metrics_dashboard_out)
     visualize_batch_representation_overview(dataset_name, rows, representation_dashboard_out)
@@ -15874,19 +15874,19 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--threshold", type=float, default=None,
-        help="Fixed γ threshold (default: adaptive μ+σ, floor 0.15)",
+        help="Fixed gamma threshold (default: adaptive μ+σ, floor 0.15)",
     )
     parser.add_argument(
         "--adaptive_threshold_cap", type=float, default=0.295,
-        help="Optional upper cap applied only to adaptive γ; ignored when --threshold is set.",
+        help="Optional upper cap applied only to adaptive gamma; ignored when --threshold is set.",
     )
     parser.add_argument(
         "--adaptive_threshold_gap_limit", type=float, default=0.05,
-        help="Optional max (p75_top1 - legacy μ+2σ) gap allowed before adaptive γ capping is skipped; ignored when --threshold is set.",
+        help="Optional max (p75_top1 - legacy μ+2σ) gap allowed before adaptive gamma capping is skipped; ignored when --threshold is set.",
     )
     parser.add_argument(
         "--adaptive_threshold_force_legacy_max", type=float, default=0.30,
-        help="Optional legacy μ+2σ cutoff that still forces adaptive γ capping even when the gap limit would skip it; ignored when --threshold is set.",
+        help="Optional legacy μ+2σ cutoff that still forces adaptive gamma capping even when the gap limit would skip it; ignored when --threshold is set.",
     )
     parser.add_argument(
         "--cluster_label_backend", type=str, choices=["gliner2", "keyword", "lmstudio", "oracle"], default="lmstudio",
@@ -16046,7 +16046,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--pair_embedding_mode", type=str, choices=["signature", "semantic_signature", "contextual_sentence_average", "row_pair_hybrid"], default="contextual_sentence_average",
-        help="Pair embedding representation used for clustering ablations (default: contextual_sentence_average — current best validated batch profile)",
+        help="Pair embedding representation used for clustering ablations (default: contextual_sentence_average - current best validated batch profile)",
     )
     parser.add_argument(
         "--hdbscan_min_cluster_size", type=int, default=4,
@@ -16343,13 +16343,13 @@ def parse_args() -> argparse.Namespace:
         help="Skip inference and regenerate the CSV-backed batch dashboard plots (PNG plus sibling PDF) from an existing materialized_batch_results_*.csv file.",
     )
 
-    # ── Cross-encoder rerank (Phase D.5, Option C) — on by default ────────────
+    # -- Cross-encoder rerank (Phase D.5, Option C) - on by default ------------
     parser.add_argument(
         "--use_cross_encoder", dest="use_cross_encoder",
         action="store_true", default=True,
         help="Run cross-encoder per-pair sentence rerank (Option C). Writes ce_score onto every "
              "surviving path; downstream signature/cluster-prompt builders are CE-aware. "
-             "Enabled by default — improves typed pair F1 on admission 20393363 by ~+0.03.",
+             "Enabled by default - improves typed pair F1 on admission 20393363 by ~+0.03.",
     )
     parser.add_argument(
         "--no_cross_encoder", dest="use_cross_encoder", action="store_false",
@@ -16387,7 +16387,7 @@ def parse_args() -> argparse.Namespace:
         help="Return raw logits instead of sigmoid-normalized scores",
     )
 
-    # ── Option D — CE-based pair-level filter (after Phase D.5) ──────────────
+    # -- Option D - CE-based pair-level filter (after Phase D.5) --------------
     parser.add_argument(
         "--ce_pair_filter_mode", type=str,
         choices=["off", "absolute", "quantile", "combined"],
@@ -16459,16 +16459,16 @@ def main() -> None:
         if cli.max_admissions is not None:
             eligible_admission_ids = eligible_admission_ids[:cli.max_admissions]
 
-        print("═" * 66)
-        print("  LOKI — Batch Cross-Table Materialization")
+        print("=" * 66)
+        print("  LOKI - Batch Cross-Table Materialization")
         print(f"  Dataset: {cli.dataset}  |  Device: {DEVICE}")
         if resolved_evaluation_profile != EVALUATION_PROFILE_DEFAULT:
             print(f"  Evaluation profile: {resolved_evaluation_profile}")
         print(f"  Admissions: {len(eligible_admission_ids)}")
         print(f"  Active relationship types: {', '.join(active_rel_types)}")
-        print("═" * 66)
+        print("=" * 66)
 
-        print("\n── Phase A: Dataset Indexing ─────────────────────────────────────")
+        print("\n-- Phase A: Dataset Indexing -------------------------------------")
         print(f"  Data file : {data_file}")
         print(f"  Annot file: {annot_file}")
         print(f"  Indexed admissions with tables: {len(admission_index)}")
@@ -16476,7 +16476,7 @@ def main() -> None:
         if resolved_evaluation_profile != EVALUATION_PROFILE_DEFAULT:
             print(f"  Profile-qualified admissions : {len(eligible_admission_ids)}")
 
-        print("\n── Phase B: Model Loading ────────────────────────────────────────")
+        print("\n-- Phase B: Model Loading ----------------------------------------")
         model_args = load_model_args()
         model = build_model(model_args)
         model.to(DEVICE)
@@ -16492,7 +16492,7 @@ def main() -> None:
         batch_resume_records: List[Dict[str, Any]] = []
         # VLDB-grade aggregate-plot inputs collected during the batch loop:
         #   pipeline_funnel_rows: per-admission pair counts at each pipeline
-        #     gate (Stage-5 → pair filter → CE filter → cluster-tail → GT).
+        #     gate (Stage-5 -> pair filter -> CE filter -> cluster-tail -> GT).
         #   pair_label_records:   (predicted_label, gt_label) for every
         #     materialised GT-matched pair across the corpus, for the
         #     dataset-scale relation-label confusion matrix.
@@ -16545,7 +16545,7 @@ def main() -> None:
             print("  (Per-admission visualizations skipped in batch mode; only dataset-level batch plots are produced.)")
             cli.skip_visualizations = True
 
-        print("\n── Phase C-F: Batch Inference ────────────────────────────────────")
+        print("\n-- Phase C-F: Batch Inference ------------------------------------")
         if cli.resume:
             print(
                 f"  Resume mode: loaded {len(completed_admission_ids)} completed admissions from "
@@ -16573,7 +16573,7 @@ def main() -> None:
             # OUT_AUDIT point at this admission's own folder. Pass create_dir=False
             # because batch mode never writes per-admission artifacts (per-admission
             # viz is force-skipped, JSON/CSV/audit are only written in single-admission
-            # runs) — eager mkdir would litter 382 empty loki_run_<id> folders.
+            # runs) - eager mkdir would litter 382 empty loki_run_<id> folders.
             configure_runtime_context(
                 output_dataset_name, data_file, annot_file, admission_id, patient_id,
                 create_dir=False,
@@ -16660,7 +16660,7 @@ def main() -> None:
                 else (_filter_paths_for_target_pairs(result["paths"], evaluation_target_pairs) or [])
             )
 
-            # ── Capture corpus-level inputs for VLDB aggregate plots ────────
+            # -- Capture corpus-level inputs for VLDB aggregate plots --------
             _m = result["metrics"]
             _pair_filter = _m.get("pair_filter") or {}
             _ce_filter = result.get("ce_pair_filter_stats") or {}
@@ -16783,7 +16783,7 @@ def main() -> None:
         if interrupted_lmstudio_error is not None:
             if batch_rows:
                 save_batch_results(output_dataset_name, batch_rows)
-            print("\n── Batch Interrupted ───────────────────────────────────────────")
+            print("\n-- Batch Interrupted -------------------------------------------")
             if batch_rows:
                 print(f"  Completed admissions kept : {len(batch_rows)}")
                 print(f"  Results CSV              : {_batch_results_csv_path(output_dataset_name)}")
@@ -16819,12 +16819,12 @@ def main() -> None:
                 batch_classwise_summary,
                 batch_classwise_out,
                 title=(
-                    f"LOKI Batch Classwise Typed Metrics — {output_dataset_name}\n"
+                    f"LOKI Batch Classwise Typed Metrics - {output_dataset_name}\n"
                     f"Averaged over {len(batch_rows)} admissions"
                 ),
             )
 
-            # ── VLDB-grade aggregate plots ──────────────────────────────────
+            # -- VLDB-grade aggregate plots ----------------------------------
             funnel_out = batch_vis_dir / f"materialized_batch_pipeline_funnel_{output_dataset_name}.png"
             visualize_batch_pipeline_funnel(output_dataset_name, pipeline_funnel_rows, funnel_out)
             gamma_f1_out = batch_vis_dir / f"materialized_batch_gamma_vs_f1_{output_dataset_name}.png"
@@ -16883,7 +16883,7 @@ def main() -> None:
                 )
 
         summary = summarize_batch_rows(output_dataset_name, batch_rows)
-        print("\n── Batch Summary ────────────────────────────────────────────────")
+        print("\n-- Batch Summary ------------------------------------------------")
         print(f"  Mean pair average precision: {summary['averages']['pair_average_precision']}")
         print(f"  Mean relaxed pair F1      : {summary['averages']['relaxed_pair_f1']}")
         print(f"  Mean exact triple F1      : {summary['averages']['exact_triple_f1']}")
@@ -16918,7 +16918,7 @@ def main() -> None:
             print(f"  Mean GT miss STK / THR    : {summary['averages']['gt_fail_sentence_side_top_k']} / {summary['averages']['gt_fail_transitive_join_threshold']}")
         print(f"  Admissions completed      : {summary['totals']['n_admissions']}")
         print(f"  Admissions failed         : {len(failed_admissions)}")
-        print("\n✓ Done.")
+        print("\n[OK] Done.")
         return
 
     admission_id = cli.admission_id or (
@@ -16942,13 +16942,13 @@ def main() -> None:
 
     configure_runtime_context(output_dataset_name, data_file, annot_file, admission_id, patient_id)
 
-    print("═" * 66)
-    print("  LOKI — Cross-Table Join Path Extraction & Materialization")
+    print("=" * 66)
+    print("  LOKI - Cross-Table Join Path Extraction & Materialization")
     print(f"  Admission: {ADMISSION_ID}  |  Patient: {TARGET_PATIENT}")
     print(f"  Dataset: {cli.dataset}  |  Device: {DEVICE}")
-    print("═" * 66)
+    print("=" * 66)
 
-    print("\n── Phase A: Data Loading ─────────────────────────────────────────")
+    print("\n-- Phase A: Data Loading -----------------------------------------")
     diag_rows, med_rows, sent_texts, sent_meta = load_admission_data_from_examples(record)
     print(
         f"  Loaded {len(diag_rows)} diagnosis rows, {len(med_rows)} medication rows, {len(sent_texts)} note sentences"
@@ -16991,7 +16991,7 @@ def main() -> None:
         print(f"  Negative relationship pairs: {len(negative_pairs)}")
     print(f"  Row coverage: {len(gt_diag)} diagnosis rows, {len(gt_med)} medication rows annotated")
 
-    print("\n── Phase B: Model Loading ────────────────────────────────────────")
+    print("\n-- Phase B: Model Loading ----------------------------------------")
     model_args = load_model_args()
     model = build_model(model_args)
     model.to(DEVICE)
@@ -17035,7 +17035,7 @@ def main() -> None:
     kept_cluster_ids = result["kept_cluster_ids"]
     pair_recovery_diagnostics = result["pair_recovery_diagnostics"]
 
-    print("\n── Materialized Table Preview ────────────────────────────────────")
+    print("\n-- Materialized Table Preview ------------------------------------")
     print_table_preview(paths, n=12)
 
     sanitized_gt_relationships = result.get("gt_relationships", gt_relationships)
@@ -17063,10 +17063,10 @@ def main() -> None:
     diagnose_gt_coverage(result["pair_scores"], result["n_diag"], sanitized_gt_relationships)
 
     if cli.skip_visualizations:
-        print("\n── Visualizations ─────────────────────────────────────────────────")
+        print("\n-- Visualizations -------------------------------------------------")
         print("  Skipped (--skip_visualizations)")
     else:
-        print("\n── Visualizations ─────────────────────────────────────────────────")
+        print("\n-- Visualizations -------------------------------------------------")
         selected_topic_map_clusters: Optional[set[int]] = None
         if cli.topic_map_cluster_ids.strip():
             selected_topic_map_clusters = {
@@ -17126,13 +17126,13 @@ def main() -> None:
         visualize_classwise_typed_metrics(
             metrics.get("classwise_typed_metrics", {}),
             classwise_metrics_out,
-            title=f"Classwise Typed Metrics — admission {ADMISSION_ID} ({cli.dataset})",
+            title=f"Classwise Typed Metrics - admission {ADMISSION_ID} ({cli.dataset})",
         )
 
         tsne_full_out = str(VIS_DIR / f"clusters_tsne_full_{ADMISSION_ID}.png")
         visualize_all_sentences_tsne(result["refined_sentences"], viz_paths, sanitized_gt_relationships, tsne_full_out)
 
-    print("\n✓ Done.")
+    print("\n[OK] Done.")
 
 
 if __name__ == "__main__":

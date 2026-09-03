@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from contextlib import nullcontext
 from typing import Callable, Optional, List, Dict, Any, Tuple
 from sentence_transformers import util
 
@@ -289,8 +290,8 @@ def sinkhorn_reg_loss(
 
     Args:
         attention_weights: [B, N_q, N_k]  (assumed row-normalised)
-        query_mask: [B, N_q]  bool – True for valid queries
-        key_mask:   [B, N_k]  bool – True for valid keys
+        query_mask: [B, N_q]  bool - True for valid queries
+        key_mask:   [B, N_k]  bool - True for valid keys
 
     Returns:
         Scalar loss
@@ -795,7 +796,7 @@ class EnhancedTripletLoss(nn.Module):
         anchor_for_negatives = anchor_embeddings.unsqueeze(0).expand(len(filtered_neg_ids), -1, -1)
         
         # OPTIMIZATION: Single forward pass for all anchors and contexts
-        # This computes all row × sentence pairs in parallel for all contexts
+        # This computes all row x sentence pairs in parallel for all contexts
         positive_scores, positive_attentions = self.model(
             anchor_for_positives, batched_positives, 
             aggregation_method=self.aggregation_method
@@ -1590,13 +1591,13 @@ class BidirectionalTripletLoss(nn.Module):
                 anchor_positive_mask = self._embedding_valid_mask(anchor_for_positives)
                 positive_sentence_mask = self._embedding_valid_mask(batched_positives)
 
-                # Forward attention: rows → sentences
+                # Forward attention: rows -> sentences
                 pos_fwd_sinkhorn = sinkhorn_reg_loss(
                     positive_forward_attn,
                     query_mask=anchor_positive_mask,
                     key_mask=positive_sentence_mask,
                 )
-                # Reverse attention: sentences → rows
+                # Reverse attention: sentences -> rows
                 pos_rev_sinkhorn = sinkhorn_reg_loss(
                     positive_reverse_attn,
                     query_mask=positive_sentence_mask,
@@ -1893,7 +1894,7 @@ class BidirectionalTripletLoss(nn.Module):
 class EncoderOnlyTripletLoss(nn.Module):
     """
     Triplet loss that trains ONLY the sentence encoder (no cross-attention).
-    Computes similarities by averaging row×sentence cosine similarities.
+    Computes similarities by averaging rowxsentence cosine similarities.
     Designed for Stage 0 fine-tuning comparison.
     
     OPTIMIZED FOR PEFT/LoRA:
@@ -1924,7 +1925,7 @@ class EncoderOnlyTripletLoss(nn.Module):
         self.max_batch_size = max_batch_size  # Max texts per forward pass to avoid OOM
         
         print(f"Initialized EncoderOnlyTripletLoss with margin={margin}, scale={scale}, ranking={ranking_loss_type}")
-        print(f"   ⚡ OPTIMIZED: Using batched encoding (max_batch_size={max_batch_size})")
+        print(f"   [INFO] OPTIMIZED: Using batched encoding (max_batch_size={max_batch_size})")
         
         # Cache a tiny anchor param to cheaply reattach graph if needed
         try:
@@ -1947,12 +1948,39 @@ class EncoderOnlyTripletLoss(nn.Module):
         
         self.sentence_encoder.train()
         with torch.set_grad_enabled(True):
-            # Tokenize all texts at once
-            features = self.sentence_encoder.tokenize(texts)
-            features = {k: v.to(self.device) for k, v in features.items()}
+            # 1. Safely extract the raw Hugging Face tokenizer
+            if hasattr(self.sentence_encoder, 'tokenizer'):
+                hf_tokenizer = self.sentence_encoder.tokenizer
+            elif hasattr(self.sentence_encoder, '0') and hasattr(self.sentence_encoder[0], 'tokenizer'):
+                hf_tokenizer = self.sentence_encoder[0].tokenizer
+            else:
+                raise RuntimeError("Could not find the underlying Hugging Face tokenizer in sentence_encoder")
+
+            # 2. Tokenize raw text directly to PyTorch Tensors
+            features = hf_tokenizer(
+                texts,
+                padding=True,
+                truncation=True,
+                return_tensors="pt"
+            )
             
-            # Single forward pass through encoder (including LoRA layers)
-            outputs = self.sentence_encoder(features)
+            # 3. Safely move numeric tensors to the target device
+            features = {k: v.to(self.device) for k, v in features.items()}
+
+            # 4. Pass the tensor dictionary to the encoder
+            encoder_param = next(self.sentence_encoder.parameters(), None)
+            use_bf16_autocast = (
+                encoder_param is not None
+                and encoder_param.device.type == "cuda"
+                and encoder_param.dtype == torch.bfloat16
+            )
+            autocast_context = (
+                torch.autocast(device_type="cuda", dtype=torch.bfloat16)
+                if use_bf16_autocast
+                else nullcontext()
+            )
+            with autocast_context:
+                outputs = self.sentence_encoder(features)
         
         # Extract embeddings from output
         if isinstance(outputs, dict) and 'sentence_embedding' in outputs:
@@ -2119,7 +2147,7 @@ class EncoderOnlyTripletLoss(nn.Module):
             pos_emb = positive_embeddings[pid]
             neg_emb = negative_embeddings[nid]
 
-            # Average row×sentence cosine similarities to scalar scores
+            # Average rowxsentence cosine similarities to scalar scores
             pos_sim = util.cos_sim(row_embeddings, pos_emb).mean()
             if not pos_sim.requires_grad and self._anchor_param is not None:
                 pos_sim = pos_sim + 0.0 * self._anchor_param.view(-1)[0]

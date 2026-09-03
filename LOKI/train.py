@@ -74,6 +74,31 @@ def create_frozen_encoder_baseline(sentence_encoder):
     return sentence_encoder
 
 
+def _get_example_annotation_id_candidates(example: Dict[str, Any]) -> List[Any]:
+    """Return candidate IDs that may be used to match an example to annotation entries.
+
+    Different dataset backends use different identifier fields:
+    - Pharma / Protrix-style evaluation uses anchor_id or id
+    - MIMIC-style evaluation uses admission_id
+    """
+    candidates: List[Any] = []
+    for field in ("anchor_id", "id", "admission_id"):
+        value = example.get(field)
+        if value is None:
+            continue
+        candidates.append(value)
+        candidates.append(str(value))
+    return candidates
+
+
+def _example_has_annotation_match(example: Dict[str, Any], annotation_keys: set) -> bool:
+    """Check whether an example can be matched to any annotation key in a robust way."""
+    if not annotation_keys:
+        return False
+    annotation_key_strings = {str(k) for k in annotation_keys}
+    return any(str(candidate) in annotation_key_strings for candidate in _get_example_annotation_id_candidates(example))
+
+
 def _aggregate_similarity_scores(similarity_matrix: torch.Tensor, 
                                   aggregation_method: str, 
                                   top_k: int) -> float:
@@ -131,7 +156,7 @@ def _aggregate_similarity_scores(similarity_matrix: torch.Tensor,
     
     else:
         # Fallback to mean for unknown methods
-        print(f"⚠️  Unknown aggregation method '{aggregation_method}', falling back to mean")
+        print(f"[WARN]  Unknown aggregation method '{aggregation_method}', falling back to mean")
         return flat_scores.mean().item()
 
 
@@ -165,9 +190,9 @@ def evaluate_frozen_encoder_baseline(sentence_encoder, eval_examples, batch_size
     
     use_cache = eval_cache is not None
     if use_cache:
-        print(f"🔥 Evaluating with FROZEN ENCODER ONLY (using CACHE, aggregation={aggregation_method})")
+        print(f"[INFO] Evaluating with FROZEN ENCODER ONLY (using CACHE, aggregation={aggregation_method})")
     else:
-        print(f"🔥 Evaluating with FROZEN ENCODER ONLY (no cache - may be slow, aggregation={aggregation_method})")
+        print(f"[INFO] Evaluating with FROZEN ENCODER ONLY (no cache - may be slow, aggregation={aggregation_method})")
     
     correct_predictions = 0
     total_comparisons = 0
@@ -392,7 +417,7 @@ def _compute_attention_collapse_diagnostics(
                     return_attention_weights=True,
                 )
             except Exception as exc:
-                print(f"⚠️  Attention diagnostic skipped one example: {str(exc)[:120]}")
+                print(f"[WARN]  Attention diagnostic skipped one example: {str(exc)[:120]}")
                 continue
 
             def summarize(attn: torch.Tensor) -> Tuple[int, int, float, float, float]:
@@ -436,8 +461,8 @@ def _compute_attention_collapse_diagnostics(
     }
     metrics["examples_evaluated"] = float(len(summaries))
     print(
-        "🔎 Attention diagnostics: "
-        f"forward unique_topk≈{metrics['forward_unique']:.1f}/{metrics['forward_queries']:.1f} "
+        "[INFO] Attention diagnostics: "
+        f"forward unique_topk~{metrics['forward_unique']:.1f}/{metrics['forward_queries']:.1f} "
         f"(ratio={metrics['forward_unique_ratio']:.3f}), "
         f"hub_fraction={metrics['forward_hub_fraction']:.3f}, "
         f"row_var={metrics['forward_row_variance']:.6f}, "
@@ -445,13 +470,80 @@ def _compute_attention_collapse_diagnostics(
     )
     print(
         "   Reverse attention: "
-        f"unique_topk≈{metrics['reverse_unique']:.1f}/{metrics['reverse_queries']:.1f} "
+        f"unique_topk~{metrics['reverse_unique']:.1f}/{metrics['reverse_queries']:.1f} "
         f"(ratio={metrics['reverse_unique_ratio']:.3f}), "
         f"hub_fraction={metrics['reverse_hub_fraction']:.3f}, "
         f"row_var={metrics['reverse_row_variance']:.6f}, "
         f"entropy={metrics['reverse_entropy']:.3f}"
     )
     return metrics
+
+
+def _capture_checkpoint_state_dict(
+    model: Union[TableTextEmbeddingModel, BidirectionalTableTextModel],
+) -> Dict[str, torch.Tensor]:
+    """Capture a checkpoint-safe state dict by merging any LoRA adapters first.
+
+    When an encoder is wrapped with PEFT/LoRA (e.g. via Unsloth QLoRA), calling
+    ``model.state_dict()`` stores the *base* weights and the LoRA adapter
+    matrices (``lora_A``, ``lora_B``) separately.  However the way the
+    SentenceTransformer nests inside our outer model can cause the LoRA keys to
+    be silently dropped from the checkpoint, so post-training evaluation sees
+    only the un-modified base weights and therefore reports **baseline** metrics
+    instead of fine-tuned ones.
+
+    This helper:
+    1. Detects whether the encoder has PEFT adapters.
+    2. If so, temporarily *merges* the LoRA deltas into the base weights so
+       that ``state_dict()`` returns a self-contained set of fully-merged
+       weights.
+    3. After capturing, *unmerges* the adapters so training can continue
+       without corruption.
+    """
+    encoder = getattr(model, "sentence_encoder", None)
+    if encoder is None:
+        # Fallback: no sentence_encoder attribute, just capture normally.
+        return {
+            name: param.clone().detach().cpu()
+            for name, param in model.state_dict().items()
+        }
+
+    # Walk the encoder module tree to find any PEFT-wrapped sub-model that
+    # exposes ``merge_adapter`` / ``unmerge_adapter`` (the standard PEFT API).
+    peft_model = None
+    for module in encoder.modules():
+        if hasattr(module, "merge_adapter") and hasattr(module, "unmerge_adapter"):
+            peft_model = module
+            break
+
+    if peft_model is None:
+        # No PEFT model found - regular capture.
+        return {
+            name: param.clone().detach().cpu()
+            for name, param in model.state_dict().items()
+        }
+
+    # Merge -> capture -> unmerge so training can continue.
+    try:
+        peft_model.merge_adapter()
+    except Exception as exc:
+        print(f"[WARNING] Could not merge LoRA adapters for checkpoint: {exc}")
+        return {
+            name: param.clone().detach().cpu()
+            for name, param in model.state_dict().items()
+        }
+
+    state_dict = {
+        name: param.clone().detach().cpu()
+        for name, param in model.state_dict().items()
+    }
+
+    try:
+        peft_model.unmerge_adapter()
+    except Exception as exc:
+        print(f"[WARNING] Could not unmerge LoRA adapters after checkpoint capture: {exc}")
+
+    return state_dict
 
 
 def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, BidirectionalTableTextModel],
@@ -629,9 +721,9 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
             auto_save=True,
             auto_plot=auto_plot_curves
         )
-        print("🎯 Training curves tracking enabled")
+        print("[INFO] Training curves tracking enabled")
         if save_best_by_test_metrics and enable_row_sent_eval:
-            print("🏆 Test-based model saving enabled - will save best models by test metrics")
+            print("[BEST] Test-based model saving enabled - will save best models by test metrics")
         # Set dynamic Stage 3 label for curves/summary
         try:
             training_curves.trained_stage_label = f"Trained Stage {start_training_from_stage}"
@@ -653,11 +745,11 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
             override = "auto"
 
         if override == "on":
-            print("🔧 Stage 0 cache override: FORCING caches ON (use_cache=True)")
+            print("[INFO] Stage 0 cache override: FORCING caches ON (use_cache=True)")
             print("   Note: If encoder parameters are trainable, cached embeddings will become stale and may harm training quality.")
             use_cache = True
         elif override == "off":
-            print("🔧 Stage 0 cache override: FORCING caches OFF (use_cache=False)")
+            print("[INFO] Stage 0 cache override: FORCING caches OFF (use_cache=False)")
             use_cache = False
         else:
             # Determine intended training mode:
@@ -665,13 +757,13 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
             # - If model has frozen encoder AND user wants cache: cross-attention only training (keep cache)
             # - Otherwise: full model training (disable cache)
             if encoder_only_training:
-                print("⚠️  Stage 0 encoder-only training: disabling caches so encoder updates reflect in training/eval")
+                print("[WARN]  Stage 0 encoder-only training: disabling caches so encoder updates reflect in training/eval")
                 use_cache = False
             elif not model_encoder_trainable and use_cache:
-                print("✅ Stage 0 cross-attention only training: keeping caches enabled as requested")
+                print("[OK] Stage 0 cross-attention only training: keeping caches enabled as requested")
                 print("   Encoder frozen, training only cross-attention heads - perfect for component analysis!")
             else:
-                print("⚠️  Stage 0 full model training: disabling caches so encoder updates reflect in training/eval")
+                print("[WARN]  Stage 0 full model training: disabling caches so encoder updates reflect in training/eval")
                 use_cache = False
     
     # ================================
@@ -684,11 +776,11 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
     row_sent_test_cache = None
     row_sent_eval_format = (dataset_format or "other").lower()
     if row_sent_eval_format not in {"mimic", "other"}:
-        print(f"⚠️  Unknown dataset_format='{dataset_format}', falling back to 'other'")
+        print(f"[WARN]  Unknown dataset_format='{dataset_format}', falling back to 'other'")
         row_sent_eval_format = "other"
 
     if enable_row_sent_eval:
-        print(f"\n🔍 Loading row-sentence evaluation data (backend={row_sent_eval_format})...")
+        print(f"\n[INFO] Loading row-sentence evaluation data (backend={row_sent_eval_format})...")
         try:
             _is_mimic_flipped_load = (row_sent_eval_format == "mimic"
                                       and native_direction.upper() == "DOC_TO_TABLE")
@@ -713,10 +805,10 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
                 pre_filter_count = len(row_sent_test_examples)
                 row_sent_test_examples = [
                     ex for ex in row_sent_test_examples
-                    if ex.get("admission_id") in annotation_keys
+                    if _example_has_annotation_match(ex, annotation_keys)
                 ]
                 if len(row_sent_test_examples) < pre_filter_count:
-                    print(f"🔍 Pre-filtered test set to {len(row_sent_test_examples)}/{pre_filter_count} "
+                    print(f"[INFO] Pre-filtered test set to {len(row_sent_test_examples)}/{pre_filter_count} "
                           f"examples with annotations (skipping {pre_filter_count - len(row_sent_test_examples)} unannotated)")
 
                 # Optional further subsampling (only relevant if annotation set is very large)
@@ -724,31 +816,34 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
                     # Deterministic sampling using anchor_id or id as staple keys
                     def get_stable_key(ex):
                         # Ensure we use the SAME key that annotations mapping uses (usually anchor_id/id)
-                        return str(ex.get('anchor_id') or ex.get('id') or '')
+                        candidates = _get_example_annotation_id_candidates(ex)
+                        return str(next((c for c in candidates if c is not None), ''))
                     
                     row_sent_test_examples_sorted = sorted(row_sent_test_examples, key=get_stable_key)
                     sampling_rng = random.Random(42)  # Fixed seed for consistency
                     row_sent_test_examples = sampling_rng.sample(row_sent_test_examples_sorted, row_sent_max_examples)
                     
-                    # Filter annotations to match sampled examples.
-                    # mimic_flipped annotations are keyed by admission_id (str), not anchor_id,
-                    # so build a secondary key set from admission_id when available.
-                    sampled_keys = {get_stable_key(ex) for ex in row_sent_test_examples}
-                    sampled_admission_ids = {str(ex.get("admission_id", "")) for ex in row_sent_test_examples if ex.get("admission_id")}
+                    # Filter annotations to match sampled examples using the same identifier candidates.
+                    sampled_keys = {
+                        str(candidate)
+                        for ex in row_sent_test_examples
+                        for candidate in _get_example_annotation_id_candidates(ex)
+                        if candidate is not None
+                    }
                     row_sent_annotations = {
                         k: v for k, v in row_sent_annotations.items()
-                        if str(k) in sampled_keys or str(k) in sampled_admission_ids
+                        if str(k) in sampled_keys
                     }
                     
-                    print(f"⚡ Subsampled row-sentence evaluation to {len(row_sent_test_examples)} examples (deterministic)")
+                    print(f"[INFO] Subsampled row-sentence evaluation to {len(row_sent_test_examples)} examples (deterministic)")
 
                 if row_sent_max_examples is None or row_sent_max_examples == 0:
-                    print(f"✅ Row-sentence evaluation enabled (all {len(row_sent_test_examples)} test examples)")
+                    print(f"[OK] Row-sentence evaluation enabled (all {len(row_sent_test_examples)} test examples)")
                 else:
-                    print(f"✅ Row-sentence evaluation enabled ({len(row_sent_test_examples)} test examples selected)")
+                    print(f"[OK] Row-sentence evaluation enabled ({len(row_sent_test_examples)} test examples selected)")
 
                 if use_cache:
-                    print("🚀 Building test cache for row-sentence evaluation...")
+                    print("[INFO] Building test cache for row-sentence evaluation...")
                     from encoding import build_id_based_embedding_cache
                     row_sent_test_cache = build_id_based_embedding_cache(
                         examples=row_sent_test_examples,
@@ -763,15 +858,15 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
                         use_header_conditioning=use_header_conditioning,
                         use_cell_level_matching=use_cell_level_matching,
                     )
-                    print(f"✅ Test cache built successfully: {row_sent_test_cache.stats()}")
+                    print(f"[OK] Test cache built successfully: {row_sent_test_cache.stats()}")
                 else:
                     row_sent_test_cache = None
-                    print("🔄 Cache disabled for training: row-sentence test will be re-encoded each epoch")
+                    print("[INFO] Cache disabled for training: row-sentence test will be re-encoded each epoch")
             else:
-                print("⚠️  Row-sentence evaluation data not found, disabling evaluation")
+                print("[WARN]  Row-sentence evaluation data not found, disabling evaluation")
                 enable_row_sent_eval = False
         except Exception as e:
-            print(f"⚠️  Error loading row-sentence evaluation data: {e}")
+            print(f"[WARN]  Error loading row-sentence evaluation data: {e}")
             print("   Continuing training without row-sentence evaluation")
             enable_row_sent_eval = False
     
@@ -823,7 +918,7 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
     # Safety check: Ensure we have batches to train on
     if len(train_batches) == 0:
         raise ValueError(
-            f"❌ No training batches were created! This usually means:\n"
+            f"[ERROR] No training batches were created! This usually means:\n"
             f"   1. Examples generated 0 triplets (check your data)\n"
             f"   2. All batches were dropped (total_triplets < batch_size with drop_last=True)\n"
             f"   Current config: strategy={triplet_strategy}, max_triplets={max_triplets_per_example}, "
@@ -915,7 +1010,7 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
     # ================================
     # STAGE 0: FROZEN ENCODER ONLY (TRUE BASELINE)
     # ================================
-    print("\n🔥 STAGE 0: FROZEN ENCODER ONLY EVALUATION...")
+    print("\n[INFO] STAGE 0: FROZEN ENCODER ONLY EVALUATION...")
     print("Evaluating with ONLY the frozen sentence encoder (no cross-attention at all)...")
     
     # For Stage 0 evaluation, we always want to use cached embeddings for speed.
@@ -923,7 +1018,7 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
     # cache just for Stage 0 baseline evaluation since the encoder is frozen during eval.
     stage0_eval_cache = eval_cache
     if stage0_eval_cache is None:
-        print("⚡ Building temporary cache for Stage 0 evaluation (encoder frozen during eval)...")
+        print("[INFO] Building temporary cache for Stage 0 evaluation (encoder frozen during eval)...")
         from encoding import build_id_based_embedding_cache
         stage0_eval_cache = build_id_based_embedding_cache(
             examples=eval_examples,
@@ -951,7 +1046,7 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
         native_direction=native_direction
     )
     
-    print(f"🔥 FROZEN ENCODER ONLY Accuracy: {frozen_encoder_metrics['accuracy']:.3f}")
+    print(f"[INFO] FROZEN ENCODER ONLY Accuracy: {frozen_encoder_metrics['accuracy']:.3f}")
     print(f"   (Total comparisons: {frozen_encoder_metrics['total_comparisons']})")
     
     # NEW: Row-sentence evaluation for Stage 0 if enabled
@@ -959,19 +1054,19 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
     stage0_row_sent_cache = None  # Initialize outside to reuse for Stage 1
     
     # DEBUG: Check state before Stage 0 row-sent evaluation
-    print(f"\n🔍 DEBUG Stage 0 Row-Sent Eval Pre-check:")
+    print(f"\n[INFO] DEBUG Stage 0 Row-Sent Eval Pre-check:")
     print(f"   enable_row_sent_eval = {enable_row_sent_eval}")
     print(f"   row_sent_test_examples count = {len(row_sent_test_examples) if row_sent_test_examples else 0}")
     print(f"   row_sent_annotations count = {len(row_sent_annotations) if row_sent_annotations else 0}")
     print(f"   Condition result = {bool(enable_row_sent_eval and row_sent_test_examples and row_sent_annotations)}")
     
     if enable_row_sent_eval and row_sent_test_examples and row_sent_annotations:
-        print("🔍 Stage 0: Evaluating row-sentence alignment...")
+        print("[INFO] Stage 0: Evaluating row-sentence alignment...")
         try:
             # Build a cache for Stage 0 row-sent eval if none exists (for speed)
             stage0_row_sent_cache = row_sent_test_cache
             if stage0_row_sent_cache is None:
-                print("⚡ Building temporary cache for Stage 0 row-sentence evaluation...")
+                print("[INFO] Building temporary cache for Stage 0 row-sentence evaluation...")
                 from encoding import build_id_based_embedding_cache
                 stage0_row_sent_cache = build_id_based_embedding_cache(
                     examples=row_sent_test_examples,
@@ -990,7 +1085,7 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
             is_mimic_flipped = is_mimic and native_direction.upper() == "DOC_TO_TABLE"
 
             if is_mimic_flipped:
-                print("ℹ️  Using MIMIC-Flipped evaluator (DOC_TO_TABLE)...")
+                print("[INFO]  Using MIMIC-Flipped evaluator (DOC_TO_TABLE)...")
                 stage_0_row_sent_metrics = evaluate_frozen_encoder_mimic_flipped(
                     sentence_encoder=model.sentence_encoder,
                     examples=row_sent_test_examples[:row_sent_max_examples] if row_sent_max_examples else row_sent_test_examples,
@@ -1003,7 +1098,7 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
                     stage_0_row_sent_metrics['row_sent_f1'] = stage_0_row_sent_metrics.get('f1', stage_0_row_sent_metrics.get('row_sent_f1', 0.0))
                     stage_0_row_sent_metrics['row_sent_avg_precision'] = stage_0_row_sent_metrics.get('average_precision', stage_0_row_sent_metrics.get('row_sent_avg_precision', 0.0))
             elif is_mimic:
-                print("ℹ️  Using MIMIC evaluator...")
+                print("[INFO]  Using MIMIC evaluator...")
                 from evaluate_mimic_row_sent import evaluate_frozen_encoder_mimic
                 stage_0_row_sent_metrics = evaluate_frozen_encoder_mimic(
                     sentence_encoder=model.sentence_encoder,
@@ -1017,7 +1112,7 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
                     stage_0_row_sent_metrics['row_sent_f1'] = stage_0_row_sent_metrics.get('f1', stage_0_row_sent_metrics.get('row_sent_f1', 0.0))
                     stage_0_row_sent_metrics['row_sent_avg_precision'] = stage_0_row_sent_metrics.get('average_precision', stage_0_row_sent_metrics.get('row_sent_avg_precision', 0.0))
             else:
-                print("ℹ️  Using Unified Row-Sentence evaluator...")
+                print("[INFO]  Using Unified Row-Sentence evaluator...")
                 from row_sentence_eval import evaluate_frozen_encoder_only
                 stage_0_row_sent_metrics = evaluate_frozen_encoder_only(
                     sentence_encoder=model.sentence_encoder,
@@ -1031,10 +1126,10 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
                     stage_0_row_sent_metrics['row_sent_f1'] = stage_0_row_sent_metrics.get('f1', stage_0_row_sent_metrics.get('row_sent_f1', 0.0))
                     stage_0_row_sent_metrics['row_sent_avg_precision'] = stage_0_row_sent_metrics.get('average_precision', stage_0_row_sent_metrics.get('row_sent_avg_precision', 0.0))
                     
-            print(f"🔥 Stage 0 Row-Sent Avg Precision: {stage_0_row_sent_metrics.get('row_sent_avg_precision', 0.0):.3f}")
-            print(f"🔥 Stage 0 Row-Sent F1: {stage_0_row_sent_metrics.get('row_sent_f1', 0.0):.3f}")
+            print(f"[INFO] Stage 0 Row-Sent Avg Precision: {stage_0_row_sent_metrics.get('row_sent_avg_precision', 0.0):.3f}")
+            print(f"[INFO] Stage 0 Row-Sent F1: {stage_0_row_sent_metrics.get('row_sent_f1', 0.0):.3f}")
         except Exception as e:
-            print(f"⚠️  Stage 0 row-sentence evaluation failed: {e}")
+            print(f"[WARN]  Stage 0 row-sentence evaluation failed: {e}")
             import traceback
             traceback.print_exc()
             stage_0_row_sent_metrics = {}
@@ -1042,22 +1137,22 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
     # ================================
     # STAGE 1: SOPHISTICATED MODEL (PRE-TRAINING)
     # ================================
-    print("\n🚀 STAGE 1: SOPHISTICATED MODEL EVALUATION (PRE-TRAINING)...")
+    print("\n[INFO] STAGE 1: SOPHISTICATED MODEL EVALUATION (PRE-TRAINING)...")
     print("Evaluating sophisticated model BEFORE training...")
     model.eval()
     
     # Always try CUDA first, then fall back to the model's current device
     if torch.cuda.is_available():
         device = torch.device("cuda")
-        print(f"🚀 Using CUDA device for evaluation")
+        print(f"[INFO] Using CUDA device for evaluation")
         model.to(device)
     else:
         device = next(model.parameters()).device
-        print(f"💻 Using device: {device} for evaluation")
+        print(f"[INFO] Using device: {device} for evaluation")
     
     # NEW: Determine which model to train based on start_training_from_stage
     if start_training_from_stage == 0:
-        print(f"\n🎯 TRAINING CONFIGURATION: Starting from Stage 0")
+        print(f"\n[INFO] TRAINING CONFIGURATION: Starting from Stage 0")
         
         # Check model's encoder trainability and LoRA settings to determine training strategy
         encoder_trainable = getattr(model, 'trainable_encoder', True)
@@ -1071,15 +1166,15 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
                 # Check for actual PEFT wrappers, not just attributes that might be None
                 encoder_has_peft = any('lora' in name.lower() for name, _ in model.sentence_encoder.named_parameters())
             except Exception as e:
-                print(f"   ⚠️ Error checking for PEFT/QLoRA on encoder: {e}")
+                print(f"   [WARN] Error checking for PEFT/QLoRA on encoder: {e}")
                 encoder_has_peft = False # Ensure it's false if an error occurs
         
-        print(f"   📋 Configuration detected:")
+        print(f"   [INFO] Configuration detected:")
         print(f"      Encoder trainable: {encoder_trainable}")
         print(f"      Use cache: {use_cache}")
         print(f"      Use LoRA: {use_lora}")
         print(f"      Encoder-only training: {encoder_only_training}")
-        print(f"      Encoder has PEFT/QLoRA: {'✅ Yes' if encoder_has_peft else '❌ No'}")
+        print(f"      Encoder has PEFT/QLoRA: {'[OK] Yes' if encoder_has_peft else '[ERROR] No'}")
         
         if encoder_only_training:
             print(f"   Mode: Encoder-only training (cross-attention heads frozen)")
@@ -1095,12 +1190,12 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
                 for name, p in training_model.named_parameters():
                     if "sentence_encoder" not in name:
                         p.requires_grad = False
-                print("   🔒 Non-encoder params frozen; encoder params managed by PEFT")
+                print("   [INFO] Non-encoder params frozen; encoder params managed by PEFT")
             else:
                 # Without PEFT: Enable all encoder params, freeze everything else
                 for name, p in training_model.named_parameters():
                     p.requires_grad = ("sentence_encoder" in name)
-                print("   🔒 Non-encoder params frozen; encoder params enabled for training")
+                print("   [INFO] Non-encoder params frozen; encoder params enabled for training")
 
             # =====================================================================
             # IMPORTANT: Skip gradual unfreezing when PEFT/QLoRA is active
@@ -1112,8 +1207,8 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
             # 3. The layer structure changes when wrapped by PEFT
             # =====================================================================
             if encoder_has_peft:
-                print("   ⚠️ PEFT/QLoRA detected on encoder - skipping gradual unfreezing")
-                print("   📝 With QLoRA, only LoRA adapter weights are trainable (base weights frozen by PEFT)")
+                print("   [WARN] PEFT/QLoRA detected on encoder - skipping gradual unfreezing")
+                print("   [INFO] With QLoRA, only LoRA adapter weights are trainable (base weights frozen by PEFT)")
                 
                 # Count trainable LoRA parameters vs frozen base parameters
                 encoder_total = sum(p.numel() for p in training_model.sentence_encoder.parameters())
@@ -1122,7 +1217,7 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
                 lora_params = sum(p.numel() for name, p in training_model.sentence_encoder.named_parameters() 
                                  if 'lora' in name.lower())
                 
-                print(f"   📊 Encoder parameter breakdown:")
+                print(f"   [INFO] Encoder parameter breakdown:")
                 print(f"      Total encoder params: {encoder_total:,}")
                 print(f"      LoRA adapters (trainable): {encoder_trainable:,} parameters")
                 print(f"      Base model (frozen by PEFT): {encoder_frozen:,} parameters")
@@ -1131,11 +1226,11 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
                 
                 # Verify PEFT is actually working
                 if encoder_trainable == encoder_total:
-                    print(f"\n   ❌ ERROR: PEFT did NOT freeze base weights!")
+                    print(f"\n   [ERROR] ERROR: PEFT did NOT freeze base weights!")
                     print(f"      All {encoder_total:,} encoder parameters are trainable.")
                     print(f"      This is likely a bug - QLoRA should freeze ~95% of params.")
                 elif encoder_trainable < encoder_total * 0.1:
-                    print(f"   ✅ QLoRA verified: Only {encoder_trainable/encoder_total*100:.2f}% params trainable")
+                    print(f"   [OK] QLoRA verified: Only {encoder_trainable/encoder_total*100:.2f}% params trainable")
                     
             # Apply encoder tuning policy (full vs gradual) - ONLY if not using PEFT
             elif encoder_tuning_mode.lower() == "gradual":
@@ -1159,7 +1254,7 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
                     # Embedding matrices or other shared components fall through (left frozen)
 
                 if not layer_to_params:
-                    print("   ⚠️ Could not detect encoder layers automatically; falling back to full training for encoder")
+                    print("   [WARN] Could not detect encoder layers automatically; falling back to full training for encoder")
                 else:
                     max_layer = max(layer_to_params.keys())
                     num_layers = max_layer + 1
@@ -1179,7 +1274,7 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
                     for lid in unfrozen_layers:
                         for p in layer_to_params.get(lid, []):
                             p.requires_grad = True
-                    print(f"   🔓 Gradual unfreezing initialized: {len(unfrozen_layers)}/{num_layers} top layers trainable (layers {start_from}..{num_layers-1})")
+                    print(f"   [INFO] Gradual unfreezing initialized: {len(unfrozen_layers)}/{num_layers} top layers trainable (layers {start_from}..{num_layers-1})")
                     # Stash schedule for later epochs
                     training_model._gradual_unfreeze = {
                         "layer_to_params": layer_to_params,
@@ -1190,7 +1285,7 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
                     }
                     # Safety: ensure at least one encoder parameter remains trainable
                     if not any(p.requires_grad for p in training_model.sentence_encoder.parameters()):
-                        print("   🔒 Safety: No encoder params trainable after initialization; unfreezing top layer")
+                        print("   [INFO] Safety: No encoder params trainable after initialization; unfreezing top layer")
                         top_lid = num_layers - 1
                         for p in layer_to_params.get(top_lid, []):
                             p.requires_grad = True
@@ -1210,7 +1305,7 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
                     p.requires_grad = True  # Cross-attention heads and other components
                     cross_attention_params += p.numel()
             
-            print(f"   📊 Parameter breakdown:")
+            print(f"   [INFO] Parameter breakdown:")
             print(f"      Encoder (frozen): {encoder_params:,} parameters")
             print(f"      Cross-attention (trainable): {cross_attention_params:,} parameters")
             print(f"      Training only {cross_attention_params/(encoder_params+cross_attention_params)*100:.1f}% of total parameters")
@@ -1223,7 +1318,7 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
                 p.requires_grad = True
     else:
         # Default: start_training_from_stage == 1 (Sophisticated Model)
-        print(f"\n🚀 TRAINING CONFIGURATION: Starting from Stage 1 (Sophisticated Model) - Default behavior")
+        print(f"\n[INFO] TRAINING CONFIGURATION: Starting from Stage 1 (Sophisticated Model) - Default behavior")
         print(f"   Will train the sophisticated model as usual")
         
         # Use the sophisticated model for training
@@ -1256,7 +1351,7 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
     if encoder_only_training:
         from losses import EncoderOnlyTripletLoss
         if train_cache is not None:
-            print("⚠️  Ignoring training cache for encoder-only; encoder is being updated each step")
+            print("[WARN]  Ignoring training cache for encoder-only; encoder is being updated each step")
         ranking_loss_type = getattr(model, 'ranking_loss_type', 'softplus')
         infonce_tau = getattr(model, 'infonce_tau', 0.7)
         loss_fn = EncoderOnlyTripletLoss(
@@ -1376,10 +1471,10 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
     # no training has happened yet. REUSE Stage 0 cache if available - same encoder state!
     stage1_eval_cache = eval_cache
     if stage1_eval_cache is None and stage0_eval_cache is not None:
-        print("⚡ Reusing Stage 0 cache for Stage 1 pre-training evaluation (same encoder state)")
+        print("[INFO] Reusing Stage 0 cache for Stage 1 pre-training evaluation (same encoder state)")
         stage1_eval_cache = stage0_eval_cache
     elif stage1_eval_cache is None:
-        print("⚡ Building temporary cache for Stage 1 pre-training evaluation...")
+        print("[INFO] Building temporary cache for Stage 1 pre-training evaluation...")
         from encoding import build_id_based_embedding_cache
         stage1_eval_cache = build_id_based_embedding_cache(
             examples=eval_examples,
@@ -1401,7 +1496,7 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
         # Import bidirectional evaluation function
         try:
             from run_cross_attention import evaluate_bidirectional_with_join_paths
-            print("🔧 Using bidirectional evaluation for bidirectional model")
+            print("[INFO] Using bidirectional evaluation for bidirectional model")
             initial_metrics = evaluate_bidirectional_with_join_paths(
                 model=model,
                 examples=eval_examples,
@@ -1411,26 +1506,26 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
                 evaluation_margin=0.0
             )
         except ImportError:
-            print("⚠️ Could not import bidirectional evaluation, falling back to standard evaluation")
+            print("[WARN] Could not import bidirectional evaluation, falling back to standard evaluation")
             initial_metrics = evaluate_with_id_cache(model, eval_examples, stage1_eval_cache, eval_batch_size, aggregation_method, allow_cache_build=True)
     else:
-        print("🔧 Using standard evaluation for unidirectional model")
+        print("[INFO] Using standard evaluation for unidirectional model")
         initial_metrics = evaluate_with_id_cache(model, eval_examples, stage1_eval_cache, eval_batch_size, aggregation_method, allow_cache_build=True)
     
-    print(f"🚀 SOPHISTICATED MODEL Accuracy (Pre-training): {initial_metrics['accuracy']:.3f}")
+    print(f"[INFO] SOPHISTICATED MODEL Accuracy (Pre-training): {initial_metrics['accuracy']:.3f}")
     
     # NEW: Row-sentence evaluation for Stage 1 (Sophisticated Untrained) if enabled
     stage_1_row_sent_metrics = {}
     if enable_row_sent_eval and row_sent_test_examples and row_sent_annotations:
-        print("🔍 Stage 1: Evaluating row-sentence alignment (Sophisticated Untrained)...")
+        print("[INFO] Stage 1: Evaluating row-sentence alignment (Sophisticated Untrained)...")
         try:
             # REUSE Stage 0 row-sent cache if available - same encoder state before training!
             stage1_row_sent_cache = row_sent_test_cache
             if stage1_row_sent_cache is None and stage0_row_sent_cache is not None:
-                print("⚡ Reusing Stage 0 row-sent cache for Stage 1 (same encoder state)")
+                print("[INFO] Reusing Stage 0 row-sent cache for Stage 1 (same encoder state)")
                 stage1_row_sent_cache = stage0_row_sent_cache
             elif stage1_row_sent_cache is None:
-                print("⚡ Building temporary cache for Stage 1 row-sentence evaluation...")
+                print("[INFO] Building temporary cache for Stage 1 row-sentence evaluation...")
                 from encoding import build_id_based_embedding_cache
                 stage1_row_sent_cache = build_id_based_embedding_cache(
                     examples=row_sent_test_examples,
@@ -1484,7 +1579,7 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
                     test_examples=row_sent_test_examples,
                     annotations=row_sent_annotations,
                     max_examples=row_sent_max_examples,
-                    test_cache=row_sent_test_cache
+                    test_cache=stage1_row_sent_cache
                 )
             else:
                 stage_1_row_sent_metrics = quick_row_sentence_eval(
@@ -1492,10 +1587,10 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
                     test_examples=row_sent_test_examples,
                     annotations=row_sent_annotations,
                     max_examples=row_sent_max_examples,
-                    test_cache=row_sent_test_cache
+                    test_cache=stage1_row_sent_cache
                 )          
-            print(f"🚀 Stage 1 Row-Sent Avg Precision: {stage_1_row_sent_metrics.get('row_sent_avg_precision', 0.0):.3f}")
-            print(f"🚀 Stage 1 Row-Sent F1: {stage_1_row_sent_metrics.get('row_sent_f1', 0.0):.3f}")
+            print(f"[INFO] Stage 1 Row-Sent Avg Precision: {stage_1_row_sent_metrics.get('row_sent_avg_precision', 0.0):.3f}")
+            print(f"[INFO] Stage 1 Row-Sent F1: {stage_1_row_sent_metrics.get('row_sent_f1', 0.0):.3f}")
             if enable_attention_diagnostics and isinstance(model, BidirectionalTableTextModel):
                 _compute_attention_collapse_diagnostics(
                     model=model,
@@ -1506,32 +1601,32 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
                     aggregation_method=aggregation_method,
                 )
         except Exception as e:
-            print(f"⚠️  Stage 1 row-sentence evaluation failed: {e}")
+            print(f"[WARN]  Stage 1 row-sentence evaluation failed: {e}")
             stage_1_row_sent_metrics = {}
     
     # Show the progressive benefits (Stage 0 -> Stage 1 only now)
     architecture_benefit = initial_metrics['accuracy'] - frozen_encoder_metrics['accuracy']
     
-    print(f"\n📊 ARCHITECTURE BENEFIT:")
-    print(f"   🔥→🚀 Sophisticated model benefit: +{architecture_benefit:.3f} ({architecture_benefit*100:.1f}%)")
+    print(f"\n[INFO] ARCHITECTURE BENEFIT:")
+    print(f"   [INFO]->[INFO] Sophisticated model benefit: +{architecture_benefit:.3f} ({architecture_benefit*100:.1f}%)")
     
     # NEW: Show row-sentence progression if enabled
     if enable_row_sent_eval and stage_0_row_sent_metrics and stage_1_row_sent_metrics:
-        print(f"\n📈 ROW-SENTENCE PROGRESSION (Avg Precision):")
+        print(f"\n[INFO] ROW-SENTENCE PROGRESSION (Avg Precision):")
         stage_0_ap = stage_0_row_sent_metrics.get('row_sent_avg_precision', stage_0_row_sent_metrics.get('average_precision', 0.0))
         stage_1_ap = stage_1_row_sent_metrics.get('row_sent_avg_precision', stage_1_row_sent_metrics.get('average_precision', 0.0))
-        print(f"   🔥 Stage 0 (Frozen): {stage_0_ap:.3f}")
-        print(f"   🚀 Stage 1 (Sophisticated): {stage_1_ap:.3f} (+{stage_1_ap - stage_0_ap:.3f})")
+        print(f"   [INFO] Stage 0 (Frozen): {stage_0_ap:.3f}")
+        print(f"   [INFO] Stage 1 (Sophisticated): {stage_1_ap:.3f} (+{stage_1_ap - stage_0_ap:.3f})")
     
     if architecture_benefit < 0.01:
-        print("⚠️  WARNING: Sophisticated model barely improves over frozen encoder!")
+        print("[WARN]  WARNING: Sophisticated model barely improves over frozen encoder!")
         print("   Consider if the architecture complexity is necessary for this task.")
     
     # ================================
     # WANDB LOGGING - Log baseline/initial metrics (Epoch 0)
     # ================================
     if use_wandb and WANDB_AVAILABLE and wandb.run is not None:
-        print("📊 Logging initial stage metrics to wandb...")
+        print("[INFO] Logging initial stage metrics to wandb...")
         # Log Stage 0 (frozen encoder) and Stage 1 (untrained model) baselines
         wandb_baseline_metrics = {
             "epoch": 0,
@@ -1570,11 +1665,11 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
             })
         
         wandb.log(wandb_baseline_metrics, step=0)
-        print("✅ Baseline metrics logged to wandb (epoch 0)")
+        print("[OK] Baseline metrics logged to wandb (epoch 0)")
     
     # NEW: Add initial stage metrics to training curves if enabled
     if training_curves is not None:
-        print("\n📊 Adding initial stage metrics to training curves...")
+        print("\n[INFO] Adding initial stage metrics to training curves...")
         # Note: Stage 0 metrics use 'row_sent_avg_precision'/'row_sent_f1' keys (set in lines 781-782, 797-798)
         # Also try 'average_precision'/'f1' as fallback for compatibility
         stage_0_ap = 0.0
@@ -1603,7 +1698,7 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
     
     # Add Epoch 0 data to training curves if enabled
     if training_curves is not None:
-        print("📊 Adding Epoch 0 (untrained model) baseline to training curves...")
+        print("[INFO] Adding Epoch 0 (untrained model) baseline to training curves...")
         
         # Use initial_metrics for validation accuracy (this represents the model being trained)
         epoch_0_val_accuracy = initial_metrics['accuracy']
@@ -1629,7 +1724,7 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
         )
     
     # Training loop
-    print(f"\n🎓 STARTING TRAINING OF {training_model_type.upper()}")
+    print(f"\n[INFO] STARTING TRAINING OF {training_model_type.upper()}")
     print(f"   Training model type: {training_model_type}")
     print(f"   Training from Stage: {start_training_from_stage}")
     
@@ -1674,10 +1769,10 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
                 if newly_unfrozen:
                     low = min(newly_unfrozen)
                     high = max(newly_unfrozen)
-                    print(f"   🔓 Gradual unfreezing: enabled layers {low}..{high} (total {target}/{num_layers})")
+                    print(f"   [INFO] Gradual unfreezing: enabled layers {low}..{high} (total {target}/{num_layers})")
             # Safety: ensure at least one encoder parameter is trainable
             if not any(p.requires_grad for p in training_model.sentence_encoder.parameters()):
-                print("   🔒 Safety: No encoder params trainable after schedule; unfreezing top layer")
+                print("   [INFO] Safety: No encoder params trainable after schedule; unfreezing top layer")
                 top_lid = num_layers - 1
                 for p in layer_to_params.get(top_lid, []):
                     p.requires_grad = True
@@ -1731,7 +1826,7 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
             
             if (start_training_from_stage == 0 and encoder_only_training 
                 and not loss.requires_grad and not encoder_has_peft_active):
-                print("   ⚠️  Stage 0: loss has no grad_fn; ensuring encoder has trainable params and re-anchoring loss")
+                print("   [WARN]  Stage 0: loss has no grad_fn; ensuring encoder has trainable params and re-anchoring loss")
                 # Ensure at least one encoder param is trainable
                 enc_params = list(training_model.sentence_encoder.parameters())
                 if not any(p.requires_grad for p in enc_params):
@@ -1811,7 +1906,7 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
             if hasattr(loss_fn, 'get_encoding_stats'):
                 enc_stats = loss_fn.get_encoding_stats()
                 if enc_stats.get('forward_passes', 0) > 0:
-                    print(f"   ⚡ Encoding optimization stats:")
+                    print(f"   [INFO] Encoding optimization stats:")
                     print(f"      Total texts: {enc_stats.get('total_texts', 0):,}")
                     print(f"      Unique texts (after dedup): {enc_stats.get('unique_texts', 0):,}")
                     print(f"      Forward passes: {enc_stats.get('forward_passes', 0):,}")
@@ -1844,8 +1939,8 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
         if start_training_from_stage == 0 and encoder_only_training:
             # Evaluate Stage 0 (encoder-only) using frozen-encoder baseline logic (cosine on embeddings)
             # Rebuild cache each epoch to reflect encoder updates (PEFT/LoRA changes the effective embeddings)
-            print("🔎 Validation evaluator: Stage 0 (frozen encoder baseline)")
-            print("⚡ Rebuilding eval cache to reflect encoder updates...")
+            print("[INFO] Validation evaluator: Stage 0 (frozen encoder baseline)")
+            print("[INFO] Rebuilding eval cache to reflect encoder updates...")
             from encoding import build_id_based_embedding_cache
             epoch_eval_cache = build_id_based_embedding_cache(
                 examples=eval_examples,
@@ -1872,7 +1967,7 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
             )
         else:
             # Use model forward-based evaluation for Stage 2 (Sophisticated Model)
-            print("🔎 Validation evaluator: Stage 2 (sophisticated model forward)")
+            print("[INFO] Validation evaluator: Stage 2 (sophisticated model forward)")
             if isinstance(training_model, BidirectionalTableTextModel):
                 # Import bidirectional evaluation function
                 try:
@@ -1886,7 +1981,7 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
                         evaluation_margin=0.0
                     )
                 except ImportError:
-                    print("⚠️ Could not import bidirectional evaluation, falling back to standard evaluation")
+                    print("[WARN] Could not import bidirectional evaluation, falling back to standard evaluation")
                     eval_metrics = evaluate_with_id_cache(training_model, eval_examples, eval_cache if use_cache else None, eval_batch_size, aggregation_method, allow_cache_build=use_cache)
             else:
                 eval_metrics = evaluate_with_id_cache(training_model, eval_examples, eval_cache if use_cache else None, eval_batch_size, aggregation_method, allow_cache_build=use_cache)
@@ -1909,7 +2004,7 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
         # Row-sentence evaluation if enabled
         row_sent_metrics = {}
         if enable_row_sent_eval and row_sent_test_examples and row_sent_annotations:
-            # print("🔍 Evaluating row-sentence alignment...")  # Commented out - redundant with epoch summary
+            # print("[INFO] Evaluating row-sentence alignment...")  # Commented out - redundant with epoch summary
             try:
                 # Rebuild test cache per epoch when caching is disabled; otherwise reuse
                 effective_test_cache = row_sent_test_cache
@@ -1939,9 +2034,9 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
 
                 # Stage-aware row-sentence evaluation
                 if start_training_from_stage == 0 and encoder_only_training:
-                    print("🔎 Row-sent evaluator: Stage 0 (frozen encoder baseline)")
+                    print("[INFO] Row-sent evaluator: Stage 0 (frozen encoder baseline)")
                     if is_mimic_flipped_format:
-                        print("ℹ️  Using MIMIC-Flipped evaluator (DOC_TO_TABLE)...")
+                        print("[INFO]  Using MIMIC-Flipped evaluator (DOC_TO_TABLE)...")
                         row_sent_metrics = evaluate_frozen_encoder_mimic_flipped(
                             sentence_encoder=training_model.sentence_encoder,
                             examples=row_sent_test_examples[:row_sent_max_examples] if row_sent_max_examples else row_sent_test_examples,
@@ -1951,7 +2046,7 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
                             test_cache=effective_test_cache,
                         )
                     elif is_mimic_format:
-                        print("ℹ️  Using MIMIC evaluator...")
+                        print("[INFO]  Using MIMIC evaluator...")
                         from evaluate_mimic_row_sent import evaluate_frozen_encoder_mimic
                         row_sent_metrics = evaluate_frozen_encoder_mimic(
                             sentence_encoder=training_model.sentence_encoder,
@@ -1962,7 +2057,7 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
                             test_cache=effective_test_cache
                         )
                     else:
-                        print("ℹ️  Using Unified Row-Sentence evaluator...")
+                        print("[INFO]  Using Unified Row-Sentence evaluator...")
                         from row_sentence_eval import evaluate_frozen_encoder_only
                         row_sent_metrics = evaluate_frozen_encoder_only(
                             sentence_encoder=training_model.sentence_encoder,
@@ -1977,7 +2072,7 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
                         row_sent_metrics['row_sent_avg_precision'] = row_sent_metrics.get('average_precision', row_sent_metrics.get('row_sent_avg_precision', 0.0))
                 else:
                     # Stage 2: Sophisticated model evaluation
-                    print("🔎 Row-sent evaluator: Stage 2 (sophisticated model forward)")
+                    print("[INFO] Row-sent evaluator: Stage 2 (sophisticated model forward)")
 
                     if is_mimic_flipped_format:
                         row_sent_metrics = evaluate_mimic_flipped_with_model(
@@ -2026,7 +2121,7 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
                         aggregation_method=aggregation_method,
                     )
             except Exception as e:
-                print(f"⚠️  Row-sentence evaluation failed: {e}")
+                print(f"[WARN]  Row-sentence evaluation failed: {e}")
                 row_sent_metrics = {}
         
         # Calculate epoch time
@@ -2102,10 +2197,7 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
         if eval_metrics['accuracy'] > best_accuracy:
             best_accuracy = eval_metrics['accuracy']
             best_epoch = epoch + 1
-            best_state_dict = {
-                name: param.clone().detach().cpu()
-                for name, param in training_model.state_dict().items()
-            }
+            best_state_dict = _capture_checkpoint_state_dict(training_model)
             print(f"New best model! Accuracy: {best_accuracy:.3f}")
         
         # NEW: Track best test metrics and optionally save models
@@ -2117,20 +2209,14 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
             if current_test_acc > best_test_f1:
                 best_test_f1 = current_test_acc
                 best_test_epoch = epoch + 1
-                best_test_state_dict = {
-                    name: param.clone().detach().cpu()
-                    for name, param in training_model.state_dict().items()
-                }
+                best_test_state_dict = _capture_checkpoint_state_dict(training_model)
                 print(f"New best test F1! {best_test_f1:.3f} (Epoch {best_test_epoch})")
             
             # Track best test average precision
             if current_test_prec > best_test_avg_precision:
                 best_test_avg_precision = current_test_prec
                 best_test_precision_epoch = epoch + 1
-                best_test_precision_state_dict = {
-                    name: param.clone().detach().cpu()
-                    for name, param in training_model.state_dict().items()
-                }
+                best_test_precision_state_dict = _capture_checkpoint_state_dict(training_model)
                 print(f"New best test average precision! {best_test_avg_precision:.3f} (Epoch {best_test_precision_epoch})")
     
     # Load the best model
@@ -2148,7 +2234,7 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
     
     # NEW: Save best test-based models if requested
     if save_best_by_test_metrics and enable_row_sent_eval:
-        print(f"\n🎯 SAVING BEST TEST-BASED MODELS:")
+        print(f"\n[INFO] SAVING BEST TEST-BASED MODELS:")
         
         # Save best test F1 model
         if best_test_state_dict is not None:
@@ -2180,7 +2266,7 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
             print(f"Reloaded validation-based best model for final analysis")
 
     if enable_attention_diagnostics and isinstance(training_model, BidirectionalTableTextModel) and row_sent_test_examples:
-        print("\n🔎 FINAL ATTENTION COLLAPSE DIAGNOSTIC:")
+        print("\n[INFO] FINAL ATTENTION COLLAPSE DIAGNOSTIC:")
         _compute_attention_collapse_diagnostics(
             model=training_model,
             examples=row_sent_test_examples,
@@ -2194,7 +2280,7 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
     # FINAL 3-STAGE IMPACT ANALYSIS
     # ================================
     print("\n" + "="*90)
-    print("🎯 COMPREHENSIVE 3-STAGE IMPACT ANALYSIS")
+    print("[INFO] COMPREHENSIVE 3-STAGE IMPACT ANALYSIS")
     print("="*90)
     
     # Calculate all stage improvements (3 stages now)
@@ -2202,58 +2288,58 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
     training_improvement = best_accuracy - initial_metrics['accuracy']
     total_improvement = best_accuracy - frozen_encoder_metrics['accuracy']
     
-    print(f"📊 COMPLETE PERFORMANCE BREAKDOWN:")
-    print(f"   🔥 Stage 0 - Frozen Encoder Only:     {frozen_encoder_metrics['accuracy']:.3f}")
-    print(f"   🚀 Stage 1 - Sophisticated (Pre):     {initial_metrics['accuracy']:.3f} (+{architecture_benefit:.3f})")
-    print(f"   🏆 Stage 2 - Trained Model:           {best_accuracy:.3f} (+{training_improvement:.3f})")
-    print(f"   📈 Total Improvement:                 +{total_improvement:.3f} ({total_improvement*100:.1f}%)")
+    print(f"[INFO] COMPLETE PERFORMANCE BREAKDOWN:")
+    print(f"   [INFO] Stage 0 - Frozen Encoder Only:     {frozen_encoder_metrics['accuracy']:.3f}")
+    print(f"   [INFO] Stage 1 - Sophisticated (Pre):     {initial_metrics['accuracy']:.3f} (+{architecture_benefit:.3f})")
+    print(f"   [BEST] Stage 2 - Trained Model:           {best_accuracy:.3f} (+{training_improvement:.3f})")
+    print(f"   [INFO] Total Improvement:                 +{total_improvement:.3f} ({total_improvement*100:.1f}%)")
     
     # NEW: Add test metrics summary if available
     if enable_row_sent_eval and (best_test_f1 > 0 or best_test_avg_precision > 0):
-        print(f"\n🏆 TEST METRICS SUMMARY:")
-        print(f"   🎯 Best Test F1:     {best_test_f1:.3f} (Epoch {best_test_epoch})")
-        print(f"   🎯 Best Test Average Precision:    {best_test_avg_precision:.3f} (Epoch {best_test_precision_epoch})")
-        print(f"   📊 Validation vs Test Performance:")
+        print(f"\n[BEST] TEST METRICS SUMMARY:")
+        print(f"   [INFO] Best Test F1:     {best_test_f1:.3f} (Epoch {best_test_epoch})")
+        print(f"   [INFO] Best Test Average Precision:    {best_test_avg_precision:.3f} (Epoch {best_test_precision_epoch})")
+        print(f"   [INFO] Validation vs Test Performance:")
         print(f"      - Validation Best: {best_accuracy:.3f} (Epoch {best_epoch})")
         print(f"      - Test F1: {best_test_f1:.3f} (Epoch {best_test_epoch})")
         print(f"      - Test Avg Precision: {best_test_avg_precision:.3f} (Epoch {best_test_precision_epoch})")
         
         # Check if best test metrics occurred at different epochs than validation
         if best_epoch != best_test_epoch:
-            print(f"   ⚠️  NOTE: Best test F1 occurred at epoch {best_test_epoch}, not at best validation epoch {best_epoch}")
+            print(f"   [WARN]  NOTE: Best test F1 occurred at epoch {best_test_epoch}, not at best validation epoch {best_epoch}")
         if best_epoch != best_test_precision_epoch:
-            print(f"   ⚠️  NOTE: Best test average precision occurred at epoch {best_test_precision_epoch}, not at best validation epoch {best_epoch}")
+            print(f"   [WARN]  NOTE: Best test average precision occurred at epoch {best_test_precision_epoch}, not at best validation epoch {best_epoch}")
     
-    print(f"\n🔍 DETAILED IMPACT ATTRIBUTION:")
+    print(f"\n[INFO] DETAILED IMPACT ATTRIBUTION:")
     if total_improvement > 0:
         arch_pct = (architecture_benefit/total_improvement*100)
         tr_pct = (training_improvement/total_improvement*100)
-        print(f"   🚀 Architecture Contribution:      {architecture_benefit:.3f} ({arch_pct:.1f}% of total)")
-        print(f"   🎓 Training Contribution:          {training_improvement:.3f} ({tr_pct:.1f}% of total)")
+        print(f"   [INFO] Architecture Contribution:      {architecture_benefit:.3f} ({arch_pct:.1f}% of total)")
+        print(f"   [INFO] Training Contribution:          {training_improvement:.3f} ({tr_pct:.1f}% of total)")
     else:
-        print(f"   🚀 Architecture Contribution:      {architecture_benefit:.3f}")
-        print(f"   🎓 Training Contribution:          {training_improvement:.3f}")
+        print(f"   [INFO] Architecture Contribution:      {architecture_benefit:.3f}")
+        print(f"   [INFO] Training Contribution:          {training_improvement:.3f}")
     
-    print(f"\n💡 COMPONENT ASSESSMENT:")
+    print(f"\n[INFO] COMPONENT ASSESSMENT:")
     # Architecture assessment
     if architecture_benefit > 0.05:
-        print("✅ ARCHITECTURE: Significant benefit - sophisticated model is effective")
+        print("[OK] ARCHITECTURE: Significant benefit - sophisticated model is effective")
     elif architecture_benefit > 0.02:
-        print("✅ ARCHITECTURE: Moderate benefit - cross-attention is helping")
+        print("[OK] ARCHITECTURE: Moderate benefit - cross-attention is helping")
     elif architecture_benefit > 0.005:
-        print("⚠️  ARCHITECTURE: Small benefit - consider if complexity is worth it")
+        print("[WARN]  ARCHITECTURE: Small benefit - consider if complexity is worth it")
     else:
-        print("❌ ARCHITECTURE: Minimal benefit - consider simpler approaches")
+        print("[ERROR] ARCHITECTURE: Minimal benefit - consider simpler approaches")
     
     # Training assessment
     if training_improvement > architecture_benefit:
-        print("✅ TRAINING: Primary driver of performance - excellent!")
+        print("[OK] TRAINING: Primary driver of performance - excellent!")
     elif training_improvement > 0.02:
-        print("✅ TRAINING: Effective improvement - training is working")
+        print("[OK] TRAINING: Effective improvement - training is working")
     elif training_improvement > 0.005:
-        print("⚠️  TRAINING: Modest improvement - consider longer training")
+        print("[WARN]  TRAINING: Modest improvement - consider longer training")
     else:
-        print("❌ TRAINING: Minimal improvement - check hyperparameters/data")
+        print("[ERROR] TRAINING: Minimal improvement - check hyperparameters/data")
     
     print("="*90)
     
@@ -2261,7 +2347,7 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
     # WANDB LOGGING - Log final summary metrics
     # ================================
     if use_wandb and WANDB_AVAILABLE and wandb.run is not None:
-        print("📊 Logging final summary metrics to wandb...")
+        print("[INFO] Logging final summary metrics to wandb...")
         wandb_summary = {
             # Final stage breakdown
             "summary/stage0_frozen_encoder_accuracy": frozen_encoder_metrics['accuracy'],
@@ -2289,15 +2375,15 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
         
         # Also log as final step
         wandb.log(wandb_summary, step=epochs + 1)
-        print("✅ Final summary logged to wandb")
+        print("[OK] Final summary logged to wandb")
     
     # ================================
     # AUTOMATIC 3-STAGE VISUALIZATION  
     # ================================
     if skip_four_stage_viz:
-        print("\n🎨 Skipping 3-STAGE example visualizations (skip_four_stage_viz=True)")
+        print("\n[INFO] Skipping 3-STAGE example visualizations (skip_four_stage_viz=True)")
     else:
-        print("\n🎨 GENERATING 3-STAGE VISUALIZATION...")
+        print("\n[INFO] GENERATING 3-STAGE VISUALIZATION...")
         try:
             from visualize_attention import create_complete_four_stage_analysis
             
@@ -2316,10 +2402,10 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
                 stage_3_label="Stage 2 - Trained"
             )
             
-            print(f"✅ 3-stage visualizations saved to: {viz_output_dir}")
+            print(f"[OK] 3-stage visualizations saved to: {viz_output_dir}")
             
         except Exception as e:
-            print(f"⚠️ Could not generate 3-stage visualization: {e}")
+            print(f"[WARN] Could not generate 3-stage visualization: {e}")
             print("   You can run visualization manually using demo_four_stage_visualization.py")
     
     print("="*90)
@@ -2327,7 +2413,7 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
     # Final training curves summary and cleanup
     if training_curves is not None:
         print("\n" + "="*70)
-        print("🎯 TRAINING CURVES SUMMARY")
+        print("[INFO] TRAINING CURVES SUMMARY")
         print("="*70)
         
         # Print comprehensive summary
@@ -2338,7 +2424,7 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
         
         # Generate batch-level analysis if enabled
         if track_batch_losses:
-            print("📈 Generating batch-level analysis...")
+            print("[INFO] Generating batch-level analysis...")
             training_curves.plot_batch_losses()  # Plot all epochs heatmap
             # Plot specific epochs of interest
             if len(training_curves.epochs) > 0:
@@ -2346,9 +2432,9 @@ def train_with_id_based_triplets(model: Union[TableTextEmbeddingModel, Bidirecti
                 if len(training_curves.epochs) > 1:
                     training_curves.plot_batch_losses(epoch=len(training_curves.epochs))  # Last epoch
         
-        print("✅ Training curves analysis complete!")
-        print(f"📁 All plots saved to: {training_curves.plots_dir}")
-        print(f"💾 Training data saved to: {training_curves.data_dir}")
+        print("[OK] Training curves analysis complete!")
+        print(f"[INFO] All plots saved to: {training_curves.plots_dir}")
+        print(f"[INFO] Training data saved to: {training_curves.data_dir}")
     
-    print(f"\n🎓 TRAINING COMPLETED: Returning trained {training_model_type}")
+    print(f"\n[INFO] TRAINING COMPLETED: Returning trained {training_model_type}")
     return training_model 

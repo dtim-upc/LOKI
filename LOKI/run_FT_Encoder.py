@@ -44,7 +44,7 @@ try:
 except Exception:
     wandb = None
 
-from sentence_transformers import SentenceTransformer, SimilarityFunction
+from sentence_transformers import SentenceTransformer
 from models import TableTextEmbeddingModel, BidirectionalTableTextModel
 from data import (
     load_row_level_dataset,
@@ -68,33 +68,6 @@ from encoding import build_id_based_embedding_cache
 from new_visualization import run_clean_analysis_for_examples
 # Import initialization system
 from initialization import get_available_methods, get_method_description, get_recommended_method_params
-from hf_model_resolver import bootstrap_hf_model_snapshots
-
-# ColBERT checkpoints may advertise MaxSim, which SentenceTransformers does not
-# support consistently across versions. Treat it as cosine for this pipeline.
-try:
-    _original_to_similarity_fn = SimilarityFunction.to_similarity_fn
-
-    @classmethod
-    def _patched_to_similarity_fn(cls, value):
-        if str(value).lower() in ["maxsim", "max_sim"]:
-            return SimilarityFunction.COSINE
-        return _original_to_similarity_fn(value)
-
-    SimilarityFunction.to_similarity_fn = _patched_to_similarity_fn
-
-    if hasattr(SimilarityFunction, "to_similarity_pairwise_fn"):
-        _original_to_similarity_pairwise_fn = SimilarityFunction.to_similarity_pairwise_fn
-
-        @classmethod
-        def _patched_to_similarity_pairwise_fn(cls, value):
-            if str(value).lower() in ["maxsim", "max_sim"]:
-                return SimilarityFunction.COSINE
-            return _original_to_similarity_pairwise_fn(value)
-
-        SimilarityFunction.to_similarity_pairwise_fn = _patched_to_similarity_pairwise_fn
-except Exception as exc:
-    print(f"Warning: Failed to patch MaxSim SimilarityFunction compatibility: {exc}")
 
 # Set environment variables and disable warnings
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
@@ -113,21 +86,6 @@ os.environ["BITSANDBYTES_NOWELCOME"] = "1"  # Silences bitsandbytes startup text
 # Repo root (parent of LOKI/). Dataset defaults resolve here, not from process CWD.
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent
 _DATASETS_DIR = _PROJECT_ROOT / "Datasets"
-
-
-def _bootstrap_training_hf_assets(model_name: str) -> str:
-    """Ensure a local snapshot exists and return the path to load the encoder from."""
-    bootstrap_records = bootstrap_hf_model_snapshots([model_name], allow_online=True)
-    if not bootstrap_records:
-        return model_name
-
-    print("\n=== Phase 0: Hugging Face Asset Bootstrap ===")
-    for record in bootstrap_records:
-        print(
-            f"   - {record['model_name']} -> {record['resolved_path']} "
-            f"({record['source']})"
-        )
-    return bootstrap_records[0]["resolved_path"]
 
 
 def setup_output_dir(args, model_name, embedding_dim=None, max_seq_length=None) -> str:
@@ -502,7 +460,6 @@ def main():
         "MiniLM": "unsloth/all-MiniLM-L6-v2",
         "embedding-gemma": "unsloth/embeddinggemma-300m",
         "qwen3": "unsloth/Qwen3-Embedding-0.6B",
-        "octen": "Octen/Octen-Embedding-0.6B",
         # Medical Embedding
         "qwen3-med": "luluw/Qwen3-MedEmbed-0.6B",
         "google": "sentence-transformers/embeddinggemma-300m-medical",
@@ -574,24 +531,24 @@ def main():
                              "Lower values reduce memory usage. 0 = use native value (default).")
 
     # Training stage control
-    parser.add_argument("--start_training_from_stage", type=int, default=1, choices=[0, 1],
+    parser.add_argument("--start_training_from_stage", type=int, default=0, choices=[0, 1],
                         help="Choose which stage to start training from: 0 (Encoder-only fine-tuning) or 1 (Sophisticated Model, default).")
 
     # Encoder training control - add both positive and negative options for clarity
     encoder_group = parser.add_mutually_exclusive_group()
-    encoder_group.add_argument("--enable_lora", action="store_true", default=False,
+    encoder_group.add_argument("--enable_lora", action="store_true", default=True,
                                help="Fine-tune the encoder (full fine-tuning). Note: training cache will be disabled when enabled so encoder updates take effect.")
-    encoder_group.add_argument("--disable_lora", action="store_true", default=True,
+    encoder_group.add_argument("--disable_lora", action="store_true", default=False,
                                help="Explicitly disable encoder fine-tuning (keep encoder frozen). Useful for cross-attention only training.")
 
     # Encoder-only training (baseline without cross-attention, for comparison when the above is 0)
-    parser.add_argument("--encoder_only_training", action="store_true", default=False,
+    parser.add_argument("--encoder_only_training", action="store_true", default=True,
                         help="Train only the base sentence encoder using encoder-only triplet objective (no cross-attention)")
     parser.add_argument("--no_encoder_only_training", dest="encoder_only_training", action="store_false",
                         help="Skip encoder-only Stage 0 training (start directly with sophisticated model)")
 
     # Caching control
-    parser.add_argument("--use_cache", action="store_true", default=True,
+    parser.add_argument("--use_cache", action="store_true", default=False,
                         help="Enable embedding caching for improved performance (significantly faster training). "
                              "Automatically disabled if --enable_lora is set (encoder fine-tuning).")
 
@@ -612,13 +569,13 @@ def main():
                         help="Also keep the pooler/head of the encoder trainable during gradual unfreezing if present")
 
     # Dataset paths (under repo Datasets/<name>/; anchored to project root, not CWD)
-    parser.add_argument("--train_file", type=str, default=str(_DATASETS_DIR / "mimic" / "train_row_level.json"),
+    parser.add_argument("--train_file", type=str, default=str(_DATASETS_DIR / "feverous" / "train_row_level.json"),
                         help="Path to the training dataset")
-    parser.add_argument("--eval_file", type=str, default=str(_DATASETS_DIR / "mimic" / "val_row_level.json"),
+    parser.add_argument("--eval_file", type=str, default=str(_DATASETS_DIR / "feverous" / "val_row_level.json"),
                         help="Path to the evaluation dataset")
-    parser.add_argument("--test_file", type=str, default=str(_DATASETS_DIR / "mimic" / "test_row_level.json"),
+    parser.add_argument("--test_file", type=str, default=str(_DATASETS_DIR / "feverous" / "test_row_level.json"),
                         help="Path to the test dataset (optional)")
-    parser.add_argument("--output_dir", type=str, default="./output_mimic_model/",
+    parser.add_argument("--output_dir", type=str, default="./output_feverous_model/",
                         help="Directory to save the output")
     
     # NEW: Task-Aware Dataset flags
@@ -628,15 +585,15 @@ def main():
     parser.add_argument("--native_direction", type=str, default="TABLE_TO_DOC",
                         choices=["TABLE_TO_DOC", "DOC_TO_TABLE"],
                         help="The native direction of the source file (default: DOC_TO_TABLE for Flipped Pharma)")
-    parser.add_argument("--dataset_format", type=str, default="mimic",
+    parser.add_argument("--dataset_format", type=str, default="other",
                         choices=["mimic", "other"],
                         help="Parsing format for tables/rows (default: other)")
 
     # Large dataset optimization
-    parser.add_argument("--max_train_examples", type=int, default=5000,
+    parser.add_argument("--max_train_examples", type=int, default=0,
                         help="Maximum number of training examples to use (0 = use all). "
                              "Use for faster iteration on large datasets (e.g., 5000 for quick experiments)")
-    parser.add_argument("--max_eval_examples", type=int, default=1000,
+    parser.add_argument("--max_eval_examples", type=int, default=0,
                         help="Maximum number of evaluation examples to use (0 = use all). "
                              "Use for faster evaluation on large val sets")
     parser.add_argument("--eval_every_n_steps", type=int, default=0,
@@ -647,9 +604,9 @@ def main():
     # Note: With 5000 examples and batch_size=64, need ~10 epochs for convergence
     parser.add_argument("--epochs", type=int, default=20,
                         help="Number of training epochs (10 is good for 5k examples, reduce to 5 for 20k+)")
-    parser.add_argument("--early_stopping_patience", type=int, default=50,
+    parser.add_argument("--early_stopping_patience", type=int, default=20,
                         help="Epochs without validation improvement before early stopping")
-    parser.add_argument("--early_stopping_min_epochs", type=int, default=50,
+    parser.add_argument("--early_stopping_min_epochs", type=int, default=20,
                         help="Do not early-stop before this many epochs")
     parser.add_argument("--enable_checkpointing", action="store_true", default=True,
                         help="Enable gradient checkpointing for memory efficiency")
@@ -670,11 +627,11 @@ def main():
 
     # Batch size and optimizer - Keep the batch size 10x10 = 100 for Protrix dataset and 8x8 = 64 for Pharma Data.
     # Note: Larger batches = better gradient estimates with more data
-    parser.add_argument("--train_batch_size", type=int, default=64,
+    parser.add_argument("--train_batch_size", type=int, default=100,
                         help="Training batch size (increase for larger datasets)")
-    parser.add_argument("--eval_batch_size", type=int, default=64,
+    parser.add_argument("--eval_batch_size", type=int, default=100,
                         help="Evaluation batch size")
-    parser.add_argument("--encoding_batch_size", type=int, default=64,
+    parser.add_argument("--encoding_batch_size", type=int, default=100,
                         help="Batch size for SentenceTransformer.encode() when building embedding caches. "
                              "Higher values saturate the GPU better (256-512 for 24GB VRAM). "
                              "Reduce if you hit OOM during cache building.")
@@ -701,7 +658,7 @@ def main():
                              "'balanced' (partition negatives equally per positive domain, interleaved), "
                              "'random' (sample N triplets), "
                              "'primary_only' (only 1 pos x 1 neg per example)")
-    parser.add_argument("--max_triplets_per_example", type=int, default=2,
+    parser.add_argument("--max_triplets_per_example", type=int, default=10,
                         help="Maximum triplets per example when using 'limited' or 'random' strategy")
 
     # Default to enhanced_triplet for unidirectional; script will switch to bidirectional_triplet when needed
@@ -769,7 +726,7 @@ def main():
     # Hard negative mining
     parser.add_argument("--use_hard_negative_mining", action="store_true", default=True,
                         help="Enable simple in-batch hard negative mining")
-    parser.add_argument("--hard_negative_topk", type=int, default=1,
+    parser.add_argument("--hard_negative_topk", type=int, default=10,
                         help="Top-k hardest negatives to consider (1 uses single hardest)")
 
     # Loss function parameters
@@ -801,30 +758,6 @@ def main():
                         help="Relative weight for attention regularization loss (will be normalized with other weights)")
     parser.add_argument("--pair_loss_weight", type=float, default=0.3,
                         help="Relative weight for pair-wise contrastive loss (bidirectional only, will be normalized with other weights)")
-    parser.add_argument("--diversity_weight", type=float, default=0.0,
-                        help="Relative weight for cross-row diversity loss")
-    parser.add_argument("--direct_attention_loss_weight", type=float, default=0.0,
-                        help="Relative weight for direct attention anti-collapse loss")
-    parser.add_argument("--direct_attention_diversity_weight", type=float, default=1.0,
-                        help="Subweight for direct attention diversity")
-    parser.add_argument("--direct_attention_hub_weight", type=float, default=0.0,
-                        help="Subweight for direct attention hub penalty")
-    parser.add_argument("--direct_attention_entropy_weight", type=float, default=0.0,
-                        help="Subweight for direct attention entropy penalty")
-    parser.add_argument("--direct_attention_entropy_floor_ratio", type=float, default=0.5,
-                        help="Fraction of log(top_k) used as the attention entropy floor")
-    parser.add_argument("--forward_attention_loss_weight", type=float, default=0.0,
-                        help="Relative weight for forward attention anti-collapse loss")
-    parser.add_argument("--pair_mil_loss_weight", type=float, default=0.0,
-                        help="Relative weight for pair MIL loss")
-    parser.add_argument("--pair_mil_positive_margin", type=float, default=0.2,
-                        help="Minimum positive pair MIL margin")
-    parser.add_argument("--pair_mil_negative_margin", type=float, default=0.05,
-                        help="Maximum negative pair MIL margin")
-    parser.add_argument("--pair_mil_sparsity_weight", type=float, default=0.0,
-                        help="Pair MIL sparsity subweight")
-    parser.add_argument("--pair_mil_hub_weight", type=float, default=0.0,
-                        help="Pair MIL hub penalty subweight")
 
     # Attention Distillation arguments (preserves zero-shot row-sentence alignment quality)
     # OPTIMIZED: Enabled by default with 0.2 weight to preserve local alignments during training
@@ -834,27 +767,13 @@ def main():
                         help="Disable attention distillation")
     parser.add_argument("--distillation_weight", type=float, default=0.2,
                         help="Relative weight for attention distillation loss (will be normalized with other loss weights)")
-    parser.add_argument("--teacher_temperature", type=float, default=0.5,
+    parser.add_argument("--teacher_temperature", type=float, default=0.1,
                         help="Temperature for teacher (frozen encoder) pair similarities. Lower = sharper distribution (0.05-0.2 recommended)")
     parser.add_argument("--student_temperature", type=float, default=0.1,
                         help="Temperature for student (LOKI) pair scores. Should match teacher_temperature for consistent KL")
     parser.add_argument("--distillation_loss_type", type=str, default="js_div",
                         choices=["kl_div", "mse", "cosine", "js_div"],
                         help="Type of distillation loss: kl_div (KL divergence), mse (mean squared error), cosine (1 - cosine sim), js_div (Jensen-Shannon)")
-    parser.add_argument("--teacher_hub_centering", action="store_true", default=True,
-                        help="Subtract per-sentence teacher means before distillation")
-    parser.add_argument("--no_teacher_hub_centering", dest="teacher_hub_centering", action="store_false",
-                        help="Disable teacher hub centering")
-    parser.add_argument("--sigreg_weight", type=float, default=0.15,
-                        help="Relative weight for SIGReg structural regularization")
-    parser.add_argument("--sigreg_target_std", type=float, default=1.0,
-                        help="Target standard deviation for SIGReg")
-    parser.add_argument("--sigreg_num_proj", type=int, default=1024,
-                        help="Number of SIGReg random projections")
-    parser.add_argument("--sigreg_knots", type=int, default=17,
-                        help="Number of SIGReg quadrature knots")
-    parser.add_argument("--sinkhorn_weight", type=float, default=0.05,
-                        help="Relative weight for Sinkhorn attention regularization")
 
     parser.add_argument("--pair_score_method", type=str, default="cosine",
                         choices=["cosine", "dot", "mlp"],
@@ -913,15 +832,11 @@ def main():
                         help="Hidden dim for 2-layer gating MLP (0 => single linear)")
     parser.add_argument("--gated_attention_dropout", type=float, default=0.0,
                         help="Dropout on gate values (after sigmoid)")
-    parser.add_argument("--gated_attention_init_bias", type=float, default=0.0,
+    parser.add_argument("--gated_attention_init_bias", type=float, default=6.0,
                         help="Initial bias for gate logits (sigmoid(init_bias) close to 1 for pass-through init)")
-    parser.add_argument("--use_inner_gate", action="store_true", default=True,
-                        help="Enable the inner gate inside sparse attention modules")
-    parser.add_argument("--no_inner_gate", dest="use_inner_gate", action="store_false",
-                        help="Disable the inner sparse-attention gate")
 
     # Temperature scaling control (we'll force-disable when gated attention is enabled)
-    parser.add_argument("--disable_temperature", action="store_true", default=False,
+    parser.add_argument("--disable_temperature", action="store_true", default=True,
                         help="Disable temperature scaling inside attention score computation (useful for clean ablations)")
 
     parser.add_argument("--attention_activation", type=str, default="softmax",
@@ -967,20 +882,12 @@ def main():
     # Row-sentence evaluation arguments
     parser.add_argument("--enable_row_sent_eval", action="store_true", default=True,
                         help="Enable row-sentence level evaluation during training (default: False)")
-    parser.add_argument("--row_sent_test_file", type=str, default=str(_DATASETS_DIR / "mimic_small" / "test_row_level.json"),
+    parser.add_argument("--row_sent_test_file", type=str, default=str(_DATASETS_DIR / "feverous" / "test_row_level.json"),
                         help="Path to test dataset for row-sentence evaluation")
-    parser.add_argument("--row_sent_annotation_file", type=str, default=str(_DATASETS_DIR / "mimic_small" / "Annotated_Test.json"),
+    parser.add_argument("--row_sent_annotation_file", type=str, default=str(_DATASETS_DIR / "feverous" / "Annotated_Test.json"),
                         help="Path to row-sentence annotation file")
-    # parser.add_argument("--row_sent_annotation_file", type=str, default=str(_DATASETS_DIR / "totto" / "Annotated_Test.json"),
-    #                     help="Path to row-sentence annotation file")
     parser.add_argument("--row_sent_max_examples", type=int, default=None,
                         help="Maximum number of test examples to evaluate per epoch (default: None = all examples)")
-    parser.add_argument("--enable_attention_diagnostics", action="store_true", default=True,
-                        help="Report sparse attention collapse diagnostics during evaluation")
-    parser.add_argument("--no_attention_diagnostics", dest="enable_attention_diagnostics", action="store_false",
-                        help="Disable sparse attention collapse diagnostics")
-    parser.add_argument("--attention_diagnostic_examples", type=int, default=3,
-                        help="Number of examples to use for attention diagnostics")
     # Save best-by-test metrics checkpoints (requires row-sentence eval)
     parser.add_argument("--save_best_by_test_metrics", action="store_true", default=True,
                         help="Also save checkpoints for best test F1 and best test average precision")
@@ -1099,7 +1006,7 @@ def main():
         args.disable_temperature = True
 
     # =====================================================================
-    # IMPORTANT: Auto-adjust QLoRA + Gradual Unfreezing conflict
+    # IMPORTANT: Warn about QLoRA + Gradual Unfreezing conflict
     # =====================================================================
     # Unsloth QLoRA freezes the base model weights via PEFT, making gradual
     # unfreezing ineffective. Only LoRA adapter weights are trainable.
@@ -1113,13 +1020,11 @@ def main():
         print("   With QLoRA, the base encoder weights are FROZEN by PEFT, so gradual")
         print("   unfreezing has NO EFFECT. Only LoRA adapter weights are trainable.")
         print("")
-        print("   Auto-adjusting --encoder_tuning_mode from 'gradual' to 'full'.")
-        print("   This keeps QLoRA enabled and avoids a no-op gradual schedule.")
-        print("")
-        print("   Effective configuration:")
-        print("   - --unsloth_qlora stays enabled")
-        print("   - --unsloth_full_finetuning remains False")
-        print("   - all trainable LoRA adapters are optimized from epoch 0")
+        print("   Auto-adjusting configuration:")
+        print("   - Keeping --unsloth_qlora enabled")
+        print("   - Keeping --unsloth_full_finetuning disabled")
+        print("   - Switching --encoder_tuning_mode from 'gradual' to 'full'")
+        print("     so no gradual-unfreeze schedule is applied to PEFT-managed weights")
         print("=" * 70 + "\n")
         args.encoder_tuning_mode = "full"
 
@@ -1139,9 +1044,6 @@ def main():
     try:
         # Get the actual model name from the dictionary using the key
         model_name = AVAILABLE_MODELS[args.model_key]
-        # Load the encoder from the repo-local snapshot path (avoids re-hitting the Hub
-        # once the snapshot has already been materialized).
-        resolved_model_path = _bootstrap_training_hf_assets(model_name)
 
         # Initialize wandb if requested
         if args.use_wandb:
@@ -1176,8 +1078,8 @@ def main():
         use_unsloth_loading = args.use_unsloth and UNSLOTH_AVAILABLE
 
         # Resolve model name for Unsloth (SentenceTransformer default namespace)
-        unsloth_model_name = resolved_model_path
-        if use_unsloth_loading and "/" not in model_name and not os.path.exists(resolved_model_path):
+        unsloth_model_name = model_name
+        if use_unsloth_loading and "/" not in model_name and not os.path.exists(model_name):
             unsloth_model_name = f"sentence-transformers/{model_name}"
             print(f"   [INFO] Auto-resolving short model name to '{unsloth_model_name}' for Unsloth")
 
@@ -1331,7 +1233,7 @@ def main():
 
             try:
                 sentence_encoder = SentenceTransformer(
-                    resolved_model_path,
+                    model_name,
                     model_kwargs=model_kwargs,
                     trust_remote_code=True,
                     device=device,
@@ -1356,7 +1258,7 @@ def main():
                     fallback_model_kwargs["dtype"] = torch.bfloat16
 
                     sentence_encoder = SentenceTransformer(
-                        resolved_model_path,
+                        model_name,
                         model_kwargs=fallback_model_kwargs,
                         trust_remote_code=True,
                         device=device,
@@ -1370,7 +1272,7 @@ def main():
                         final_kwargs = {"dtype": torch.bfloat16}
 
                         sentence_encoder = SentenceTransformer(
-                            resolved_model_path,
+                            model_name,
                             model_kwargs=final_kwargs,
                             trust_remote_code=True,
                             device=device
@@ -1381,7 +1283,7 @@ def main():
                         super_final_kwargs = {}
 
                         sentence_encoder = SentenceTransformer(
-                            resolved_model_path,
+                            model_name,
                             model_kwargs=super_final_kwargs if super_final_kwargs else None,
                             trust_remote_code=True,
                             device=device
@@ -1529,7 +1431,6 @@ def main():
                 gated_attention_hidden_dim=args.gated_attention_hidden_dim,
                 gated_attention_dropout=args.gated_attention_dropout,
                 gated_attention_init_bias=args.gated_attention_init_bias,
-                use_inner_gate=args.use_inner_gate,
                 use_header_conditioning=args.use_header_conditioning,
                 use_cell_level_matching=args.use_cell_level_matching,
                 cell_matching_weight=args.cell_matching_weight,
@@ -1754,7 +1655,6 @@ def main():
         config_dict['gated_attention_hidden_dim'] = args.gated_attention_hidden_dim
         config_dict['gated_attention_dropout'] = args.gated_attention_dropout
         config_dict['gated_attention_init_bias'] = args.gated_attention_init_bias
-        config_dict['use_inner_gate'] = args.use_inner_gate
         config_dict['disable_temperature'] = args.disable_temperature
         config_dict['use_cache'] = use_cache
         config_dict['stage0_cache_mode'] = args.stage0_cache_mode
@@ -1810,18 +1710,6 @@ def main():
             top_k=args.top_k,  # Number of top pairs for aggregation methods
             triplet_weight=args.triplet_weight,  # NEW: Pass triplet weight argument
             attention_loss_weight=args.attention_loss_weight,
-            diversity_weight=args.diversity_weight if args.use_bidirectional else 0.0,
-            direct_attention_loss_weight=args.direct_attention_loss_weight if args.use_bidirectional else 0.0,
-            direct_attention_diversity_weight=args.direct_attention_diversity_weight if args.use_bidirectional else 0.0,
-            direct_attention_hub_weight=args.direct_attention_hub_weight if args.use_bidirectional else 0.0,
-            direct_attention_entropy_weight=args.direct_attention_entropy_weight if args.use_bidirectional else 0.0,
-            direct_attention_entropy_floor_ratio=args.direct_attention_entropy_floor_ratio if args.use_bidirectional else 0.5,
-            forward_attention_loss_weight=args.forward_attention_loss_weight if args.use_bidirectional else 0.0,
-            pair_mil_loss_weight=args.pair_mil_loss_weight if args.use_bidirectional else 0.0,
-            pair_mil_positive_margin=args.pair_mil_positive_margin if args.use_bidirectional else 0.2,
-            pair_mil_negative_margin=args.pair_mil_negative_margin if args.use_bidirectional else 0.05,
-            pair_mil_sparsity_weight=args.pair_mil_sparsity_weight if args.use_bidirectional else 0.0,
-            pair_mil_hub_weight=args.pair_mil_hub_weight if args.use_bidirectional else 0.0,
             margin=args.margin,
             margin_end=args.margin_end,
             margin_schedule=args.margin_schedule,
@@ -1836,15 +1724,9 @@ def main():
             teacher_temperature=args.teacher_temperature if args.use_bidirectional else 0.1,
             student_temperature=args.student_temperature if args.use_bidirectional else 0.1,
             distillation_loss_type=args.distillation_loss_type if args.use_bidirectional else "kl_div",
-            teacher_hub_centering=args.teacher_hub_centering if args.use_bidirectional else False,
             share_attention_weights=args.share_attention_weights if args.use_bidirectional else False,
             extract_join_paths=args.extract_join_paths if args.use_bidirectional else False,
             join_path_threshold=args.join_path_threshold if args.use_bidirectional else 0.1,
-            sigreg_weight=args.sigreg_weight if args.use_bidirectional else 0.0,
-            sigreg_target_std=args.sigreg_target_std,
-            sigreg_num_proj=args.sigreg_num_proj,
-            sigreg_knots=args.sigreg_knots,
-            sinkhorn_weight=args.sinkhorn_weight if args.use_bidirectional else 0.0,
             mix_examples=args.mix_examples,  # Control triplet batching behavior
             triplet_strategy=args.triplet_strategy,  # NEW: Triplet sampling strategy
             max_triplets_per_example=args.max_triplets_per_example,  # NEW: Max triplets for limited/random
@@ -1864,8 +1746,6 @@ def main():
             row_sent_annotation_file=args.row_sent_annotation_file,
             dataset_format=args.dataset_format,
             row_sent_max_examples=args.row_sent_max_examples,
-            enable_attention_diagnostics=args.enable_attention_diagnostics if args.use_bidirectional else False,
-            attention_diagnostic_examples=args.attention_diagnostic_examples,
             # Initialization parameters (NEW - for Stage 1 evaluation)
             init_method=args.init_method,
             init_method_params=args.init_method_params,

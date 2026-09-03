@@ -109,6 +109,7 @@ def _materialize_repo_local_snapshot(
     local_dir: Path,
     cache_dir: Optional[Path],
     local_files_only: bool,
+    token: Optional[Any] = None,
 ) -> bool:
     try:
         from huggingface_hub import snapshot_download
@@ -123,6 +124,8 @@ def _materialize_repo_local_snapshot(
     }
     if cache_dir is not None:
         download_kwargs["cache_dir"] = str(cache_dir)
+    if token is not None:
+        download_kwargs["token"] = token
 
     try:
         snapshot_download(**download_kwargs)
@@ -161,13 +164,27 @@ def ensure_repo_local_hf_snapshot(
                 return str(repo_local_snapshot_dir), "repo_local_from_managed_cache"
             return str(repo_local_snapshot_dir), "repo_local_from_external_cache"
 
-    if allow_online and _materialize_repo_local_snapshot(
-        candidate_text,
-        repo_local_snapshot_dir,
-        cache_dir=Path(get_repo_local_hf_cache_folder()),
-        local_files_only=False,
-    ):
-        return str(repo_local_snapshot_dir), "downloaded_to_repo"
+    if allow_online:
+        # Try anonymously first since most repos are public; only fall back to
+        # HF_TOKEN (env/stored credentials) for gated/private repos or when an
+        # invalid token would otherwise break anonymous requests.
+        if _materialize_repo_local_snapshot(
+            candidate_text,
+            repo_local_snapshot_dir,
+            cache_dir=Path(get_repo_local_hf_cache_folder()),
+            local_files_only=False,
+            token=False,
+        ):
+            return str(repo_local_snapshot_dir), "downloaded_to_repo"
+
+        if _materialize_repo_local_snapshot(
+            candidate_text,
+            repo_local_snapshot_dir,
+            cache_dir=Path(get_repo_local_hf_cache_folder()),
+            local_files_only=False,
+            token=None,
+        ):
+            return str(repo_local_snapshot_dir), "downloaded_to_repo_with_token"
 
     cached_snapshot = resolve_cached_hf_snapshot(candidate_text)
     if cached_snapshot is not None:

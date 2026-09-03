@@ -125,6 +125,25 @@ def validate_aggregation_method(model, aggregation_method: str) -> bool:
         return aggregation_method in unidirectional_methods
 
 
+def get_annotation_id_candidates(example: Dict[str, Any]) -> List[str]:
+    """Return candidate identifier values that may be used to match an example to annotations."""
+    candidates: List[str] = []
+    for field in ("anchor_id", "id", "admission_id"):
+        value = example.get(field)
+        if value is None:
+            continue
+        candidates.append(str(value))
+    return candidates
+
+
+def example_has_annotation_match(example: Dict[str, Any], annotation_keys: Any) -> bool:
+    """Check whether an example can be matched to a set of annotation keys across supported formats."""
+    if not annotation_keys:
+        return False
+    key_strings = {str(k) for k in annotation_keys}
+    return any(candidate in key_strings for candidate in get_annotation_id_candidates(example))
+
+
 def load_protrix_annotations(annotation_file: str) -> Dict[int, List[List[int]]]:
     """Load annotations mapping anchor_id to highlighted_cells.
     
@@ -133,7 +152,7 @@ def load_protrix_annotations(annotation_file: str) -> Dict[int, List[List[int]]]
     returns empty dict and lets MIMIC evaluation handle it instead.
     """
     if not Path(annotation_file).exists():
-        print(f"⚠️  Row-sentence annotation file not found: {annotation_file}")
+        print(f"[WARN]  Row-sentence annotation file not found: {annotation_file}")
         return {}
     
     try:
@@ -164,11 +183,11 @@ def load_protrix_annotations(annotation_file: str) -> Dict[int, List[List[int]]]
             # MIMIC format detected - skip loading, let MIMIC eval handle it
             return {}
         
-        print(f"✅ Loaded {len(annotations)} row-sentence annotations")
+        print(f"[OK] Loaded {len(annotations)} row-sentence annotations")
         return annotations
         
     except Exception as e:
-        print(f"❌ Error loading row-sentence annotations: {e}")
+        print(f"[ERROR] Error loading row-sentence annotations: {e}")
         return {}
 
 
@@ -206,7 +225,7 @@ def calculate_f1_for_pairs(pair_scores: np.ndarray,
     ground truth pairs from non-ground truth pairs.
     
     Args:
-        pair_scores: N×M matrix of row-sentence similarities
+        pair_scores: NxM matrix of row-sentence similarities
         row_sentence_pairs: List of (row_idx, sent_idx) ground truth pairs
         num_rows: Number of rows
         num_sentences: Number of sentences
@@ -276,7 +295,7 @@ def calculate_average_precision_for_pairs(pair_scores: np.ndarray,
     ground truth pairs above non-ground truth pairs.
     
     Args:
-        pair_scores: N×M matrix of row-sentence similarities
+        pair_scores: NxM matrix of row-sentence similarities
         row_sentence_pairs: List of (row_idx, sent_idx) ground truth pairs
         num_rows: Number of rows
         num_sentences: Number of sentences
@@ -383,9 +402,9 @@ def evaluate_row_sentence_metrics(model, examples: List[Dict[str, Any]],
     # FIXED: Extract model configuration dynamically (no hardcoding!)
     if model_config is None:
         model_config = extract_model_config(model)
-        # print(f"🔧 Extracted model configuration: {model_config}")  # Commented out - too verbose for training
+        # print(f"[INFO] Extracted model configuration: {model_config}")  # Commented out - too verbose for training
     else:
-        # print(f"🔧 Using provided model configuration: {model_config}")  # Commented out - too verbose for training
+        # print(f"[INFO] Using provided model configuration: {model_config}")  # Commented out - too verbose for training
         pass
     
     # FIXED: Determine appropriate aggregation method based on model type and training
@@ -396,14 +415,14 @@ def evaluate_row_sentence_metrics(model, examples: List[Dict[str, Any]],
         else:
             # Default for unidirectional models (row-level aggregation)
             aggregation_method = "entropy_regularized"
-        # print(f"🔧 Using default aggregation method: {aggregation_method}")  # Commented out - too verbose for training
+        # print(f"[INFO] Using default aggregation method: {aggregation_method}")  # Commented out - too verbose for training
         pass
     else:
         # Validate the specified aggregation method
         if not validate_aggregation_method(model, aggregation_method):
             model_type = "bidirectional" if isinstance(model, BidirectionalTableTextModel) else "unidirectional"
-            print(f"⚠️  Warning: {aggregation_method} may not be compatible with {model_type} model")
-        # print(f"🔧 Using specified aggregation method: {aggregation_method}")  # Commented out - too verbose for training
+            print(f"[WARN]  Warning: {aggregation_method} may not be compatible with {model_type} model")
+        # print(f"[INFO] Using specified aggregation method: {aggregation_method}")  # Commented out - too verbose for training
     
     overall_accuracies = []
     avg_precisions = []
@@ -537,7 +556,7 @@ def evaluate_row_sentence_metrics(model, examples: List[Dict[str, Any]],
                 
             except Exception as e:
                 # Skip examples that cause errors, but log for debugging
-                print(f"⚠️  Row-sentence eval error for example {example_idx} (anchor_id={anchor_id}): {str(e)[:100]}...")
+                print(f"[WARN]  Row-sentence eval error for example {example_idx} (anchor_id={anchor_id}): {str(e)[:100]}...")
                 continue
     
     # Compute aggregate metrics
@@ -563,9 +582,9 @@ def evaluate_row_sentence_metrics(model, examples: List[Dict[str, Any]],
         mean_score_separation = 0.0
     
     # Add debugging info about processing results
-    print(f"🔍 Row-sentence evaluation completed: {examples_processed}/{len(examples)} examples processed")
+    print(f"[INFO] Row-sentence evaluation completed: {examples_processed}/{len(examples)} examples processed")
     if examples_processed == 0:
-        print("⚠️  WARNING: No examples were successfully processed in row-sentence evaluation!")
+        print("[WARN]  WARNING: No examples were successfully processed in row-sentence evaluation!")
     
     return {
         # Original metrics (FIXED: no ranking assumption)
@@ -600,14 +619,26 @@ def load_test_data_and_annotations(test_file: str, annotation_file: str) -> Tupl
         test_examples = load_row_level_dataset(test_file)
         annotations = load_protrix_annotations(annotation_file)
         
-        # Check consistency
-        test_ids = set(ex.get("anchor_id") for ex in test_examples if ex.get("anchor_id") is not None)
+        # Keep only examples that can be matched to annotations across supported identifier fields.
+        if annotations:
+            matched_examples = [
+                ex for ex in test_examples
+                if example_has_annotation_match(ex, annotations.keys())
+            ]
+            if len(matched_examples) < len(test_examples):
+                print(f"[INFO] Filtered row-sentence test set to {len(matched_examples)}/{len(test_examples)} examples with annotation matches")
+            test_examples = matched_examples
+        
+        # Check consistency using the same compatibility logic
         annotation_ids = set(annotations.keys())
-        common_ids = test_ids & annotation_ids
+        annotation_id_strings = {str(k) for k in annotation_ids}
+        examples_with_annotations = sum(
+            1
+            for ex in test_examples
+            if any(candidate in annotation_id_strings for candidate in get_annotation_id_candidates(ex))
+        )
         
-        examples_with_annotations = sum(1 for aid in common_ids if annotations[aid])
-        
-        print(f"📊 Row-sentence evaluation data:")
+        print(f"[INFO] Row-sentence evaluation data:")
         print(f"   Test examples: {len(test_examples)}")
         print(f"   Annotations: {len(annotations)}")
         print(f"   Examples with annotations: {examples_with_annotations}")
@@ -615,7 +646,7 @@ def load_test_data_and_annotations(test_file: str, annotation_file: str) -> Tupl
         return test_examples, annotations
         
     except Exception as e:
-        print(f"❌ Error loading test data or annotations: {e}")
+        print(f"[ERROR] Error loading test data or annotations: {e}")
         return [], {}
 
 

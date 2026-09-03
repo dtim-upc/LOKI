@@ -628,7 +628,7 @@ def generate_triplet_batches_for_single_example(
         elif triplet_strategy == "limited":
             # Round-robin over positives so all positives are represented even with small budgets.
             # Each positive sees negatives sequentially from the shared pool.
-            # e.g. 2 pos × 4 neg, budget=4: (p0,n0),(p1,n0),(p0,n1),(p1,n1)
+            # e.g. 2 pos x 4 neg, budget=4: (p0,n0),(p1,n0),(p0,n1),(p1,n1)
             triplet_list = []
             neg_cursors = [0] * len(all_positives)
             while len(triplet_list) < max_triplets_per_example:
@@ -737,7 +737,7 @@ def prepare_mixed_triplet_batches(examples: List[Dict[str, Any]], batch_size: in
     # Print statistics about triplet generation
     if triplet_counts:
         import numpy as np
-        print(f"\n📊 Triplet Generation Statistics:")
+        print(f"\n[INFO] Triplet Generation Statistics:")
         print(f"   Total examples: {len(examples)}")
         print(f"   Total triplets: {len(all_triplets)}")
         print(f"   Avg triplets/example: {np.mean(triplet_counts):.2f}")
@@ -762,7 +762,7 @@ def prepare_mixed_triplet_batches(examples: List[Dict[str, Any]], batch_size: in
     
     dropped_triplets = len(all_triplets) - sum(len(b) for b in batches)
     if dropped_triplets > 0:
-        print(f"⚠️  Dropped {dropped_triplets} triplets from incomplete batches (drop_last=True)")
+        print(f"[WARN]  Dropped {dropped_triplets} triplets from incomplete batches (drop_last=True)")
     
     print(f"Generated {len(batches)} mixed batches from {len(all_triplets)} total triplets")
     return batches
@@ -797,7 +797,7 @@ def prepare_example_isolated_batches(examples: List[Dict[str, Any]], batch_size:
     if triplet_counts:
         import numpy as np
         total_triplets = sum(triplet_counts)
-        print(f"\n📊 Triplet Generation Statistics (Isolated Batching):")
+        print(f"\n[INFO] Triplet Generation Statistics (Isolated Batching):")
         print(f"   Total examples: {len(examples)}")
         print(f"   Total triplets: {total_triplets}")
         print(f"   Avg triplets/example: {np.mean(triplet_counts):.2f}")

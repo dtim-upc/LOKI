@@ -23,9 +23,18 @@ Usage:
 
 import torch
 from typing import Optional, List, Dict, Any, Tuple, Union
+import os
 import warnings
 
+# 1. Tell Python's core warning system to ignore everything
+warnings.filterwarnings("ignore")
+warnings.simplefilter("ignore")
+
+# 2. Block native C/C++ logging warnings from Hugging Face/PyTorch backends
+os.environ["PYTHONWARNINGS"] = "ignore"
+os.environ["BITSANDBYTES_NOWELCOME"] = "1"  # Silences bitsandbytes startup text
 # Track whether unsloth is available
+
 UNSLOTH_AVAILABLE = False
 FAST_SENTENCE_TRANSFORMER_AVAILABLE = False
 try:
@@ -43,7 +52,7 @@ try:
     UNSLOTH_AVAILABLE = True
     print("[Unsloth] Successfully imported - 2x faster training enabled!")
 except ImportError as e:
-    warnings.warn(f"🦥 Unsloth not available: {e}. Falling back to standard implementation.")
+    warnings.warn(f"[INFO] Unsloth not available: {e}. Falling back to standard implementation.")
 
 # Import other dependencies after unsloth
 from peft import TaskType
@@ -198,7 +207,7 @@ def get_model_max_seq_length(model_name: str, default: int = 512) -> int:
             _PRACTICAL_CAP = 512
             if max_len > _PRACTICAL_CAP:
                 print(
-                    f"[INFO] Auto-detected max_seq_length for {model_name}: {max_len} — "
+                    f"[INFO] Auto-detected max_seq_length for {model_name}: {max_len} - "
                     f"this is the model's absolute positional limit and will cause OOM during training. "
                     f"Capping to {_PRACTICAL_CAP}. Use --override_max_seq_length to choose a different value."
                 )
@@ -536,7 +545,7 @@ def create_unsloth_model(
         verbose=True,
     )
     
-    print(f"🦥 Loading {model_name} with Unsloth optimizations...")
+    print(f"[INFO] Loading {model_name} with Unsloth optimizations...")
     print(f"   HF snapshot source: {model_source}")
     
     if FAST_SENTENCE_TRANSFORMER_AVAILABLE:
@@ -550,7 +559,7 @@ def create_unsloth_model(
             # Note: FastSentenceTransformer handles dtype automatically
         )
         
-        print(f"✅ Loaded {model_name} with FastSentenceTransformer")
+        print(f"[OK] Loaded {model_name} with FastSentenceTransformer")
         # FastSentenceTransformer returns just the model (it's already a SentenceTransformer)
         return model, None  # tokenizer is internal to the model
     else:
@@ -570,7 +579,7 @@ def create_unsloth_model(
             load_in_4bit=load_in_4bit,
         )
         
-        print(f"✅ Loaded {model_name} with FastModel")
+        print(f"[OK] Loaded {model_name} with FastModel")
         return model, tokenizer
 
 
@@ -633,7 +642,7 @@ def apply_qlora_adapters(
     if exclude_modules is None:
         exclude_modules = []
     
-    print(f"🎯 Attaching LoRA adapters (rank={lora_rank}, alpha={lora_alpha})...")
+    print(f"[INFO] Attaching LoRA adapters (rank={lora_rank}, alpha={lora_alpha})...")
     print(f"   Target modules: {target_modules}")
     print(f"   Random state: {random_state}")
     
@@ -676,7 +685,7 @@ def apply_qlora_adapters(
     if hasattr(model, 'print_trainable_parameters'):
         model.print_trainable_parameters()
     
-    print("✅ LoRA adapters attached successfully")
+    print("[OK] LoRA adapters attached successfully")
     return model
 
 
@@ -706,7 +715,7 @@ def wrap_unsloth_in_sentence_transformer(
     Returns:
         SentenceTransformer instance wrapping the Unsloth model
     """
-    print("🔧 Wrapping Unsloth model in SentenceTransformer...")
+    print("[INFO] Wrapping Unsloth model in SentenceTransformer...")
     resolved_base_model_id, model_source = _resolve_hf_snapshot(
         base_model_id,
         allow_online=True,
@@ -750,7 +759,7 @@ def wrap_unsloth_in_sentence_transformer(
     # 5. Initialize SentenceTransformer with custom modules
     sbert_model = SentenceTransformer(modules=modules)
     
-    print("✅ SentenceTransformer wrapper created successfully")
+    print("[OK] SentenceTransformer wrapper created successfully")
     return sbert_model
 
 
@@ -822,7 +831,7 @@ def create_unsloth_sentence_encoder(
     """
     # Check if Unsloth is available and requested
     if use_unsloth and not UNSLOTH_AVAILABLE:
-        print("⚠️ Unsloth requested but not available. Falling back to standard loading.")
+        print("[WARN] Unsloth requested but not available. Falling back to standard loading.")
         use_unsloth = False
     
     # Auto-detect target modules if not explicitly specified
@@ -844,7 +853,7 @@ def create_unsloth_sentence_encoder(
     
     if use_unsloth:
         print(f"\n{'='*60}")
-        print("🦥 UNSLOTH MODE: Creating optimized sentence encoder")
+        print("[INFO] UNSLOTH MODE: Creating optimized sentence encoder")
         print(f"{'='*60}")
         
         # Force FastModel fallback for ColBERT models to ensure an explicit Pooling layer is added
@@ -863,6 +872,9 @@ def create_unsloth_sentence_encoder(
             sentence_encoder = FastSentenceTransformer.from_pretrained(
                 model_name=resolved_model_name,
                 max_seq_length=max_seq_length,
+                dtype=dtype,
+                load_in_4bit=load_in_4bit,
+                load_in_16bit=not load_in_4bit,
                 full_finetuning=full_finetuning,
             )
             
@@ -895,7 +907,7 @@ def create_unsloth_sentence_encoder(
                 lora_params = sum(p.numel() for name, p in sentence_encoder.named_parameters() 
                                  if 'lora' in name.lower())
                 
-                print(f"\n   📊 PEFT Status After get_peft_model():")
+                print(f"\n   [INFO] PEFT Status After get_peft_model():")
                 print(f"      Total params: {total_params:,}")
                 print(f"      Trainable: {trainable_params:,} ({trainable_params/total_params*100:.2f}%)")
                 print(f"      Frozen: {frozen_params:,} ({frozen_params/total_params*100:.2f}%)")
@@ -903,12 +915,12 @@ def create_unsloth_sentence_encoder(
                 
                 # Check if PEFT is working correctly
                 if trainable_params == total_params:
-                    print(f"\n   ⚠️ WARNING: PEFT did NOT freeze base weights!")
+                    print(f"\n   [WARN] WARNING: PEFT did NOT freeze base weights!")
                     print(f"      All {total_params:,} parameters are trainable.")
                     print(f"      This means you're doing FULL fine-tuning, NOT QLoRA.")
                     
                     # Try to manually freeze base weights
-                    print(f"\n   🔧 Attempting to manually freeze base weights...")
+                    print(f"\n   [INFO] Attempting to manually freeze base weights...")
                     for name, param in sentence_encoder.named_parameters():
                         # Keep LoRA params trainable, freeze everything else
                         if 'lora' not in name.lower():
@@ -922,21 +934,21 @@ def create_unsloth_sentence_encoder(
                     print(f"      Frozen: {frozen_after:,} ({frozen_after/total_params*100:.2f}%)")
                     
                     if trainable_after == total_params:
-                        print(f"\n   ❌ CRITICAL: Manual freeze failed!")
+                        print(f"\n   [ERROR] CRITICAL: Manual freeze failed!")
                         print(f"      No LoRA params found. Check if target_modules are correct.")
                         print(f"      Available param names (first 10):")
                         for i, (name, _) in enumerate(sentence_encoder.named_parameters()):
                             if i < 10:
                                 print(f"         {name}")
                     else:
-                        print(f"   ✅ Manual freeze succeeded! QLoRA is now active.")
+                        print(f"   [OK] Manual freeze succeeded! QLoRA is now active.")
                 else:
                     pct = trainable_params / total_params * 100
-                    print(f"\n   ✅ PEFT is working! Only {pct:.2f}% params trainable (QLoRA active)")
+                    print(f"\n   [OK] PEFT is working! Only {pct:.2f}% params trainable (QLoRA active)")
                 
                 # Try to use PEFT's built-in method if available
                 if hasattr(sentence_encoder, 'print_trainable_parameters'):
-                    print("\n   📋 PEFT print_trainable_parameters():")
+                    print("\n   [INFO] PEFT print_trainable_parameters():")
                     sentence_encoder.print_trainable_parameters()
                 
                 # Check if the underlying model has PEFT
@@ -944,21 +956,21 @@ def create_unsloth_sentence_encoder(
                 if hasattr(sentence_encoder, '_modules'):
                     for module_name, module in sentence_encoder._modules.items():
                         if hasattr(module, 'print_trainable_parameters'):
-                            print(f"\n   📋 PEFT on {module_name}.print_trainable_parameters():")
+                            print(f"\n   [INFO] PEFT on {module_name}.print_trainable_parameters():")
                             module.print_trainable_parameters()
                             underlying_model = module
                             break
                         # Also check for nested model attribute
                         if hasattr(module, 'model') and hasattr(module.model, 'print_trainable_parameters'):
-                            print(f"\n   📋 PEFT on {module_name}.model.print_trainable_parameters():")
+                            print(f"\n   [INFO] PEFT on {module_name}.model.print_trainable_parameters():")
                             module.model.print_trainable_parameters()
                             underlying_model = module.model
                             break
                     
             elif use_qlora and full_finetuning:
-                print("   ⚠️ Ignoring use_qlora since full_finetuning=True")
+                print("   [WARN] Ignoring use_qlora since full_finetuning=True")
             
-            print(f"\n✅ FastSentenceTransformer encoder ready!")
+            print(f"\n[OK] FastSentenceTransformer encoder ready!")
             print(f"{'='*60}\n")
             
         else:
@@ -989,7 +1001,7 @@ def create_unsloth_sentence_encoder(
                     model_name=model_name,
                 )
             elif use_qlora and full_finetuning:
-                print("   ⚠️ Ignoring use_qlora since full_finetuning=True")
+                print("   [WARN] Ignoring use_qlora since full_finetuning=True")
             
             # Step 3: Wrap in SentenceTransformer
             sentence_encoder = wrap_unsloth_in_sentence_transformer(
@@ -1006,7 +1018,7 @@ def create_unsloth_sentence_encoder(
         
     else:
         # Fallback to standard SentenceTransformer loading
-        print(f"\n📦 Loading {model_name} with standard SentenceTransformer...")
+        print(f"\n[INFO] Loading {model_name} with standard SentenceTransformer...")
         
         model_kwargs = {}
         if device == "cuda" and torch.cuda.is_available():
@@ -1021,7 +1033,7 @@ def create_unsloth_sentence_encoder(
             model_kwargs=model_kwargs,
         )
         
-        print(f"✅ Standard encoder loaded")
+        print(f"[OK] Standard encoder loaded")
     
     return sentence_encoder
 
@@ -1059,13 +1071,13 @@ def print_unsloth_status():
     """Print Unsloth status information."""
     status = get_unsloth_status()
     
-    print("\n🦥 Unsloth Status:")
-    print(f"   Available: {'✅ Yes' if status['available'] else '❌ No'}")
+    print("\n[INFO] Unsloth Status:")
+    print(f"   Available: {'[OK] Yes' if status['available'] else '[ERROR] No'}")
     if status['available']:
-        print(f"   FastSentenceTransformer: {'✅ Yes (preferred)' if status['fast_sentence_transformer'] else '❌ No (using FastModel fallback)'}")
+        print(f"   FastSentenceTransformer: {'[OK] Yes (preferred)' if status['fast_sentence_transformer'] else '[ERROR] No (using FastModel fallback)'}")
     if status['version']:
         print(f"   Version: {status['version']}")
-    print(f"   CUDA: {'✅ Yes' if status['cuda_available'] else '❌ No'}")
+    print(f"   CUDA: {'[OK] Yes' if status['cuda_available'] else '[ERROR] No'}")
     if status['gpu_name']:
         print(f"   GPU: {status['gpu_name']}")
         print(f"   GPU Memory: {status['gpu_memory']}")
@@ -1124,10 +1136,10 @@ def compile_custom_modules(
         on older PyTorch versions.
     """
     if not TORCH_COMPILE_AVAILABLE:
-        print("⚠️ torch.compile() not available (requires PyTorch 2.0+)")
+        print("[WARN] torch.compile() not available (requires PyTorch 2.0+)")
         return model
     
-    print(f"\n🔧 Applying torch.compile() optimizations (mode={mode})...")
+    print(f"\n[INFO] Applying torch.compile() optimizations (mode={mode})...")
     
     compiled_count = 0
     
@@ -1158,10 +1170,10 @@ def compile_custom_modules(
                 module.forward = compiled_forward
                 compiled_count += 1
             except Exception as e:
-                print(f"   ⚠️ Could not compile {name} ({module_type}): {e}")
+                print(f"   [WARN] Could not compile {name} ({module_type}): {e}")
     
     if compiled_count > 0:
-        print(f"✅ Compiled {compiled_count} custom modules with torch.compile()")
+        print(f"[OK] Compiled {compiled_count} custom modules with torch.compile()")
     else:
         print("   No custom modules found to compile")
         
@@ -1235,9 +1247,9 @@ def optimize_model_for_training(
     if use_gradient_checkpointing and hasattr(model, 'gradient_checkpointing_enable'):
         try:
             model.gradient_checkpointing_enable()
-            print("✅ Gradient checkpointing enabled")
+            print("[OK] Gradient checkpointing enabled")
         except Exception as e:
-            print(f"⚠️ Could not enable gradient checkpointing: {e}")
+            print(f"[WARN] Could not enable gradient checkpointing: {e}")
     
     return model
 
@@ -1269,10 +1281,10 @@ def print_optimization_status():
     """Print optimization capabilities status."""
     status = get_optimization_status()
     
-    print("\n⚡ Optimization Status:")
-    print(f"   Unsloth (Encoder): {'✅ Yes' if status['unsloth_available'] else '❌ No'}")
-    print(f"   torch.compile() (Custom Modules): {'✅ Yes' if status['torch_compile_available'] else '❌ No'}")
-    print(f"   CUDA: {'✅ Yes' if status['cuda_available'] else '❌ No'}")
+    print("\n[INFO] Optimization Status:")
+    print(f"   Unsloth (Encoder): {'[OK] Yes' if status['unsloth_available'] else '[ERROR] No'}")
+    print(f"   torch.compile() (Custom Modules): {'[OK] Yes' if status['torch_compile_available'] else '[ERROR] No'}")
+    print(f"   CUDA: {'[OK] Yes' if status['cuda_available'] else '[ERROR] No'}")
     print(f"   PyTorch: {status['pytorch_version']}")
     if status['gpu_name']:
         print(f"   GPU: {status['gpu_name']} ({status['gpu_memory']})")
@@ -1326,9 +1338,9 @@ if __name__ == "__main__":
             # Test encoding
             test_sentences = ["This is a test sentence.", "Another test."]
             embeddings = encoder.encode(test_sentences)
-            print(f"✅ Test embeddings shape: {embeddings.shape}")
+            print(f"[OK] Test embeddings shape: {embeddings.shape}")
         except Exception as e:
-            print(f"❌ Test failed: {e}")
+            print(f"[ERROR] Test failed: {e}")
             import traceback
             traceback.print_exc()
     else:

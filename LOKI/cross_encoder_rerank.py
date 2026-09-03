@@ -4,12 +4,12 @@ cross_encoder_rerank.py
 
 Pluggable zero-shot cross-encoder reranker for LOKI.
 
-Used as Phase D.5 in materialize_joins.py — between LOKI atomic-link extraction
+Used as Phase D.5 in materialize_joins.py - between LOKI atomic-link extraction
 and clustering / labeling.  Re-scores (query, passage) pairs where the query is
 the (diagnosis + medication) text and the passage is the candidate evidence
 sentence.  LOKI provides recall; the cross-encoder provides precision.
 
-Zero-shot only — annotations are never used for fine-tuning.
+Zero-shot only - annotations are never used for fine-tuning.
 
 Default backend: cross-encoder/ettin-reranker-400m-v1 via sentence-transformers.
 Any HF cross-encoder works (BGE-reranker, MS-MARCO MiniLM, etc.) by changing
@@ -39,7 +39,7 @@ DEFAULT_CROSS_ENCODER_MODEL = "Alibaba-NLP/gte-reranker-modernbert-base"
 
 
 # ---------------------------------------------------------------------------
-# Protocol — anything implementing this is a drop-in reranker
+# Protocol - anything implementing this is a drop-in reranker
 # ---------------------------------------------------------------------------
 
 @runtime_checkable
@@ -163,7 +163,7 @@ def cache_key(model_name: str, query: str, passage: str) -> str:
 # ---------------------------------------------------------------------------
 
 _SMOKE_PAIRS: List[Tuple[str, str]] = [
-    # Strong treatment evidence — should score HIGH
+    # Strong treatment evidence - should score HIGH
     ("Diagnosis: type 2 diabetes mellitus | Medication: metformin 500 mg",
      "Patient continued on metformin for blood glucose control."),
     ("Diagnosis: hypertension | Medication: lisinopril 10 mg",
@@ -176,12 +176,12 @@ _SMOKE_PAIRS: List[Tuple[str, str]] = [
      "Iron sulfate prescribed for iron-deficiency anemia."),
     ("Diagnosis: COPD | Medication: albuterol nebulizer",
      "Albuterol nebulizers given q4h for wheezing."),
-    # Discontinuation / adverse-effect evidence — should also score HIGH (still relevant)
+    # Discontinuation / adverse-effect evidence - should also score HIGH (still relevant)
     ("Diagnosis: atrial fibrillation | Medication: warfarin",
      "Patient developed bleeding; warfarin was held and discontinued."),
     ("Diagnosis: gout flare | Medication: prednisone",
      "Could not tolerate prednisone; discontinued due to hallucinations."),
-    # Unrelated — should score LOW
+    # Unrelated - should score LOW
     ("Diagnosis: pneumonia | Medication: aspirin 81 mg",
      "Patient eats a high-fiber breakfast every morning."),
     ("Diagnosis: insomnia | Medication: zolpidem",

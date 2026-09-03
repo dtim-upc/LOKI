@@ -473,7 +473,7 @@ def create_clean_bidirectional_analysis(
         np.save(diag_dir / "step2_forward_attention.npy", forward_attention)
         visualize_matrix(
             forward_attention, len(rows), len(sentences),
-            title=f"Step 2: Forward Attention (Rows→Sentences) (Example {example_idx})",
+            title=f"Step 2: Forward Attention (Rows->Sentences) (Example {example_idx})",
             output_file=str(diag_dir / "step2_forward_attention.png"),
             matrix_type="attention"
         )
@@ -482,7 +482,7 @@ def create_clean_bidirectional_analysis(
         np.save(diag_dir / "step2_reverse_attention.npy", reverse_attention)
         visualize_matrix(
             reverse_attention.T, len(rows), len(sentences),  # Transpose for consistent visualization
-            title=f"Step 2: Reverse Attention (Sentences→Rows) (Example {example_idx})",
+            title=f"Step 2: Reverse Attention (Sentences->Rows) (Example {example_idx})",
             output_file=str(diag_dir / "step2_reverse_attention.png"),
             matrix_type="attention"
         )
@@ -652,10 +652,10 @@ def create_clean_bidirectional_analysis(
         
         # Check consistency
         if np.allclose(final_pair_scores, model_pair_scores, atol=1e-6):
-            print("    ✅ CONSISTENT: Manual computation matches model forward pass")
+            print("    [OK] CONSISTENT: Manual computation matches model forward pass")
             consistency_status = "CONSISTENT"
         else:
-            print("    ❌ INCONSISTENT: Manual computation differs from model forward pass")
+            print("    [ERROR] INCONSISTENT: Manual computation differs from model forward pass")
             consistency_status = "INCONSISTENT"
             
             # Save difference matrix for debugging
@@ -681,10 +681,10 @@ def create_clean_bidirectional_analysis(
             print("  Comparison: Contextualized vs Final (should be identical when refinement=False)...")
             
             if np.allclose(contextualized_similarities, final_pair_scores, atol=1e-6):
-                print("    ✅ IDENTICAL: Contextualized similarities = Final pair scores (as expected)")
+                print("    [OK] IDENTICAL: Contextualized similarities = Final pair scores (as expected)")
                 comparison_status = "IDENTICAL"
             else:
-                print("    ❌ DIFFERENT: Contextualized similarities ≠ Final pair scores (unexpected!)")
+                print("    [ERROR] DIFFERENT: Contextualized similarities != Final pair scores (unexpected!)")
                 comparison_status = "DIFFERENT"
                 
                 # This is the bug the user identified!
@@ -722,7 +722,7 @@ def create_clean_bidirectional_analysis(
         with open(diag_dir / "summary.json", 'w', encoding='utf-8') as f:
             json.dump(summary, f, indent=2, ensure_ascii=False)
         
-        print(f"  ✅ Clean analysis completed. Results saved to {diag_dir}")
+        print(f"  [OK] Clean analysis completed. Results saved to {diag_dir}")
         
         return results
 
@@ -863,7 +863,7 @@ def run_clean_analysis_for_examples(
     
     for idx in example_indices:
         if idx < len(examples):
-            print(f"\n🔬 Running clean analysis for Example {idx}...")
+            print(f"\n[INFO] Running clean analysis for Example {idx}...")
             example_results = run_clean_analysis_for_example(
                 model, examples[idx], idx, output_dir, use_refinement
             )
@@ -878,7 +878,7 @@ def test_smart_range_calculation():
     Test function to demonstrate the smart range calculation.
     This shows how the color ranges are now dynamically calculated.
     """
-    print("🎨 Testing Smart Range Calculation for Consistent Color Mapping")
+    print("[INFO] Testing Smart Range Calculation for Consistent Color Mapping")
     print("=" * 60)
     
     # Test case 1: Values like in the user's example (0.216 to 0.572)
@@ -886,36 +886,36 @@ def test_smart_range_calculation():
     vmin1, vmax1 = calculate_smart_range(test_data_1)
     print(f"Test 1 - Input range: [{test_data_1.min():.3f}, {test_data_1.max():.3f}]")
     print(f"         Smart range:  [{vmin1:.3f}, {vmax1:.3f}]")
-    print(f"         Rounds 0.216 → {vmin1:.3f}, 0.572 → {vmax1:.3f}")
+    print(f"         Rounds 0.216 -> {vmin1:.3f}, 0.572 -> {vmax1:.3f}")
     
     # Test case 2: Attention values (typically 0 to 1)
     test_data_2 = np.array([0.05, 0.23, 0.67, 0.89, 0.94])
     vmin2, vmax2 = calculate_smart_range(test_data_2)
     print(f"\nTest 2 - Input range: [{test_data_2.min():.3f}, {test_data_2.max():.3f}]")
     print(f"         Smart range:  [{vmin2:.3f}, {vmax2:.3f}]")
-    print(f"         Rounds 0.05 → {vmin2:.3f}, 0.94 → {vmax2:.3f}")
+    print(f"         Rounds 0.05 -> {vmin2:.3f}, 0.94 -> {vmax2:.3f}")
     
     # Test case 3: Similarity values with negative numbers
     test_data_3 = np.array([-0.12, 0.03, 0.28, 0.47, 0.69])
     vmin3, vmax3 = calculate_smart_range(test_data_3)
     print(f"\nTest 3 - Input range: [{test_data_3.min():.3f}, {test_data_3.max():.3f}]")
     print(f"         Smart range:  [{vmin3:.3f}, {vmax3:.3f}]")
-    print(f"         Rounds -0.12 → {vmin3:.3f}, 0.69 → {vmax3:.3f}")
+    print(f"         Rounds -0.12 -> {vmin3:.3f}, 0.69 -> {vmax3:.3f}")
     
     # Show colormap choices
-    print(f"\n🎨 Colormap Choices:")
-    print(f"   - Attention matrices: 'coolwarm' (Blue→White→Red with center at mid-range)")
-    print(f"   - Similarity matrices: 'coolwarm' (Blue→White→Red with center at mid-range)")
-    print(f"   - Difference matrices: 'coolwarm' (Blue→White→Red symmetric around 0)")
+    print(f"\n[INFO] Colormap Choices:")
+    print(f"   - Attention matrices: 'coolwarm' (Blue->White->Red with center at mid-range)")
+    print(f"   - Similarity matrices: 'coolwarm' (Blue->White->Red with center at mid-range)")
+    print(f"   - Difference matrices: 'coolwarm' (Blue->White->Red symmetric around 0)")
     
-    print(f"\n✅ All heatmaps now use consistent coloring with smart range calculation!")
+    print(f"\n[OK] All heatmaps now use consistent coloring with smart range calculation!")
     print(f"   - Min values are rounded DOWN to nearest 0.05")
     print(f"   - Max values are rounded UP to nearest 0.05")
     print(f"   - Same colormap ('coolwarm') used across both visualization files")
     print(f"   - GUARANTEED Blue-to-Red spectrum with proper centering!")
     
     # Test colormap examples
-    print(f"\n🌈 Color Spectrum Examples:")
+    print(f"\n[INFO] Color Spectrum Examples:")
     print(f"   - Low values (e.g., 0.20): BLUE")
     print(f"   - Mid values (e.g., 0.40): WHITE/LIGHT")
     print(f"   - High values (e.g., 0.60): RED")

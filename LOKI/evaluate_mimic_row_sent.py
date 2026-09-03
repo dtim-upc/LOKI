@@ -677,9 +677,9 @@ def evaluate_mimic_row_grounding(
     print(f"       Diagnosis: {len(diagnosis_metrics)} examples, F1={result['level_a_row_grounding']['diagnosis']['f1']:.3f}")
     print(f"       Medication: {len(medication_metrics)} examples, F1={result['level_a_row_grounding']['medication']['f1']:.3f}")
     if examples_skipped_no_valid_pairs > 0:
-        print(f"       ⚠️  Skipped {examples_skipped_no_valid_pairs} examples (all GT pairs out-of-bounds)")
+        print(f"       [WARN]  Skipped {examples_skipped_no_valid_pairs} examples (all GT pairs out-of-bounds)")
     if total_oob_pairs > 0:
-        print(f"       ⚠️  Filtered {total_oob_pairs} out-of-bounds GT pairs across all examples")
+        print(f"       [WARN]  Filtered {total_oob_pairs} out-of-bounds GT pairs across all examples")
     
     return result
 
@@ -782,13 +782,13 @@ def load_mimic_test_data_and_annotations(
 # ============================================================================
 # MIMIC-Flipped (DOC_TO_TABLE) Row-Sentence Evaluation
 # ============================================================================
-# Annotation format (Annotated_Test.json) — flat list:
+# Annotation format (Annotated_Test.json) - flat list:
 #   [{"anchor_id": int, "primary_table_id": int, "medication_table_id": int,
 #     "highlighted_cells_diagnosis":  [[sent_idx, row_idx], ...],
 #     "highlighted_cells_medication": [[sent_idx, row_idx], ...]}]
 #
 # Score matrix orientation (DOC_TO_TABLE):
-#   model(sent_tensor[1,S,d], table_tensor[1,R,d]) → pair_scores[1,S,R]
+#   model(sent_tensor[1,S,d], table_tensor[1,R,d]) -> pair_scores[1,S,R]
 #   pair_scores_np[sent_idx, row_idx] indexes directly into highlighted_cells_*
 # ============================================================================
 
@@ -845,7 +845,7 @@ def evaluate_mimic_flipped_row_grounding(
     are the diagnosis and medication tables.  We compute a separate grounding score
     matrix for each table type and compare against highlighted_cells_*.
 
-    Score matrix shape: pair_scores_np[sent_idx, row_idx]  (S × R)
+    Score matrix shape: pair_scores_np[sent_idx, row_idx]  (S x R)
     Ground truth pairs from highlighted_cells_*: [[sent_idx, row_idx], ...]
     """
     model.eval()
@@ -883,7 +883,7 @@ def evaluate_mimic_flipped_row_grounding(
             hc_diag = [(s, r) for r, s in diag_pairs_rs]  # (sent_idx, row_idx)
             hc_med  = [(s, r) for r, s in med_pairs_rs]
 
-            # ── Note sentence embeddings (context side) ──────────────────────
+            # -- Note sentence embeddings (context side) ----------------------
             if test_cache is not None:
                 sent_embeddings = test_cache.get_context_embeddings(anchor_id)
                 if sent_embeddings is None:
@@ -918,7 +918,7 @@ def evaluate_mimic_flipped_row_grounding(
 
                 return safe_tensor_to_numpy(ps.squeeze(0).detach())  # [num_sents, num_table_rows]
 
-            # ── Diagnosis ────────────────────────────────────────────────────
+            # -- Diagnosis ----------------------------------------------------
             diag_item = example.get("primary_positive", {})
             diag_id   = diag_item.get("id")
             if diag_id is not None and hc_diag:
@@ -938,7 +938,7 @@ def evaluate_mimic_flipped_row_grounding(
                         if verbose and examples_processed < 3:
                             print(f"    example diag: sep={m['score_separation']:.3f} f1={m['f1']:.3f}")
 
-            # ── Medication ───────────────────────────────────────────────────
+            # -- Medication ---------------------------------------------------
             aps     = example.get("additional_positives", [])
             med_item = aps[0] if aps else {}
             med_id   = med_item.get("id")
@@ -987,9 +987,9 @@ def evaluate_mimic_flipped_row_grounding(
     print(f"       Medication F1={result['level_a_row_grounding']['medication']['f1']:.3f}  "
           f"AP={result['level_a_row_grounding']['medication']['average_precision']:.3f}")
     if examples_skipped_no_valid_pairs > 0:
-        print(f"       ⚠️  Skipped {examples_skipped_no_valid_pairs} table evaluations (all GT pairs out-of-bounds)")
+        print(f"       [WARN]  Skipped {examples_skipped_no_valid_pairs} table evaluations (all GT pairs out-of-bounds)")
     if total_oob_pairs > 0:
-        print(f"       ⚠️  Filtered {total_oob_pairs} out-of-bounds GT pairs across all examples")
+        print(f"       [WARN]  Filtered {total_oob_pairs} out-of-bounds GT pairs across all examples")
     return result
 
 

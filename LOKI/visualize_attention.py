@@ -100,6 +100,25 @@ def _load_sentence_transformer_encoder(
 
     return SentenceTransformer(resolved_model_name, **sentence_transformer_kwargs)
 
+
+def _find_checkpoint_config(model_path: str) -> Tuple[Optional[Dict[str, Any]], Optional[str]]:
+    """Search the checkpoint directory and its parents for a saved config file."""
+    config_files = ('args.json', 'training_config.json', 'config.json')
+    current_dir = Path(model_path).resolve().parent
+
+    for candidate_dir in [current_dir, *current_dir.parents]:
+        for config_name in config_files:
+            config_path = candidate_dir / config_name
+            if not config_path.exists():
+                continue
+            try:
+                with open(config_path, 'r', encoding='utf-8') as handle:
+                    return json.load(handle), str(config_path)
+            except Exception as exc:
+                print(f"[WARN] Failed to read {config_path}: {exc}")
+
+    return None, None
+
 def create_dynamic_sentence_encoder(embedding_dim: int, device="cuda"):
     """
     Create a SentenceTransformer-compatible encoder with the specified embedding dimension.
@@ -191,33 +210,23 @@ def load_model(model_path: Optional[str] = None, base_model_name: str = "answerd
     
     # If we have a model path, read configuration files first (much more reliable!)
     if model_path and os.path.exists(model_path):
-        print(f"📁 Loading TRAINED model from checkpoint: {model_path}")
+        print(f"[INFO] Loading TRAINED model from checkpoint: {model_path}")
         
         # Check if this looks like a "best" model path to confirm we're using the best model
         if "_best.pt" in model_path or "best_model" in model_path:
-            print(f"✅ CONFIRMED: Loading BEST model checkpoint (highest validation accuracy)")
+            print(f"[OK] CONFIRMED: Loading BEST model checkpoint (highest validation accuracy)")
         
         # Step 1: Try to read from configuration files (preferred approach)
-        model_dir = os.path.dirname(model_path)
-        config_files = ['args.json', 'training_config.json', 'config.json']
-        config_data = None
-        
-        for config_file in config_files:
-            config_path = os.path.join(model_dir, config_file)
-            if os.path.exists(config_path):
-                print(f"📄 Found configuration file: {config_file}")
-                try:
-                    with open(config_path, 'r', encoding='utf-8') as f:
-                        config_data = json.load(f)
-                    break
-                except Exception as e:
-                    print(f"⚠️ Failed to read {config_file}: {e}")
-                    continue
+        config_data, config_path = _find_checkpoint_config(model_path)
+        if config_path:
+            print(f"[INFO] Found configuration file: {config_path}")
         
         if config_data:
             # Extract model configuration from saved config
             is_bidirectional = config_data.get('use_bidirectional', False)
             embedding_dim = config_data.get('embedding_dim')
+            configured_model_name = config_data.get('model_name', base_model_name)
+            configured_max_seq_length = config_data.get('max_seq_length')
             
             # Extract attention configuration
             attention_type = config_data.get('attention_type', 'standard')
@@ -238,18 +247,32 @@ def load_model(model_path: Optional[str] = None, base_model_name: str = "answerd
                 architecture = config_data.get('architecture', '')
                 is_bidirectional = (architecture == 'bidirectional')
             
-            print(f"✅ Loaded from config: model_type={'Bidirectional' if is_bidirectional else 'Unidirectional'}, embedding_dim={embedding_dim}, attention_type={attention_type}")
+            print(f"[OK] Loaded from config: model_type={'Bidirectional' if is_bidirectional else 'Unidirectional'}, embedding_dim={embedding_dim}, attention_type={attention_type}")
             
-            if embedding_dim:
-                # Create a dynamic sentence encoder that matches the detected dimensions
-                sentence_encoder = create_dynamic_sentence_encoder(embedding_dim, device)
-            else:
-                print("⚠️ Config found but embedding_dim not specified, falling back to checkpoint analysis...")
-                config_data = None  # Force fallback
+            try:
+                model_kwargs = {"dtype": torch.bfloat16}
+                sentence_encoder = _load_sentence_transformer_encoder(
+                    configured_model_name,
+                    device=device,
+                    model_kwargs=model_kwargs,
+                    suppress_output=True,
+                )
+                if configured_max_seq_length:
+                    sentence_encoder.max_seq_length = configured_max_seq_length
+                if embedding_dim is None:
+                    embedding_dim = sentence_encoder.get_sentence_embedding_dimension()
+                print(f"[OK] Restored sentence encoder from config model: {configured_model_name}")
+            except Exception as e:
+                print(f"[WARN] Failed to restore sentence encoder from config model '{configured_model_name}': {e}")
+                if embedding_dim:
+                    sentence_encoder = create_dynamic_sentence_encoder(embedding_dim, device)
+                else:
+                    print("[WARN] Config found but embedding_dim not specified, falling back to checkpoint analysis...")
+                    config_data = None  # Force fallback
         
         # Step 2: Fallback to checkpoint analysis if config unavailable or incomplete
         if config_data is None or embedding_dim is None:
-            print("🔍 Analyzing checkpoint weights for architecture detection...")
+            print("[INFO] Analyzing checkpoint weights for architecture detection...")
             try:
                 state_dict = torch.load(model_path, map_location='cpu')
                 
@@ -263,14 +286,14 @@ def load_model(model_path: Optional[str] = None, base_model_name: str = "answerd
                         is_bidirectional = True
                         break
                 
-                print(f"🔍 Detected model type: {'Bidirectional' if is_bidirectional else 'Unidirectional'}")
+                print(f"[INFO] Detected model type: {'Bidirectional' if is_bidirectional else 'Unidirectional'}")
                 
                 # Dynamic embedding dimension detection from sentence encoder
                 detected_embedding_dim = None
                 for key in state_dict.keys():
                     if 'embed_tokens.weight' in key:
                         detected_embedding_dim = state_dict[key].shape[1]  # [vocab_size, embedding_dim]
-                        print(f"🎯 Detected embedding_dim from sentence encoder: {detected_embedding_dim}")
+                        print(f"[INFO] Detected embedding_dim from sentence encoder: {detected_embedding_dim}")
                         break
                 
                 # Fallback to cross-attention layers if sentence encoder not found
@@ -291,33 +314,33 @@ def load_model(model_path: Optional[str] = None, base_model_name: str = "answerd
                         # Get the dimension that appears most frequently
                         most_common_dim = max(dimension_candidates.items(), key=lambda x: x[1])
                         detected_embedding_dim = most_common_dim[0]
-                        print(f"🎯 Inferred embedding_dim from frequency analysis: {detected_embedding_dim} (appears {most_common_dim[1]} times)")
+                        print(f"[INFO] Inferred embedding_dim from frequency analysis: {detected_embedding_dim} (appears {most_common_dim[1]} times)")
                     
                     # Additional fallback: look for layer norm weights (they have embedding_dim size)
                     if detected_embedding_dim is None:
                         for key in state_dict.keys():
                             if 'norm' in key and 'weight' in key and len(state_dict[key].shape) == 1:
                                 detected_embedding_dim = state_dict[key].shape[0]
-                                print(f"🎯 Inferred embedding_dim from LayerNorm: {detected_embedding_dim}")
+                                print(f"[INFO] Inferred embedding_dim from LayerNorm: {detected_embedding_dim}")
                                 break
                 
                 if detected_embedding_dim is None:
-                    print("🔍 Available keys in checkpoint (first 10):")
+                    print("[INFO] Available keys in checkpoint (first 10):")
                     for key in list(state_dict.keys())[:10]:
                         shape_info = state_dict[key].shape if hasattr(state_dict[key], 'shape') else type(state_dict[key])
                         print(f"  - {key}: {shape_info}")
                     if len(state_dict.keys()) > 10:
                         print(f"  ... and {len(state_dict.keys()) - 10} more keys")
-                    raise ValueError("❌ Could not detect embedding dimension from checkpoint weights")
+                    raise ValueError("[ERROR] Could not detect embedding dimension from checkpoint weights")
                 
                 embedding_dim = detected_embedding_dim
-                print(f"✅ Detected model architecture: embedding_dim={embedding_dim}")
+                print(f"[OK] Detected model architecture: embedding_dim={embedding_dim}")
                 
                 # Create a dynamic sentence encoder that matches the detected dimensions
                 sentence_encoder = create_dynamic_sentence_encoder(embedding_dim, device)
                 
             except Exception as e:
-                print(f"❌ Error analyzing checkpoint: {e}")
+                print(f"[ERROR] Error analyzing checkpoint: {e}")
                 raise e
     
     # If no checkpoint or detection failed, use the provided base model
@@ -341,9 +364,9 @@ def load_model(model_path: Optional[str] = None, base_model_name: str = "answerd
                         model_kwargs=model_kwargs,
                         suppress_output=True,
                     )
-                    print(f"✅ Loaded base model with Flash Attention (matching training setup)")
+                    print(f"[OK] Loaded base model with Flash Attention (matching training setup)")
                 except Exception as flash_e:
-                    print(f"⚠️  Flash Attention failed: {flash_e}")
+                    print(f"[WARN]  Flash Attention failed: {flash_e}")
                     # Fallback without Flash Attention but with bfloat16
                     sentence_encoder = _load_sentence_transformer_encoder(
                         base_model_name,
@@ -351,7 +374,7 @@ def load_model(model_path: Optional[str] = None, base_model_name: str = "answerd
                         model_kwargs={"dtype": torch.bfloat16},
                         suppress_output=True,
                     )
-                    print(f"✅ Loaded base model without Flash Attention (with bfloat16)")
+                    print(f"[OK] Loaded base model without Flash Attention (with bfloat16)")
             else:
                 # On CPU, avoid Flash Attention but still use bfloat16
                 sentence_encoder = _load_sentence_transformer_encoder(
@@ -360,32 +383,32 @@ def load_model(model_path: Optional[str] = None, base_model_name: str = "answerd
                     model_kwargs={"dtype": torch.bfloat16},
                     suppress_output=True,
                 )
-                print(f"✅ Loaded base model without Flash Attention (CPU mode, with bfloat16)")
+                print(f"[OK] Loaded base model without Flash Attention (CPU mode, with bfloat16)")
                 
         except Exception as e:
-            print(f"❌ Failed to load base model: {e}")
+            print(f"[ERROR] Failed to load base model: {e}")
             # Final fallback to dynamic encoder
             print(f"Using dynamic fallback encoder for dimension 768")
             sentence_encoder = create_dynamic_sentence_encoder(768, device)
             
         embedding_dim = sentence_encoder.get_sentence_embedding_dimension()
     
-    print(f"📐 Final embedding dimension: {embedding_dim}")
+    print(f"[INFO] Final embedding dimension: {embedding_dim}")
     
     # Create the model with detected/specified dimensions
     # Check if we detected a bidirectional model from the checkpoint
     if is_bidirectional:
         print("Creating BidirectionalTableTextModel...")
         from models import BidirectionalTableTextModel
-        print(f"🚀 Using {attention_type} attention mechanism")
+        print(f"[INFO] Using {attention_type} attention mechanism")
         if attention_type == "top_k_sparse":
-            print(f"📋 Using top-{sparse_top_k} sparse attention")
+            print(f"[INFO] Using top-{sparse_top_k} sparse attention")
         elif attention_type == "windowed":
-            print(f"📋 Using windowed attention with window_size={window_size}")  
+            print(f"[INFO] Using windowed attention with window_size={window_size}")  
         elif attention_type == "threshold":
-            print(f"📋 Using threshold attention with base_threshold={threshold_base}")
+            print(f"[INFO] Using threshold attention with base_threshold={threshold_base}")
         else:
-            print(f"📋 Using standard scaled dot-product attention")
+            print(f"[INFO] Using standard scaled dot-product attention")
             
         model = BidirectionalTableTextModel(
             sentence_encoder, 
@@ -405,15 +428,15 @@ def load_model(model_path: Optional[str] = None, base_model_name: str = "answerd
         )
     else:
         print("Creating TableTextEmbeddingModel...")
-        print(f"🚀 Using {attention_type} attention mechanism in unidirectional model")
+        print(f"[INFO] Using {attention_type} attention mechanism in unidirectional model")
         if attention_type == "top_k_sparse":
-            print(f"📋 Using top-{sparse_top_k} sparse attention")
+            print(f"[INFO] Using top-{sparse_top_k} sparse attention")
         elif attention_type == "windowed":
-            print(f"📋 Using windowed attention with window_size={window_size}")  
+            print(f"[INFO] Using windowed attention with window_size={window_size}")  
         elif attention_type == "threshold":
-            print(f"📋 Using threshold attention with base_threshold={threshold_base}")
+            print(f"[INFO] Using threshold attention with base_threshold={threshold_base}")
         else:
-            print(f"📋 Using standard scaled dot-product attention")
+            print(f"[INFO] Using standard scaled dot-product attention")
             
         model = TableTextEmbeddingModel(
             sentence_encoder, 
@@ -435,34 +458,41 @@ def load_model(model_path: Optional[str] = None, base_model_name: str = "answerd
     # Move model to specified device
     model = model.to(device)
     
-    # Load trained weights if provided
+        # Load trained weights if provided
     if model_path and os.path.exists(model_path):
         print(f"Loading trained weights from {model_path}")
         try:
             state_dict = torch.load(model_path, map_location='cpu')
-            
-            # Filter out sentence encoder weights and only load custom layer weights
-            model_state_dict = {}
-            for key, value in state_dict.items():
-                if not key.startswith('sentence_encoder.'):
-                    model_state_dict[key] = value
-                    
-            # Load only the custom layers, skip sentence encoder
-            model.load_state_dict(model_state_dict, strict=False)
-            print("✅ Trained weights loaded successfully (custom layers only)")
-            
+
+            # Prefer loading the full checkpoint so encoder fine-tuning is preserved.
+            missing_keys, unexpected_keys = model.load_state_dict(state_dict, strict=False)
+            encoder_key_count = sum(1 for key in state_dict if key.startswith('sentence_encoder.'))
+
+            if encoder_key_count:
+                print(
+                    "[OK] Trained weights loaded successfully "
+                    f"(including {encoder_key_count} sentence encoder tensors)"
+                )
+            else:
+                print("[OK] Trained weights loaded successfully")
+
+            if missing_keys:
+                print(f"[WARN] Missing keys during checkpoint load: {len(missing_keys)}")
+            if unexpected_keys:
+                print(f"[WARN] Unexpected keys during checkpoint load: {len(unexpected_keys)}")
+
             # Final verification that we loaded the best model
             if "_best.pt" in model_path or "best_model" in model_path:
-                print("🏆 VERIFICATION: Best model weights are now active for visualization")
-            
+                print("[BEST] VERIFICATION: Best model weights are now active for visualization")
+
         except Exception as e:
-            print(f"❌ Failed to load trained weights: {e}")
+            print(f"[ERROR] Failed to load trained weights: {e}")
             import traceback
             traceback.print_exc()
             raise e
     else:
         if model_path:
-            print(f"⚠️ Warning: Model path {model_path} not found, using untrained model")
+            print(f"[WARN] Warning: Model path {model_path} not found, using untrained model")
         else:
             print("Using untrained model")
     
@@ -470,7 +500,7 @@ def load_model(model_path: Optional[str] = None, base_model_name: str = "answerd
     
     # Final status report
     model_status = "BEST TRAINED" if (model_path and ("_best.pt" in model_path or "best_model" in model_path)) else "UNTRAINED" if not model_path else "TRAINED"
-    print(f"🎯 Model ready for visualization: {model_status} model on {device}")
+    print(f"[INFO] Model ready for visualization: {model_status} model on {device}")
     
     return model
 
@@ -750,7 +780,7 @@ def visualize_attention_matrix(attention_matrix: np.ndarray,
     Create a heatmap visualization of an attention matrix.
     
     Args:
-        attention_matrix: N×M matrix where N is number of rows, M is number of sentences
+        attention_matrix: NxM matrix where N is number of rows, M is number of sentences
         rows: List of row descriptions (will be simplified for display)
         sentences: List of sentence descriptions (will be simplified for display)
         title: Title for the plot
@@ -1671,11 +1701,11 @@ def visualize_models_with_three_way_comparison(
     
     # Load trained model if path provided
     if trained_model is None and trained_model_path is not None:
-        print(f"🔍 Loading trained model from: {trained_model_path}")
+        print(f"[INFO] Loading trained model from: {trained_model_path}")
         # Determine device for visualization
         viz_device = device if device is not None else ("cuda" if torch.cuda.is_available() else "cpu")
         trained_model = load_model(trained_model_path, base_model_name, device=viz_device)
-        print(f"✅ Trained model loaded with dynamic dimension detection on {viz_device}")
+        print(f"[OK] Trained model loaded with dynamic dimension detection on {viz_device}")
     elif trained_model is None:
         raise ValueError("Either trained_model or trained_model_path must be provided")
     
@@ -1932,7 +1962,7 @@ def visualize_bidirectional_models(trained_model: BidirectionalTableTextModel,
         return
     
     # Create SIMPLE untrained bidirectional model for fair comparison
-    print("🎯 Creating SIMPLE untrained bidirectional baseline model for fair comparison...")
+    print("[INFO] Creating SIMPLE untrained bidirectional baseline model for fair comparison...")
     if device is None:
         device = next(trained_model.parameters()).device
     
@@ -2029,11 +2059,11 @@ def visualize_comprehensive_model_analysis(
     """
     # Load trained model if path provided
     if trained_model is None and trained_model_path is not None:
-        print(f"🔍 Loading BEST model for comprehensive analysis from: {trained_model_path}")
+        print(f"[INFO] Loading BEST model for comprehensive analysis from: {trained_model_path}")
         # Auto-detect device for comprehensive analysis
         viz_device = "cuda" if torch.cuda.is_available() else "cpu"
         trained_model = load_model(trained_model_path, base_model_name, device=viz_device)
-        print(f"✅ BEST trained model loaded and ready for comprehensive analysis on {viz_device}")
+        print(f"[OK] BEST trained model loaded and ready for comprehensive analysis on {viz_device}")
     elif trained_model is None:
         raise ValueError("Either trained_model or trained_model_path must be provided")
     
@@ -2043,7 +2073,7 @@ def visualize_comprehensive_model_analysis(
     if rows is None or primary_sentences is None:
         return
     
-    print(f"\n🔍 Creating comprehensive analysis for Example {example_idx}...")
+    print(f"\n[INFO] Creating comprehensive analysis for Example {example_idx}...")
     print(f"  Found {len(rows)} rows and {len(primary_sentences)} sentences")
     
     # Detect model type
@@ -2163,7 +2193,7 @@ def visualize_comprehensive_model_analysis(
         cmap2, vmin2, vmax2, center2 = get_consistent_colormap_and_range(attention_weights, "attention")
         sns.heatmap(attention_weights, annot=True, fmt='.3f', ax=axes[1],
                     cmap=cmap2, vmin=vmin2, vmax=vmax2, center=center2, cbar_kws={'label': 'Attention Score'})
-        axes[1].set_title("Step 2: Forward Attention\n(Rows → Sentences)")
+        axes[1].set_title("Step 2: Forward Attention\n(Rows -> Sentences)")
         axes[1].set_xlabel("Sentences")
         axes[1].set_ylabel("")
         
@@ -2214,7 +2244,7 @@ def visualize_comprehensive_model_analysis(
         cmap2, vmin2, vmax2, center2 = get_consistent_colormap_and_range(attention_weights, "attention")
         sns.heatmap(attention_weights, annot=True, fmt='.3f', ax=axes[1],
                     cmap=cmap2, vmin=vmin2, vmax=vmax2, center=center2, cbar_kws={'label': 'Attention Score'})
-        axes[1].set_title("Step 2: Cross-Attention Weights\n(Rows → Sentences)")
+        axes[1].set_title("Step 2: Cross-Attention Weights\n(Rows -> Sentences)")
         axes[1].set_xlabel("Sentences")
         axes[1].set_ylabel("")
         
@@ -2257,11 +2287,11 @@ def visualize_comprehensive_model_analysis(
     viz_dir.mkdir(parents=True, exist_ok=True)
     output_file = viz_dir / f"comprehensive_analysis_example_{example_idx}.png"
     save_plot_multi_format(output_file, dpi=300, bbox_inches='tight')
-    print(f"💾 Saved comprehensive analysis to {output_file}")
+    print(f"[INFO] Saved comprehensive analysis to {output_file}")
     plt.close()
     
     # Print detailed analysis summary (like the user expects)
-    print(f"\n📊 Analysis Summary for Example {example_idx}:")
+    print(f"\n[INFO] Analysis Summary for Example {example_idx}:")
     
     # Raw embeddings statistics
     raw_min, raw_max = raw_embeddings.min(), raw_embeddings.max()
@@ -2290,19 +2320,19 @@ def visualize_comprehensive_model_analysis(
             pairs.append((row_idx + 1, sent_idx + 1, score))
         return pairs
     
-    print(f"\n🔝 Top 3 pairs by Raw Embeddings:")
+    print(f"\n[INFO] Top 3 pairs by Raw Embeddings:")
     for i, (row_idx, sent_idx, score) in enumerate(get_top_pairs(raw_embeddings, "Raw")):
         print(f"  {i+1}. Row {row_idx} - Sentence {sent_idx}: {score:.3f}")
     
-    print(f"\n🔝 Top 3 pairs by Contextualized Similarities:")
+    print(f"\n[INFO] Top 3 pairs by Contextualized Similarities:")
     for i, (row_idx, sent_idx, score) in enumerate(get_top_pairs(contextualized_similarities, "Contextualized")):
         print(f"  {i+1}. Row {row_idx} - Sentence {sent_idx}: {score:.3f}")
     
-    print(f"\n🔝 Top 3 pairs by Final Model Similarities:")
+    print(f"\n[INFO] Top 3 pairs by Final Model Similarities:")
     for i, (row_idx, sent_idx, score) in enumerate(get_top_pairs(pair_scores, "Final")):
         print(f"  {i+1}. Row {row_idx} - Sentence {sent_idx}: {score:.3f}")
     
-    print(f"\n🔝 Top 3 pairs by Cross-Attention:")
+    print(f"\n[INFO] Top 3 pairs by Cross-Attention:")
     for i, (row_idx, sent_idx, score) in enumerate(get_top_pairs(attention_weights, "Attention")):
         print(f"  {i+1}. Row {row_idx} - Sentence {sent_idx}: {score:.3f}")
     
@@ -2346,7 +2376,7 @@ def visualize_comprehensive_model_analysis(
         difference = pair_scores - raw_embeddings
         f.write(f"{difference}\n")
     
-    print(f"📄 Detailed analysis saved to {text_file}")
+    print(f"[INFO] Detailed analysis saved to {text_file}")
     print()
 
 def process_example_comprehensive_analysis(
@@ -2912,7 +2942,7 @@ def visualize_bidirectional_attention(pair_scores: np.ndarray,
     axes[0].set_xlabel('Sentences')
     axes[0].set_ylabel('Rows')
     
-    # Panel 2: Forward Attention (rows → sentences)
+    # Panel 2: Forward Attention (rows -> sentences)
     cmap2, vmin2, vmax2, center2 = get_consistent_colormap_and_range(forward_attention, 'attention')
     sns.heatmap(forward_attention,
                 xticklabels=sentence_labels,
@@ -2925,11 +2955,11 @@ def visualize_bidirectional_attention(pair_scores: np.ndarray,
                 center=center2,
                 ax=axes[1],
                 cbar_kws={'label': 'Attention Weight'})
-    axes[1].set_title("Forward Attention\n(Rows → Sentences)", fontsize=12, fontweight='bold')
+    axes[1].set_title("Forward Attention\n(Rows -> Sentences)", fontsize=12, fontweight='bold')
     axes[1].set_xlabel('Sentences')
     axes[1].set_ylabel('')
     
-    # Panel 3: Reverse Attention (sentences → rows)
+    # Panel 3: Reverse Attention (sentences -> rows)
     # Note: reverse_attention is [M, N], so we transpose for consistent visualization
     reverse_attention_viz = reverse_attention.T if reverse_attention.shape[0] != len(rows) else reverse_attention
     cmap3, vmin3, vmax3, center3 = get_consistent_colormap_and_range(reverse_attention_viz, 'attention')
@@ -2944,7 +2974,7 @@ def visualize_bidirectional_attention(pair_scores: np.ndarray,
                 center=center3,
                 ax=axes[2],
                 cbar_kws={'label': 'Attention Weight'})
-    axes[2].set_title("Reverse Attention\n(Sentences → Rows)", fontsize=12, fontweight='bold')
+    axes[2].set_title("Reverse Attention\n(Sentences -> Rows)", fontsize=12, fontweight='bold')
     axes[2].set_xlabel('Sentences')
     axes[2].set_ylabel('')
     
@@ -3117,7 +3147,7 @@ def visualize_join_paths(pair_scores: np.ndarray,
     
     # Add legend
     legend_text = "\n".join([
-        f"Path {i+1}: Row {row_idx+1} ↔ Sent {sent_idx+1} (score: {score:.3f})"
+        f"Path {i+1}: Row {row_idx+1} <-> Sent {sent_idx+1} (score: {score:.3f})"
         for i, (row_idx, sent_idx, score) in enumerate(join_paths[:5])  # Show top 5
     ])
     if len(join_paths) > 5:
@@ -3191,7 +3221,7 @@ def process_bidirectional_example(model: BidirectionalTableTextModel,
             f.write(f"Join Paths for Example {example_idx} ({model_type} model)\n")
             f.write("="*50 + "\n\n")
             for i, (row_idx, sent_idx, score) in enumerate(join_paths):
-                f.write(f"Path {i+1}: Row {row_idx+1} ↔ Sentence {sent_idx+1}\n")
+                f.write(f"Path {i+1}: Row {row_idx+1} <-> Sentence {sent_idx+1}\n")
                 f.write(f"  Score: {score:.4f}\n")
                 f.write(f"  Row: {rows[row_idx]}\n")
                 f.write(f"  Sentence: {sentences[sent_idx]}\n\n")
@@ -3219,7 +3249,7 @@ def save_diagnostics_heatmaps(model: Union[TableTextEmbeddingModel, Bidirectiona
         use_refinement: Whether refinement step is enabled in the model
         base_model_name: Name of the base model (unused, kept for API compatibility)
     """
-    print(f"🔬 Generating step-by-step diagnostics for example {example_idx}...")
+    print(f"[INFO] Generating step-by-step diagnostics for example {example_idx}...")
     
     # Create diagnostics subdirectory
     # Save diagnostics to visualizations subdirectory
@@ -3294,7 +3324,7 @@ def _save_bidirectional_diagnostics(model: BidirectionalTableTextModel,
                 # Compute contextualized similarities from the model's actual contextualized
                 # embeddings (post-residual, before optional refinement). This is correct
                 # because it uses the full W_V projection path, unlike the old manual approach
-                # that bypassed W_V by using raw attention weights × raw embeddings.
+                # that bypassed W_V by using raw attention weights x raw embeddings.
                 ctx_rows_t = model_diag.get('contextualized_rows')    # [batch, num_rows, dim] cpu
                 ctx_sents_t = model_diag.get('contextualized_sentences')  # [batch, num_sents, dim] cpu
                 if ctx_rows_t is not None and ctx_sents_t is not None:
@@ -3375,7 +3405,7 @@ def _save_bidirectional_diagnostics(model: BidirectionalTableTextModel,
     else:
         # Last-resort fallback: call the model without diagnostics and use the returned
         # contextualized (post-W_V + residual) tensors directly.
-        # This is correct — the old approach of doing `attn_weights @ raw_embeddings` was
+        # This is correct - the old approach of doing `attn_weights @ raw_embeddings` was
         # wrong because it skipped the W_V projection entirely.
         with torch.no_grad():
             _ps, ctx_rows_fb, ctx_sents_fb, _, _ = model.bidirectional_attention(rows_tensor, sentences_tensor)
@@ -3709,14 +3739,14 @@ def visualize_four_stage_comparison(
         init_method: Initialization method to use for untrained models (Stages 1 & 2)
         init_method_params: Optional parameters for the initialization method
     """
-    print("🎯 Creating 4-stage comparison visualization...")
+    print("[INFO] Creating 4-stage comparison visualization...")
     
     device = next(trained_model.parameters()).device
     similarities = {}
     
     with torch.no_grad():
         # Stage 0: Frozen Encoder Only
-        print("  🔥 Stage 0: Computing frozen encoder similarities...")
+        print("  [INFO] Stage 0: Computing frozen encoder similarities...")
         
         # Use the trained model's sentence encoder for consistency
         # This avoids dimension mismatches and uses the same encoder that was actually used
@@ -3728,7 +3758,7 @@ def visualize_four_stage_comparison(
         similarities['Stage 0: Frozen Encoder'] = stage0_similarities
         
         # Stage 1: Simple Cross-Attention
-        print("  🎯 Stage 1: Creating simple cross-attention model...")
+        print("  [INFO] Stage 1: Creating simple cross-attention model...")
         model_type = "bidirectional" if isinstance(trained_model, BidirectionalTableTextModel) else "unidirectional"
         
         if model_type == "bidirectional":
@@ -3776,7 +3806,7 @@ def visualize_four_stage_comparison(
         simple_model.eval()
         
         # Compute Stage 1 similarities
-        print("  🎯 Stage 1: Computing simple cross-attention similarities...")
+        print("  [INFO] Stage 1: Computing simple cross-attention similarities...")
         rows_tensor = row_embeddings.unsqueeze(0).to(device)
         sentences_tensor = sentence_embeddings.unsqueeze(0).to(device)
         
@@ -3794,7 +3824,7 @@ def visualize_four_stage_comparison(
         torch.cuda.empty_cache() if torch.cuda.is_available() else None
         
         # Stage 2: Sophisticated Pre-training (create untrained version of trained model)
-        print("  🚀 Stage 2: Creating sophisticated untrained model...")
+        print("  [INFO] Stage 2: Creating sophisticated untrained model...")
         if model_type == "bidirectional":
             sophisticated_untrained = BidirectionalTableTextModel(
                 sentence_encoder=trained_model.sentence_encoder,
@@ -3840,7 +3870,7 @@ def visualize_four_stage_comparison(
         sophisticated_untrained.eval()
         
         # Compute Stage 2 similarities
-        print("  🚀 Stage 2: Computing sophisticated pre-training similarities...")
+        print("  [INFO] Stage 2: Computing sophisticated pre-training similarities...")
         if model_type == "bidirectional":
             # For bidirectional models, we want the pair_scores matrix, not the global similarity
             global_sim, stage2_similarities = sophisticated_untrained(rows_tensor, sentences_tensor, aggregation_method="top_k_pairs")
@@ -3855,7 +3885,7 @@ def visualize_four_stage_comparison(
         torch.cuda.empty_cache() if torch.cuda.is_available() else None
         
         # Stage 3: Post-training (the actual trained model)
-        print("  🏆 Stage 3: Computing trained model similarities...")
+        print("  [BEST] Stage 3: Computing trained model similarities...")
         if model_type == "bidirectional":
             # For bidirectional models, we want the pair_scores matrix, not the global similarity
             global_sim, stage3_similarities = trained_model(rows_tensor, sentences_tensor, aggregation_method="top_k_pairs")
@@ -3871,10 +3901,10 @@ def visualize_four_stage_comparison(
     fig.suptitle(title, fontsize=16, fontweight='bold')
     
     stage_names = list(similarities.keys())
-    stage_emojis = ['🔥', '🎯', '🚀', '🏆']
+    stage_emojis = ['[INFO]', '[INFO]', '[INFO]', '[BEST]']
     
     # Debug: Print shapes of all matrices
-    print(f"\n🔍 DEBUG: Matrix shapes for visualization:")
+    print(f"\n[INFO] DEBUG: Matrix shapes for visualization:")
     for stage_name, matrix in similarities.items():
         print(f"  {stage_name}: {matrix.shape}")
     
@@ -3884,7 +3914,7 @@ def visualize_four_stage_comparison(
         
         # Validate matrix shape before visualization
         if matrix.ndim != 2:
-            print(f"  ⚠️ Warning: {stage_name} matrix has invalid shape {matrix.shape}, expected 2D")
+            print(f"  [WARN] Warning: {stage_name} matrix has invalid shape {matrix.shape}, expected 2D")
             if matrix.ndim == 1:
                 # If 1D, try to reshape into a matrix
                 expected_size = len(rows) * len(sentences)
@@ -3931,13 +3961,13 @@ def visualize_four_stage_comparison(
     
     if output_file:
         save_plot_multi_format(output_file, dpi=300, bbox_inches='tight')
-        print(f"  💾 4-stage comparison saved to: {output_file}")
+        print(f"  [INFO] 4-stage comparison saved to: {output_file}")
         plt.close()  # Close the figure to save memory
     else:
         plt.close()  # Close the figure even if not saving
     
     # Print progression analysis
-    print(f"\n📊 4-STAGE PROGRESSION ANALYSIS:")
+    print(f"\n[INFO] 4-STAGE PROGRESSION ANALYSIS:")
     print(f"{'Stage':<35} {'Avg Similarity':<15} {'Improvement':<15}")
     print(f"-" * 65)
     
@@ -3971,7 +4001,7 @@ def create_complete_four_stage_analysis(
         example_indices: Comma-separated example indices (e.g., "0,1,2")
         base_model_name: Base model name for Stage 0 comparison
     """
-    print(f"\n🎯 CREATING COMPLETE 4-STAGE ANALYSIS")
+    print(f"\n[INFO] CREATING COMPLETE 4-STAGE ANALYSIS")
     print(f"="*60)
     
     output_path = Path(output_dir)
@@ -3999,12 +4029,12 @@ def create_complete_four_stage_analysis(
     for idx in valid_indices:
         example = examples[idx]
         
-        print(f"\n📊 Processing Example {idx}...")
+        print(f"\n[INFO] Processing Example {idx}...")
         
         # Extract rows and sentences
         rows, sentences = extract_rows_and_sentences(example, idx)
         if rows is None or sentences is None:
-            print(f"  ⚠️ Skipping example {idx} - could not extract data")
+            print(f"  [WARN] Skipping example {idx} - could not extract data")
             continue
         
         print(f"  Found {len(rows)} rows and {len(sentences)} sentences")
@@ -4034,13 +4064,13 @@ def create_complete_four_stage_analysis(
                 safe_name = stage_name.replace(" ", "_").replace(":", "").replace("(", "").replace(")", "")
                 np.save(str(example_dir / f"{safe_name}_similarities_example_{idx}.npy"), matrix)
             
-            print(f"  ✅ Example {idx} analysis complete")
+            print(f"  [OK] Example {idx} analysis complete")
             
         except Exception as e:
-            print(f"  ❌ Error processing example {idx}: {e}")
+            print(f"  [ERROR] Error processing example {idx}: {e}")
             continue
     
-    print(f"\n🎯 4-STAGE ANALYSIS COMPLETE!")
+    print(f"\n[INFO] 4-STAGE ANALYSIS COMPLETE!")
     print(f"All outputs saved to: {output_dir}")
     print(f"="*60)
 

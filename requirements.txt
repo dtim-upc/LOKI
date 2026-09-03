@@ -1,0 +1,46 @@
+# LOKI runtime environment (Python 3.12.13)
+# Install PyTorch with the CUDA index appropriate for the target machine before
+# installing this file. The versions below were verified with CUDA 12.8.
+--extra-index-url https://download.pytorch.org/whl/cu128
+
+# Core ML stack
+torch==2.9.1
+torchvision==0.24.1
+transformers==4.57.3
+sentence-transformers==5.2.0
+huggingface-hub==0.36.0
+tokenizers==0.22.2
+safetensors==0.5.2
+accelerate==1.12.0
+peft==0.18.1
+bitsandbytes==0.49.1
+xformers==0.0.33.post2
+triton==3.5.1
+
+# Unsloth
+unsloth==2026.1.4
+unsloth-zoo==2026.1.4
+
+# Data and scientific computing
+numpy==2.4.4
+scipy==1.15.1
+scikit-learn==1.6.1
+pandas==2.2.3
+datasets==4.3.0
+
+# Training, visualization, and utilities
+wandb==0.26.1
+tqdm==4.67.1
+matplotlib==3.10.1
+seaborn==0.13.2
+entmax==1.3
+protobuf==7.36.1
+requests==2.34.2
+packaging==26.3
+filelock==3.15.4
+notebook==7.3.2
+ipywidgets==8.1.5
+ipykernel==6.29.5
+jupyterlab==4.3.5
+jupyter-client==8.6.3
+jupyter-core==5.7.2

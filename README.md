@@ -80,7 +80,7 @@ Rather than producing unverified single-table dumps, LOKI discovers and material
 ### Prerequisites
 - Python 3.12+
 - PyTorch 2.9+ with CUDA 12.8 support
-- GPU with $\ge 16$ GB VRAM recommended for inference; $\ge 24$ GB for training
+- GPU with $\ge 16$ GB VRAM (recommended)
 
 ### Installation
 

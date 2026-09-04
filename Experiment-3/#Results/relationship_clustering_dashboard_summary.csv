@@ -1,0 +1,5 @@
+system_name,source_file,scope,n_admissions,n_pred_pairs,n_gt_pairs,n_final_clusters,cluster_label_n_evaluated,cluster_label_n_correct,pair_average_precision,cluster_label_macro_precision,cluster_label_macro_recall,cluster_label_macro_f1,cluster_label_precision,cluster_label_recall,cluster_label_f1,cluster_label_accuracy,raw_pair_cluster_purity,raw_pair_oracle_precision,raw_pair_oracle_recall,raw_pair_oracle_f1,cluster_ari,cluster_silhouette
+LOKI+GPT-OSS 20B,materialized_batch_results_mimic.csv,full,382,23444,5456,7671,2018,1696,0.1655,0.7469,0.747,0.7344,0.8459,0.8459,0.8459,0.8459,0.9956,0.9816,0.4864,0.6266,0.8062,0.5012
+LOKI+Qwen-3.6,materialized_batch_results_mimic.csv,full,382,36840,5456,10554,2113,1705,0.1655,0.7459,0.7285,0.7221,0.8541,0.8172,0.8299,0.8172,0.9949,0.9817,0.5154,0.6522,0.8577,0.5336
+Qwen-3.7,Qwen-3.7.json,full,382,6511,5456,595,548,525,,0.9638,0.9605,0.9616,0.9703,0.9703,0.9703,0.9703,0.9975,0.9969,0.717,0.8174,0.9841,
+Qwen3.6-Local,Qwen3.6-Local.json,full,382,3867,5456,557,523,481,,0.9293,0.9263,0.9273,0.942,0.942,0.942,0.942,0.9984,0.9931,0.5403,0.6782,0.9841,

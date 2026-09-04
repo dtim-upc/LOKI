@@ -1,0 +1,42 @@
+========================================================================
+  OOB SENTENCE INDEX REPAIR
+========================================================================
+
+[STEP 1] Building sentence bounds from source data...
+  Loaded bounds for 12205 admissions
+
+[STEP 2] Repairing annotations from 1 annotators...
+  Output directory: F:\MIMIC_Annotation_Pipeline\Annotations\Individual_Repaired
+
+  Processing: Qwen3.6-Local
+  [22645798] Stripped 1 OOB refs (diag:0 med:1 rel:0)
+  [21902946] Stripped 20 OOB refs (diag:0 med:16 rel:4)
+  [22153807] Stripped 1 OOB refs (diag:0 med:1 rel:0)
+  [25678968] Stripped 1 OOB refs (diag:1 med:0 rel:0)
+  [22869124] Stripped 2 OOB refs (diag:2 med:0 rel:0)
+  [21956767] Stripped 1 OOB refs (diag:1 med:0 rel:0)
+  [29524087] Stripped 22 OOB refs (diag:1 med:19 rel:2)
+  [25692477] Stripped 2 OOB refs (diag:0 med:2 rel:0)
+  [28427172] Stripped 1 OOB refs (diag:0 med:1 rel:0)
+
+========================================================================
+  REPAIR SUMMARY
+========================================================================
+
+  Qwen3.6-Local
+    Files total:                    383
+    Files clean (no OOB):           373
+    Files repaired (had OOB):       9
+    Total invalid refs stripped:    51
+    Diag rows dropped (OOB/None):   0
+    Diag rows dropped (was empty):  74
+    Med rows dropped (OOB/None):    3
+    Med rows dropped (was empty):   454
+    Rels dropped (ev OOB/None):     2
+    Rels dropped (ev was empty):    24
+
+  Grand total files:        383
+  Grand total OOB refs:     51
+  Original files: UNCHANGED (in F:\MIMIC_Annotation_Pipeline\Annotations\Individual)
+  Repaired files: written to F:\MIMIC_Annotation_Pipeline\Annotations\Individual_Repaired
+========================================================================

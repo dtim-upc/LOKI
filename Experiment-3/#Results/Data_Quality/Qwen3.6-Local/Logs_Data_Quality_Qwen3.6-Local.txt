@@ -1,0 +1,133 @@
+(base) PS F:\MIMIC_Annotation_Pipeline> Set-Location 'f:\MIMIC_Annotation_Pipeline'; & 'c:/Users/SHAON/anaconda3/envs/THOR/python.exe' check_data_quality.py --input_file 'Annotations/Merged_Per_Annotator/Qwen3.6-Local.json'
+Loading annotations from: Annotations\Merged_Per_Annotator\Qwen3.6-Local.json
+Loaded 382 annotation(s) in single mode
+Sentence bounds loaded for 12205 admissions (OOB check enabled)
+Running quality checks...
+
+================================================================================
+  DATA QUALITY REPORT - SINGLE ANNOTATIONS
+================================================================================
+
+[OVERVIEW]
+----------------------------------------
+  Total Files:               382
+  Total Relationships:       3942
+  Diagnosis Rows:            382
+  Medication Rows:           382
+
+[DATA QUALITY]
+----------------------------------------
+  Critical Issues:           130
+  Warnings:                  272
+
+[CRITICAL ISSUES]
+----------------------------------------
+  • [21255400] Relationship rel_005: drug_row 66 not found in row_grounding['medication']
+  • [25426298] Relationship rel_003: diagnosis_row 60 not found in row_grounding['diagnosis']
+  • [25426298] Relationship rel_004: diagnosis_row 60 not found in row_grounding['diagnosis']
+  • [25426298] Relationship rel_005: diagnosis_row 60 not found in row_grounding['diagnosis']
+  • [27104518] Relationship rel_014: drug_row 129 not found in row_grounding['medication']
+  • [20252405] Relationship rel_006: drug_row 26 not found in row_grounding['medication']
+  • [22659276] Relationship rel_009: diagnosis_row 20 not found in row_grounding['diagnosis']
+  • [24623461] Relationship rel_006: drug_row 65 not found in row_grounding['medication']
+  • [24623461] Relationship rel_007: drug_row 9 not found in row_grounding['medication']
+  • [24623461] Relationship rel_008: drug_row 10 not found in row_grounding['medication']
+  ... and 120 more issues
+
+[WARNINGS]
+----------------------------------------
+  [!] [27897940] Relationship rel_001: invalid evidence_scope 'section/document' (expected one of ['explicit', 'section', 'document'])
+  [!] [27897940] Relationship rel_002: invalid evidence_scope 'section/document' (expected one of ['explicit', 'section', 'document'])
+  [!] [27897940] Relationship rel_005: invalid evidence_scope 'section/document' (expected one of ['explicit', 'section', 'document'])
+  [!] [27897940] Relationship rel_011: invalid evidence_scope 'explicit/document' (expected one of ['explicit', 'section', 'document'])
+  [!] [24947999] Relationship rel_001: invalid evidence_scope 'explicit/section' (expected one of ['explicit', 'section', 'document'])
+  [!] [24947999] Relationship rel_003: invalid evidence_scope 'section/explicit' (expected one of ['explicit', 'section', 'document'])
+  [!] [24947999] Relationship rel_006: invalid evidence_scope 'explicit/section' (expected one of ['explicit', 'section', 'document'])
+  [!] [24947999] Relationship rel_008: invalid evidence_scope 'explicit/section' (expected one of ['explicit', 'section', 'document'])
+  [!] [21320596] Diagnosis row 2: unusual mention_type 'context/explicit'
+  [!] [21320596] Diagnosis row 5: unusual mention_type 'brand_name/explicit'
+  ... and 262 more warnings
+
+[MENTION TYPES DISTRIBUTION]
+----------------------------------------
+  diagnosis       abbreviated        388
+  diagnosis       abbreviated/context      2
+  diagnosis       abbreviated/explicit      3
+  diagnosis       brand_name          38
+  diagnosis       brand_name/explicit      2
+  diagnosis       clinical_note        1
+  diagnosis       context           5301
+  diagnosis       context/explicit     11
+  diagnosis       discharge_med        2
+  diagnosis       document             3
+  diagnosis       explicit         11729
+  diagnosis       explicit/context      3
+  diagnosis       explicit_lab         4
+  diagnosis       imaging_finding      3
+  diagnosis       imaging_interpretation      1
+  diagnosis       medication_list      2
+  diagnosis       section             35
+  diagnosis       section_header      43
+  diagnosis       synonym            460
+  diagnosis       synonym/context      1
+  diagnosis       vital_signs          1
+  medication      abbreviated        131
+  medication      abbreviated/explicit      5
+  medication      admission_list       4
+  medication      brand_name         662
+  medication      brand_name/explicit      2
+  medication      class_name           1
+  medication      clinical_course      3
+  medication      consult_recommendation      1
+  medication      context           2483
+  medication      context/explicit     11
+  medication      discharge_list      10
+  medication      discharge_med       13
+  medication      document             1
+  medication      explicit         10938
+  medication      medication_list      8
+  medication      section             67
+  medication      section_header      27
+  medication      synonym            228
+  medication      synonym/explicit      1
+
+[RELATIONSHIP TYPES]
+----------------------------------------
+  TREATS                      3587
+  DISCONTINUED                 263
+  ADVERSE_EFFECT                82
+  CONTRAINDICATED               10
+
+[EVIDENCE SCOPES]
+----------------------------------------
+  section/document               8
+  explicit                    2914
+  section                      679
+  explicit/document              5
+  document                     246
+  explicit/section              24
+  section/explicit              50
+  context/explicit               1
+  context                        9
+  synonym                        1
+  section/context                1
+  section_header                 4
+
+[CONFIDENCE LEVELS]
+----------------------------------------
+  high                        3827
+  medium                       115
+
+[AGREEMENT STATISTICS]
+----------------------------------------
+  (not applicable for single-annotation inputs)
+
+[SENTENCE BOUNDS CHECK]
+----------------------------------------
+  ✓ No out-of-bounds sentence indices detected
+
+================================================================================
+  [FAIL] FIX 130 CRITICAL ISSUES BEFORE TRAINING
+================================================================================
+
+Detailed report saved to: Annotations\Merged_Per_Annotator\data_quality_report.json

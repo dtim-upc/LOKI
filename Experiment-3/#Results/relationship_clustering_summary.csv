@@ -1,0 +1,13 @@
+system_name,source_file,scope,n_admissions,n_gt_matched_pairs,n_clusters,raw_pair_cluster_purity,raw_pair_oracle_precision,raw_pair_oracle_recall,raw_pair_oracle_f1,cluster_label_macro_precision,cluster_label_macro_recall,cluster_label_macro_f1,cluster_label_precision,cluster_label_recall,cluster_label_f1,cluster_label_accuracy,n_evaluated_clusters,n_correct_clusters
+LOKI+GPT-OSS 20B,materialized_batch_resume_state_mimic.json,full,378,2730,2018,0.9956,0.9816,0.4864,0.6266,0.7548,0.7549,0.7422,0.8404,0.8404,0.8404,0.8404,2018,1696
+LOKI+Qwen-3.6,materialized_batch_resume_state_mimic.json,full,380,2903,2113,0.9949,0.9817,0.5154,0.6522,0.7498,0.7323,0.7259,0.8478,0.8069,0.8269,0.8069,2113,1705
+Qwen-3.7,Qwen-3.7.json,full,381,4149,548,0.9975,0.9969,0.717,0.8174,0.9663,0.963,0.9641,0.958,0.958,0.958,0.958,548,525
+LOKI+GPT-OSS 20B,materialized_batch_resume_state_mimic.json,matched_to_Qwen-3.7,377,2726,2014,0.9956,0.9816,0.4867,0.6268,0.7555,0.7559,0.743,0.8406,0.8406,0.8406,0.8406,2014,1693
+Qwen-3.7,Qwen-3.7.json,matched_to_LOKI+GPT-OSS 20B,377,4117,544,0.9975,0.9969,0.7158,0.8166,0.966,0.9626,0.9637,0.9577,0.9577,0.9577,0.9577,544,521
+LOKI+Qwen-3.6,materialized_batch_resume_state_mimic.json,matched_to_Qwen-3.7,379,2899,2109,0.9949,0.9816,0.5158,0.6526,0.7504,0.7332,0.7267,0.848,0.807,0.827,0.807,2109,1702
+Qwen-3.7,Qwen-3.7.json,matched_to_LOKI+Qwen-3.6,379,4127,546,0.9975,0.9969,0.7161,0.8167,0.9661,0.9628,0.9639,0.9579,0.9579,0.9579,0.9579,546,523
+Qwen3.6-Local,Qwen3.6-Local.json,full,381,3103,523,0.9984,0.9931,0.5403,0.6782,0.9318,0.9287,0.9297,0.9197,0.9197,0.9197,0.9197,523,481
+LOKI+GPT-OSS 20B,materialized_batch_resume_state_mimic.json,matched_to_Qwen3.6-Local,377,2726,2014,0.9956,0.9816,0.4867,0.6268,0.7555,0.7559,0.743,0.8406,0.8406,0.8406,0.8406,2014,1693
+Qwen3.6-Local,Qwen3.6-Local.json,matched_to_LOKI+GPT-OSS 20B,377,3078,519,0.9984,0.993,0.5391,0.6772,0.931,0.9279,0.929,0.9191,0.9191,0.9191,0.9191,519,477
+LOKI+Qwen-3.6,materialized_batch_resume_state_mimic.json,matched_to_Qwen3.6-Local,379,2899,2109,0.9949,0.9816,0.5158,0.6526,0.7504,0.7332,0.7267,0.848,0.807,0.827,0.807,2109,1702
+Qwen3.6-Local,Qwen3.6-Local.json,matched_to_LOKI+Qwen-3.6,379,3085,521,0.9984,0.9931,0.5394,0.6774,0.9314,0.9283,0.9293,0.9194,0.9194,0.9194,0.9194,521,479

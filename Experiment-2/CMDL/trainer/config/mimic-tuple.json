@@ -1,0 +1,20 @@
+{
+    "train_frac": 1,
+    "epochs": 500,
+    "batch_size": 16,
+    "lr": 0.0001,
+    "weight_decay": 0.001,
+    "loss": "triplet",
+    "triplet_margin": 0.1,
+    "neg_weight": 1.0,
+    "data_lake": "mimic",
+    "tokenizer": "allenai/biomed_roberta_base",
+    "table_input_path": "cmdl_mimic_data/train/tables",
+    "gt_path": "cmdl_mimic_data/train/mimic-text-tables.gt",
+    "init_model_path": "./mimic-text-model",
+    "output_path": "./mimic-tuple-model",
+    "max_header_encoding_length": 50,
+    "max_tuple_content_encoding_length": 200,
+    "final_size": 100,
+    "pooling": "cls"
+}

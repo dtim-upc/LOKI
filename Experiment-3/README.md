@@ -1,4 +1,4 @@
-# LOKI: Experimental Evaluation & Benchmark Results
+## Experiment 3: End-to-End Data Integration (LOKI Vs. Frontier LLM Baselines)
 
 This repository contains the experimental evaluation artifacts for the **LOKI** pipeline compared against direct frontier LLM prompting baselines on the MIMIC-IV clinical dataset across 382 hospital admissions.
 

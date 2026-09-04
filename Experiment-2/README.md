@@ -1,4 +1,4 @@
-# HOW TO RUN — Experiment-2 (SOTA Evaluation on Data Discovery)
+## HOW TO RUN: Experiment-2 (SOTA Evaluation on Data Discovery)
 
 Unified evaluation framework for comparing **CMDL**, **LOKI**, **TabSTAR**, and **TaBERT** on the Pharma Protocol (Flipped) table-text discovery task.
 

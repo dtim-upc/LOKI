@@ -18,9 +18,9 @@ The core objective of LOKI is the automated construction of relational tables co
 - **Typed Table Materialization Macro P / R / F1:** Mean per-admission macro scores evaluating physical table recovery.
 - **Typed Table Materialization Micro P / R / F1:** Global pooled scores aggregating table-level true positives, false positives, and false negatives across all 382 admissions.
 
-\[
+$$
 \text{Precision} = \frac{\text{TP}}{\text{Pred}}, \quad \text{Recall} = \frac{\text{TP}}{\text{GT}}, \quad \text{F1} = \frac{2 \times \text{TP}}{\text{Pred} + \text{GT}}
-\]
+$$
 
 Detailed technical report: **[`relationship_table_report.md`](%23Results/relationship_table_report.md)**
 

@@ -1,0 +1,31 @@
+carte-ai
+catboost
+gpustat
+h5py
+huggingface_hub
+joblib
+kagglehub >= 0.3.12
+lightgbm
+numpy
+openml
+optuna
+pandas >= 2.2.2
+peft
+pytabkit
+pytest
+python-dotenv
+scikit-learn
+sentence_transformers
+scipy
+skrub
+streamlit
+tabdpt          # TODO: try to upgrade to >= 1.1.5 once scikit-learn conflicts are resolved
+tabicl
+tabpfn >= 2.0.8
+tabpfn_extensions
+torch >= 2.6.0
+torchvision
+tqdm
+transformers >= 4.49.0
+xgboost
+wandb

@@ -1,0 +1,98 @@
+import argparse
+from dataclasses import asdict
+from os.path import exists
+from typing import List
+
+import wandb
+
+from tabstar.datasets.all_datasets import OpenMLDatasetID, TabularDatasetID
+from tabstar.training.devices import get_device
+from tabstar_paper.benchmarks.experiments import ANALYSIS_DOWNSTREAM
+from tabstar_paper.benchmarks.folds_benchmark import TEXT2FOLD
+from tabstar_paper.benchmarks.folds_pretrain import PRETRAIN2FOLD
+from tabstar_paper.constants import DEVICE
+from tabstar_paper.pretraining.hyperparameters import (TABULAR_LAYERS, TEXTUAL_UNFREEZE_LAYERS, LR, WARMUP,
+                                                       WEIGHT_DECAY, EPOCHS, EPOCH_EXAMPLES, PATIENCE, BATCH_SIZE,
+                                                       GLOBAL_BATCH_SIZE, TrainingArgs)
+from tabstar_paper.pretraining.pretrainer import TabSTARPretrainer
+from tabstar_paper.utils.logging import wandb_run, wandb_finish
+from tabstar_paper.pretraining.pretrain_args import PretrainArgs
+
+
+def do_pretrain(pretrain_datasets: List[TabularDatasetID],
+                train_args: TrainingArgs,
+                pretrain_args: PretrainArgs):
+    if exists(pretrain_args.path):
+        print(f"Pretraining model already exists for {pretrain_args.full_exp_name}")
+        return
+    print(f"🧪 Initializing experiment {pretrain_args.full_exp_name}")
+    device = get_device(device=DEVICE)
+    wandb_run(exp_name=pretrain_args.raw_exp_name, project="tabstar_pretrain")
+    d_summary = {**asdict(pretrain_args), **asdict(train_args), 'full_exp_name': pretrain_args.full_exp_name}
+    wandb.config.update(d_summary, allow_val_change=True)
+    print(f"Pretraining over {len(pretrain_datasets)} datasets")
+    model = TabSTARPretrainer(run_name=pretrain_args.full_exp_name,
+                              dataset_ids=pretrain_datasets,
+                              device=device,
+                              train_args=train_args,
+                              pretrain_args=pretrain_args)
+    model.train()
+    pretrain_args.to_json()
+    print(f"🌟 TabSTAR was pretrained. The experiment name is: {pretrain_args.full_exp_name}")
+    wandb_finish(d_summary)
+
+
+def define_downstream_datasets(arg: argparse.Namespace) -> List[TabularDatasetID]:
+    if arg.analysis:
+        args.n_datasets = 256
+        return ANALYSIS_DOWNSTREAM
+    if arg.fold is None:
+        return []
+    fold_dict = TEXT2FOLD if args.only_text_folds else PRETRAIN2FOLD
+    datasets = [d for d, f in fold_dict.items() if f == arg.fold]
+    return datasets
+
+
+if __name__ == "__main__":
+
+    parser = argparse.ArgumentParser(description="Run the training script with optional arguments.")
+    # General
+    parser.add_argument('--exp', type=str, default="default_pretrain_exp")
+    parser.add_argument('--analysis', action='store_true', default=False)
+    parser.add_argument('--debug', action='store_true', default=False)
+    parser.add_argument('--checkpoint', type=int, default=None)
+    # Arch
+    parser.add_argument('--tabular_layers', type=int, default=TABULAR_LAYERS)
+    parser.add_argument('--e5_unfreeze_layers', type=int, default=TEXTUAL_UNFREEZE_LAYERS)
+    # Data
+    parser.add_argument('--n_datasets', type=int, default=None)
+    parser.add_argument('--fold', type=int, default=None)
+    parser.add_argument('--only_text_folds', action='store_true', default=False)
+    # Training
+    parser.add_argument('--learning_rate', type=float, default=LR)
+    parser.add_argument('--warmup', type=float, default=WARMUP)
+    parser.add_argument('--weight_decay', type=float, default=WEIGHT_DECAY)
+    parser.add_argument('--epochs', type=int, default=EPOCHS)
+    parser.add_argument('--epoch_examples', type=int, default=EPOCH_EXAMPLES)
+    parser.add_argument('--patience', type=int, default=PATIENCE)
+    parser.add_argument('--batch_size', type=int, default=BATCH_SIZE)
+    parser.add_argument('--global_batch_size', type=int, default=GLOBAL_BATCH_SIZE)
+
+    args = parser.parse_args()
+
+    downstream_data = define_downstream_datasets(args)
+
+    pretrain_data = [d for d in PRETRAIN2FOLD if d not in downstream_data]
+
+    if args.n_datasets is not None:
+        pretrain_data = pretrain_data[:args.n_datasets]
+    elif args.debug:
+        pretrain_data = [OpenMLDatasetID.BIN_SOCIAL_IMDB_GENRE_PREDICTION,
+                         OpenMLDatasetID.MUL_NATURE_EUCALYPTUS_SEED,
+                         OpenMLDatasetID.REG_SPORTS_MONEYBALL]
+        args.epochs = 3
+
+    train = TrainingArgs.from_args(args)
+    pretraining_args = PretrainArgs.from_args(args=args, pretrain_data=pretrain_data)
+
+    do_pretrain(pretrain_datasets=pretrain_data, train_args=train, pretrain_args=pretraining_args)

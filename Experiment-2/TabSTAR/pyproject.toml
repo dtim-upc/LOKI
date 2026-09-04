@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tabstar"
+version = "1.1.15"
+description = "TabSTAR: A Foundation Tabular Model With Semantically Target-Aware Representations"
+readme = "README-pypi.md"
+authors = [
+  { name = "Alan Arazi", email = "alanarazi7@gmail.com" }
+]
+license = { text = "MIT" }
+dependencies = [
+  "joblib",
+  "numpy",
+  "pandas>=2.2.2",
+  "peft",
+  "scikit-learn",
+  "skrub",
+  "torch>=2.6.0",
+  "tqdm",
+  "transformers>=4.49.0"
+]
+requires-python = ">=3.10"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools]
+include-package-data = true
+license-files = []
+
+[tool.setuptools.package-data]
+"tabstar" = ["resources/*.csv"]

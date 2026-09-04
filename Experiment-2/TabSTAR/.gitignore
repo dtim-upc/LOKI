@@ -1,0 +1,23 @@
+.DS_Store
+.env
+.idea
+.venv
+**/catboost_info/
+**/wandb/
+**/.tabstar_*/
+**/tabstar.egg-info/
+**/check_whl/
+
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.TabSTAR-env/
+
+# Distribution / packaging
+*.egg-info/
+dist/
+build/
